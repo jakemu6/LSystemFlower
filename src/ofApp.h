@@ -1,6 +1,8 @@
 #pragma once
 
 #include "ofMain.h"
+#include "Turtle.hpp"
+#include "LSystem.h"
 
 class ofApp : public ofBaseApp{
 
@@ -21,4 +23,10 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 		
+    string axiom;
+    int count;
+    
+    Turtle turtle;
+    
+    LSys system;
 };
