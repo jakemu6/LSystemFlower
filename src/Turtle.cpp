@@ -37,6 +37,14 @@ void Turtle::setLength(float _length) {
     length = _length;
 }
 
+void Turtle::setAnotherForward(string _forward) {
+    anotherForward = _forward;
+}
+
+void Turtle::setNoDrawForward(string _noDrawForward) {
+    noDrawForward = _noDrawForward;
+}
+
 void Turtle::draw(string input, float _x, float _y, float _angle) {
     x = _x;
     y = _y;
@@ -44,6 +52,8 @@ void Turtle::draw(string input, float _x, float _y, float _angle) {
     
     //get length of the input string
     int length = input.length();
+    
+    ofLog() << "length: " << length;
     
     //split the string into 1 character
     string substr[length];
@@ -55,6 +65,10 @@ void Turtle::draw(string input, float _x, float _y, float _angle) {
     for(int i = 0; i < length; i++) {
         if(substr[i] == forward)
             moveForward();
+        if(substr[i] == anotherForward)
+            moveForward();
+        if(substr[i] == noDrawForward)
+            moveForwardNoLine();
         if(substr[i] == left)
             turnLeft();
         if(substr[i] == right)
@@ -66,13 +80,14 @@ void Turtle::draw(string input, float _x, float _y, float _angle) {
     }
 }
 
-void Turtle::pushValues() {
+void Turtle::pushValues(){
     xHis.push_back(x);
     yHis.push_back(y);
     aHis.push_back(curAngle);
+//    curAngle += angle;
 }
 
-void Turtle::popValues() {
+void Turtle::popValues(){
     x = xHis[xHis.size()-1];
     y = yHis[yHis.size()-1];
     curAngle = aHis[aHis.size()-1];
@@ -80,7 +95,19 @@ void Turtle::popValues() {
     xHis.pop_back();
     yHis.pop_back();
     aHis.pop_back();
+//    curAngle -= angle;
 }
+
+void Turtle::turnLeft(){
+//    cout << "turn left" << endl;
+    curAngle += angle;
+}
+
+void Turtle::turnRight(){
+//    cout << "turn right" << endl;
+    curAngle -= angle;
+}
+
 
 void Turtle::moveForward() {
     //curAngle which is decided by turnLeft and turnRight functions determine by the degree of which way the line will move
@@ -96,12 +123,11 @@ void Turtle::moveForward() {
     y = newY;
 }
 
-void Turtle::turnLeft(){
-//    cout << "turn left" << endl;
-    curAngle += angle;
-}
+void Turtle::moveForwardNoLine() {
+    //curAngle which is decided by turnLeft and turnRight functions determine by the degree of which way the line will move
+    float newX = x + (cos(ofDegToRad(curAngle))*length);
+    float newY = y + (sin(ofDegToRad(curAngle))*length);
 
-void Turtle::turnRight(){
-//    cout << "turn right" << endl;
-    curAngle -= angle;
+    x = newX;
+    y = newY;
 }

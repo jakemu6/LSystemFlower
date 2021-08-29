@@ -29,4 +29,8 @@ class ofApp : public ofBaseApp{
     Turtle turtle;
     
     LSys system;
+    
+    float length;
+    float axiomLevel;
+
 };

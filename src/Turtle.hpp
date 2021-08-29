@@ -18,14 +18,23 @@ public:
     Turtle(string forward, string left, string right);
     void setAngle(float angle);
     void setLength(float length);
-    
+    void setAnotherForward(string forward);
+    void setNoDrawForward(string noDrawForward);
+
+
     void draw(string input, float x, float y, float angle);
     void moveForward();
+    void moveForwardNoLine();
+
     void turnLeft();
     void turnRight();
     
 protected:
     string forward;
+    string anotherForward;
+    string noDrawForward;
+
+
     string left;
     string right;
     
