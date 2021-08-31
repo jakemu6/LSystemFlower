@@ -2,7 +2,8 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-
+    cam.setDistance(1000);
+    
     //addVariable is for values that can be replaced
     system.addVariable("F");
     system.addVariable("L");
@@ -29,37 +30,41 @@ void ofApp::setup(){
     system.addRule(LRule("R", "-LFLF+RFRFR+F+RF-LFL-FR"));
     system.printRules();
     
-    length = 10.0;
+    length = 100.0;
 
     
     
     //character for move forward turn left/right
     //[] already set for save and restore state
-    turtle = Turtle("F", "-", "+");
+    turtle = Turtle("F", "+", "-");
 //    turtle.setAnotherForward("G");
 //        turtle.setNoDrawForward("f");
 
-    turtle.setAngle(90);
-    
+    turtle.setAngle(ofDegToRad(90));
+    turtle.setLength(length);
 
+    
+    ofLog() << "axiom = " << axiom;
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
     axiomLevel = ofMap(ofGetMouseX(), 0, 1024, 0, 10);
-    axiom = system.getLevel(3);
-    ofLog() << "axiom = " << axiom;
+    axiom = system.getLevel(2);
+
 
 //    length = ofMap(ofGetMouseX(), 0, 1024, 0.1, 20);
-    turtle.setLength(length);
 
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+    cam.begin();
     ofBackground(255, 255, 255);
-    turtle.draw(axiom, ofGetWidth()/2, ofGetHeight()/2 , 90); // input string, x, y, starting angle
-    
+    ofNoFill();
+    turtle.draw(axiom, 0, 0 , 90); // input string, x, y, starting angle
+    ofDrawSphere(1);
+    cam.end();
 }
 
 //--------------------------------------------------------------

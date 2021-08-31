@@ -29,6 +29,14 @@ public:
     void turnLeft();
     void turnRight();
     
+    void pitchDown();
+    void pitchUp();
+    
+    void rollLeft();
+    void rollRight();
+    
+    ofVec3f rotateVector(ofMatrix3x3 rotationMatrix, ofVec3f pVector);
+    
 protected:
     string forward;
     string anotherForward;
@@ -39,10 +47,17 @@ protected:
     string right;
     
     float angle;
+    
+    //being replaced by rotationU
     float curAngle;
+    
+    // this unit vector is only for direction
+    ofVec3f unitDirectionVector;
+    
     float length;
     float x;
     float y;
+    float z;
     
     vector<float> xHis;
     vector<float> yHis;

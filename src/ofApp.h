@@ -30,7 +30,10 @@ class ofApp : public ofBaseApp{
     
     LSys system;
     
+    
     float length;
     float axiomLevel;
+    
+    ofEasyCam cam;
 
 };
