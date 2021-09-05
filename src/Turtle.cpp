@@ -8,34 +8,49 @@
 #include "Turtle.hpp"
 
 Turtle::Turtle() {
-    angle = 90;
-    curAngle = 0;
-    length = 10;
-    unitDirectionVector.set(0.0f, -1.0f, 0.0f);
-
-
-    x = ofGetWidth()/2;
-    y = ofGetHeight()/2;
-
     
-}
-
-Turtle::Turtle(string _forward, string _left, string _right) {
-    forward = _forward;
-    left = _left;
-    right = _right;
+    mesh.setMode(OF_PRIMITIVE_LINE_STRIP);
+    mesh.enableColors();
     
-    //default values that are replaced with setLength and setAngle called in ofApp.cpp
+    //    unitDirectionVector.set(1.0f, 1.0f, 1.0f);
+    //
+    //    unitDirectionVectorU.set(1.0f, 1.0f, 1.0f);
+    //    unitDirectionVectorL.set(1.0f, 1.0f, 1.0f);
+    //    unitDirectionVectorH.set(1.0f, 1.0f, 1.0f);
+    
+    //Basic Init of variables,
+    //Should all be changed further down with setAngle and setLength
     angle = 90;
     length = 10;
-    curAngle = 0;
-    unitDirectionVector.set(0.0f, -1.0f, 0.0f);
 
-
-    x = ofGetWidth()/2;
-    y = ofGetHeight()/2;
-
+    x = 0;
+    y = 0;
+    z = 0;
+    
+    bookmarks.clear();
+    nodesContainer.clear();
 }
+
+//Turtle::Turtle(string _forward, string _left, string _right) {
+//    forward = _forward;
+//    left = _left;
+//    right = _right;
+//
+//    //default values that are replaced with setLength and setAngle called in ofApp.cpp
+//    angle = 90;
+//    length = 10;
+//    curAngle = 0;
+//    unitDirectionVector.set(1.0f, 1.0f, 1.0f);
+//
+//    unitDirectionVectorU.set(1.0f, 1.0f, 1.0f);
+//    unitDirectionVectorL.set(1.0f, 1.0f, 1.0f);
+//    unitDirectionVectorH.set(1.0f, 1.0f, 1.0f);
+//
+//    x = ofGetWidth()/2;
+//    y = ofGetHeight()/2;
+//    z = 0;
+//
+//}
 
 void Turtle::setAngle(float _angle) {
     angle = _angle;
@@ -54,91 +69,193 @@ void Turtle::setNoDrawForward(string _noDrawForward) {
     noDrawForward = _noDrawForward;
 }
 
-void Turtle::draw(string input, float _x, float _y, float _angle) {
-    x = _x;
-    y = _y;
-    curAngle = _angle;
-    unitDirectionVector.set(0.0f, -1.0f, 0.0f);
-
-    //get length of the input string
-    int length = input.length();
-        
+void Turtle::draw(string input, float _x, float _y, float _z) {
+    
 
     
+    //Init the first root of the nodecontainer
+    //set position and add it to the vector/sharedptr thingo
+    shared_ptr<ofNode> root(new ofNode);
+    root->setPosition(x, y, z);
+    nodesContainer.push_back(root);
+    mesh.addVertex(root->getGlobalPosition());
+    mesh.addColor(ofFloatColor(1.0, 0.0, 0.0));
+    
+    
+    
+//    x = _x;
+//    y = _y;
+//    z = _z;
+//
+//    curAngle = _angle;
+//    unitDirectionVector.set(1.0f, 1.0f, 1.0f);
+//
+//    unitDirectionVectorU.set(1.0f, 1.0f, 1.0f);
+//    unitDirectionVectorL.set(1.0f, 1.0f, 1.0f);
+//    unitDirectionVectorH.set(1.0f, 1.0f, 1.0f);
+
+    //get length of the input string
+    int stringLength = input.length();
+        
+    
     //split the string into 1 character
-    string substr[length];
-    for(int i = 0; i < length; i++) {
+    string substr[stringLength];
+    for(int i = 0; i < stringLength; i++) {
         substr[i] = input.substr(i, 1);
     }
     
     //check every character and act accordingly
-    for(int i = 0; i < length; i++) {
-        if(substr[i] == forward)
-            moveForward();
-        if(substr[i] == anotherForward)
-            moveForward();
-        if(substr[i] == noDrawForward)
+    for(int i = 0; i < stringLength; i++) {
+        if(substr[i] == "F") {
+            auto previousPoint = nodesContainer.back();
+            shared_ptr<ofNode> newPoint(new ofNode);
+            newPoint->setParent(*nodesContainer.back());
+            newPoint->move(0, length, 0);
+            mesh.addColor(ofFloatColor(1.0, 1.0, 0.0));
+            mesh.addVertex(newPoint->getGlobalPosition());
+            nodesContainer.push_back(newPoint);
+        }
+        else if(substr[i] == noDrawForward) {
             moveForwardNoLine();
-        if(substr[i] == left)
-            turnLeft();
-        if(substr[i] == right)
-            turnRight();
-        if(substr[i] == "[")
-            pushValues();
-        if(substr[i] == "]")
-            popValues();
+        }
+        else if(substr[i] == "+") {
+            //TURN LEFT
+            shared_ptr<ofNode> rotatingPoint(new ofNode);
+            rotatingPoint->setParent(*nodesContainer.back());
+            rotatingPoint->rollDeg(angle);
+            nodesContainer.push_back(rotatingPoint);
+        }
+        else if(substr[i] == "-") {
+            //TURN RIGHT
+            shared_ptr<ofNode> rotatingPoint(new ofNode);
+            rotatingPoint->setParent(*nodesContainer.back());
+            rotatingPoint->rollDeg(-angle);
+            nodesContainer.push_back(rotatingPoint);
+        }
+        else if(substr[i] == "[") {
+            bookmarks.push_back(nodesContainer.back());
+        }
+        else if(substr[i] == "]") {
+            nodesContainer.push_back(bookmarks.back());
+            bookmarks.pop_back();
+        }
+        else if(substr[i] == "&") {
+            //PITCH DOWN
+            shared_ptr<ofNode> rotatingPoint(new ofNode);
+            rotatingPoint->setParent(*nodesContainer.back());
+            rotatingPoint->tiltDeg(angle);
+            nodesContainer.push_back(rotatingPoint);
+        }
+        else if(substr[i] == "^") {
+            //PITCH UP
+            shared_ptr<ofNode> rotatingPoint(new ofNode);
+            rotatingPoint->setParent(*nodesContainer.back());
+            rotatingPoint->tiltDeg(-angle);
+            nodesContainer.push_back(rotatingPoint);
+        }
+        else if(substr[i] == "?") {
+            //ROLL LEFT
+            shared_ptr<ofNode> rotatingPoint(new ofNode);
+            rotatingPoint->setParent(*nodesContainer.back());
+            rotatingPoint->panDeg(angle);
+            nodesContainer.push_back(rotatingPoint);
+        }
+        else if(substr[i] == "/") {
+            //ROLL RIGHT
+            shared_ptr<ofNode> rotatingPoint(new ofNode);
+            rotatingPoint->setParent(*nodesContainer.back());
+            rotatingPoint->panDeg(-angle);
+            nodesContainer.push_back(rotatingPoint);
+        }
+        else if(substr[i] == "|") {
+            //TURN AROUND
+            shared_ptr<ofNode> rotatingPoint(new ofNode);
+            rotatingPoint->setParent(*nodesContainer.back());
+            rotatingPoint->rollDeg(180);
+            nodesContainer.push_back(rotatingPoint);
+        }
     }
+    
+    
+    mesh.draw();
+    //clear the nodeContainer each time to get it
+    nodesContainer.clear();
+    bookmarks.clear();
 }
 
 void Turtle::pushValues(){
-    xHis.push_back(x);
-    yHis.push_back(y);
-    aHis.push_back(curAngle);
-//    curAngle += angle;
+//    xHis.push_back(x);
+//    yHis.push_back(y);
+//    zHis.push_back(z);
+//
+//    unitDirectionUnityHis.push_back(unitDirectionVector);
+//    unitDirectionUnityHisU.push_back(unitDirectionVectorU);
+//    unitDirectionUnityHisL.push_back(unitDirectionVectorL);
+//    unitDirectionUnityHisH.push_back(unitDirectionVectorH);
+
 }
 
 void Turtle::popValues(){
-    x = xHis[xHis.size()-1];
-    y = yHis[yHis.size()-1];
-    curAngle = aHis[aHis.size()-1];
-    
-    xHis.pop_back();
-    yHis.pop_back();
-    aHis.pop_back();
-//    curAngle -= angle;
+//    x = xHis[xHis.size()-1];
+//    y = yHis[yHis.size()-1];
+//    z = zHis[zHis.size()-1];
+//    unitDirectionVector = unitDirectionUnityHis[unitDirectionUnityHis.size()-1];
+//    unitDirectionVectorU = unitDirectionUnityHisU[unitDirectionUnityHisU.size()-1];
+//    unitDirectionVectorL = unitDirectionUnityHisL[unitDirectionUnityHisL.size()-1];
+//    unitDirectionVectorH = unitDirectionUnityHisH[unitDirectionUnityHisH.size()-1];
+//
+//
+//    xHis.pop_back();
+//    yHis.pop_back();
+//    zHis.pop_back();
 }
 
-void Turtle::turnLeft(){
-//    cout << cosf( -angle ) << endl;
-//    curAngle += angle;
 
+void Turtle::pitchDown(){
     ofMatrix3x3 rotationMatrix;
-    rotationMatrix.a = cosf( -angle );     rotationMatrix.b = sinf( -angle );     rotationMatrix.c = 0;
-    rotationMatrix.d = -sinf( -angle );    rotationMatrix.e = cosf( -angle );     rotationMatrix.f = 0;
-    rotationMatrix.g = 0;                  rotationMatrix.h = 0;                  rotationMatrix.i = 1;
+    rotationMatrix.a = cosf(angle);     rotationMatrix.b = 0;      rotationMatrix.c = -sinf(angle);
+    rotationMatrix.d = 0;               rotationMatrix.e = 1;      rotationMatrix.f = 0;
+    rotationMatrix.g = sinf(angle);     rotationMatrix.h = 0;      rotationMatrix.i = cosf(angle);
 
-    unitDirectionVector = rotateVector(rotationMatrix, unitDirectionVector);
-    cout << unitDirectionVector << endl;
-
+    unitDirectionVectorL = rotateVector(rotationMatrix, unitDirectionVectorL);
 }
 
-void Turtle::turnRight(){
-//    cout << "turn right" << endl;
-//    curAngle -= angle;
-    
-    
+void Turtle::pitchUp(){
     ofMatrix3x3 rotationMatrix;
-    rotationMatrix.a = cosf(angle);       rotationMatrix.b = sinf(angle);     rotationMatrix.c = 0;
-    rotationMatrix.d = -sinf(angle);      rotationMatrix.e = cosf(angle);     rotationMatrix.f = 0;
-    rotationMatrix.g = 0;                 rotationMatrix.h = 0;               rotationMatrix.i = 1;
+    rotationMatrix.a = cosf(-angle);     rotationMatrix.b = 0;      rotationMatrix.c = -sinf(-angle);
+    rotationMatrix.d = 0;                rotationMatrix.e = 1;      rotationMatrix.f = 0;
+    rotationMatrix.g = sinf(-angle);     rotationMatrix.h = 0;      rotationMatrix.i = cosf(-angle);
 
-    unitDirectionVector = rotateVector(rotationMatrix, unitDirectionVector);
-    cout << unitDirectionVector << endl;
+    unitDirectionVectorL = rotateVector(rotationMatrix, unitDirectionVectorL);
 }
 
+void Turtle::rollLeft(){
+    ofMatrix3x3 rotationMatrix;
+    rotationMatrix.a = 1;      rotationMatrix.b = 0;               rotationMatrix.c = 0;
+    rotationMatrix.d = 0;      rotationMatrix.e = cosf(angle);     rotationMatrix.f = -sinf(angle);
+    rotationMatrix.g = 0;      rotationMatrix.h = sinf(angle);     rotationMatrix.i = cosf(angle);
 
+    unitDirectionVectorH = rotateVector(rotationMatrix, unitDirectionVectorH);
+}
+    
+void Turtle::rollRight(){
+    ofMatrix3x3 rotationMatrix;
+    rotationMatrix.a = 1;      rotationMatrix.b = 0;                rotationMatrix.c = 0;
+    rotationMatrix.d = 0;      rotationMatrix.e = cosf(-angle);     rotationMatrix.f = -sinf(-angle);
+    rotationMatrix.g = 0;      rotationMatrix.h = sinf(-angle);     rotationMatrix.i = cosf(-angle);
 
+    unitDirectionVectorH = rotateVector(rotationMatrix, unitDirectionVectorH);
+}
+    
+void Turtle::turnAround(){
+    ofMatrix3x3 rotationMatrix;
+    rotationMatrix.a = cosf(ofDegToRad(180));       rotationMatrix.b = sinf(ofDegToRad(180));     rotationMatrix.c = 0;
+    rotationMatrix.d = -sinf(ofDegToRad(180));      rotationMatrix.e = cosf(ofDegToRad(180));     rotationMatrix.f = 0;
+    rotationMatrix.g = 0;                           rotationMatrix.h = 0;                         rotationMatrix.i = 1;
 
+    unitDirectionVectorU = rotateVector(rotationMatrix, unitDirectionVectorU);
+}
+    
 ofVec3f Turtle::rotateVector(ofMatrix3x3 pRotationMatrix, ofVec3f pVector){
     ofVec3f result;
     result.x = pRotationMatrix.a * pVector.x + pRotationMatrix.b * pVector.y + pRotationMatrix.c *  pVector.z;
@@ -152,31 +269,36 @@ ofVec3f Turtle::rotateVector(ofMatrix3x3 pRotationMatrix, ofVec3f pVector){
 
 
 void Turtle::moveForward() {
-    //curAngle which is decided by turnLeft and turnRight functions determine by the degree of which way the line will move
-//    float newX = x + (cos(ofDegToRad(curAngle))*length);
-//    float newY = y + (sin(ofDegToRad(curAngle))*length);
-    float newX = x + (unitDirectionVector.x*length);
-    float newY = y + (unitDirectionVector.y*length);
-    float newZ = z + (unitDirectionVector.z*length);
+//    float newX = x + (unitDirectionVectorU*length).x;
+//    float newY = y + (unitDirectionVectorL*length).y;
+//    float newZ = z + (unitDirectionVectorH*length).z;
+//
+////    cout << "move forward from: " << x << ", " << y << ", " << z << " to " << newX << ", " << newY << ", " << newZ << endl;
+//    ofEnableAlphaBlending();
+//    ofSetColor(0, 0, 0, 120);
+//    ofSetLineWidth(2);
+//    ofDrawLine(x, y, z, newX, newY, newZ);
+//    x = newX;
+//    y = newY;
+//    z = newZ;
 
-//    cout << "move forward from: " << x << ", " << y << " to " << newX << ", " << newY << endl;
-    ofEnableAlphaBlending();
-    ofSetColor(0, 0, 0, 120);
-    ofSetLineWidth(2);
-    ofDrawLine(x, y, z, newX, newY, newZ);
-    x = newX;
-    y = newY;
-    
+    auto previousPoint = nodesContainer.back();
+    shared_ptr<ofNode> newPoint(new ofNode);
+    newPoint->setParent(*nodesContainer.back());
+    newPoint->move(0, -100, 0);
+    mesh.addColor(ofFloatColor(1.0, 1.0, 0.0));
+    mesh.addVertex(newPoint->getGlobalPosition());
 
 
 }
 
 void Turtle::moveForwardNoLine() {
-    //curAngle which is decided by turnLeft and turnRight functions determine by the degree of which way the line will move
-    float newX = x + (unitDirectionVector.x*length);
-    float newY = y + (unitDirectionVector.y*length);
-
-    x = newX;
-    y = newY;
+//    //curAngle which is decided by turnLeft and turnRight functions determine by the degree of which way the line will move
+//    float newX = x + (unitDirectionVectorU.x*length);
+//    float newY = y + (unitDirectionVectorL.y*length);
+//    float newZ = z + (unitDirectionVectorH.z*length);
+//    x = newX;
+//    y = newY;
+//    z = newZ;
 
 }

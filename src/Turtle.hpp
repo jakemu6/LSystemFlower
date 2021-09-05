@@ -22,7 +22,7 @@ public:
     void setNoDrawForward(string noDrawForward);
 
 
-    void draw(string input, float x, float y, float angle);
+    void draw(string input, float x, float y, float z);
     void moveForward();
     void moveForwardNoLine();
 
@@ -35,16 +35,26 @@ public:
     void rollLeft();
     void rollRight();
     
+    void turnAround();
+    
     ofVec3f rotateVector(ofMatrix3x3 rotationMatrix, ofVec3f pVector);
     
+    ofVboMesh mesh;
+    
+    //the container of nodes can be stored here.
+    //shared_ptr is a pointer object that removes itself when empty of refs or something I think.
+    std::vector<shared_ptr<ofNode> > nodesContainer;
+    std::vector<shared_ptr<ofNode> > bookmarks;
+
+    
 protected:
-    string forward;
+//    string forward;
     string anotherForward;
     string noDrawForward;
 
 
-    string left;
-    string right;
+//    string left;
+//    string right;
     
     float angle;
     
@@ -54,6 +64,11 @@ protected:
     // this unit vector is only for direction
     ofVec3f unitDirectionVector;
     
+    ofVec3f unitDirectionVectorU;
+    ofVec3f unitDirectionVectorL;
+    ofVec3f unitDirectionVectorH;
+
+    
     float length;
     float x;
     float y;
@@ -61,7 +76,14 @@ protected:
     
     vector<float> xHis;
     vector<float> yHis;
-    vector<float> aHis;
+    vector<float> zHis;
+
+    vector<ofVec3f> unitDirectionUnityHis;
+    
+    vector<ofVec3f> unitDirectionUnityHisU;
+    vector<ofVec3f> unitDirectionUnityHisL;
+    vector<ofVec3f> unitDirectionUnityHisH;
+
     
     void pushValues();
     void popValues();

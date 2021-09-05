@@ -32,6 +32,8 @@ class ofApp : public ofBaseApp{
     
     
     float length;
+    float theta;
+
     float axiomLevel;
     
     ofEasyCam cam;
