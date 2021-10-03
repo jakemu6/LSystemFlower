@@ -37,5 +37,5 @@ class ofApp : public ofBaseApp{
     float axiomLevel;
     
     ofEasyCam cam;
-
+    float rotation;
 };

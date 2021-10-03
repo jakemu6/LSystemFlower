@@ -90,12 +90,17 @@ void Turtle::draw(string input, float _x, float _y, float _z) {
             nodesContainer.push_back(newPoint);
             
             //save each segment seperately so that when it's drawn to a mesh the push pop doesn't cause problems
+//            checks each branch in the container to make sure that there are no overlaps but this ends up being slower.
+
             auto newBranch = Branch(*previousPoint, *newPoint);
-            if (!branchAlreadySaved(newBranch)) {
-                //send the branch, a mesh and the length of the branch to this.
-                lineMesh.generate(newBranch, branchMesh);
-                branchContainer.push_back(newBranch);
-            }
+            lineMesh.generate(newBranch, branchMesh);
+
+            
+//            if (!branchAlreadySaved(newBranch)) {
+//                //send the branch, a mesh and the length of the branch to this.
+//                lineMesh.generate(newBranch, branchMesh);
+//                branchContainer.push_back(newBranch);
+//            }
 
         }
         else if(substr[i] == noDrawForward) {
