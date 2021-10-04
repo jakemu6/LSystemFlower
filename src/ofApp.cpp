@@ -2,55 +2,74 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    cam.setDistance(1000);
+    cam.setDistance(50);
     
-//    //addVariable is for values that can be replaced
-//    system.addVariable("F");
+////    //addVariable is for values that can be replaced
+////    system.addVariable("F");
+////
+////    //Print sends to console
+////    system.printVariables();
+////
+////    //addConstant is for values in the string which can not be replaced
+////    system.addConstant("+");
+////    system.addConstant("-");
+////
+////    //Print sends to console
+////    system.printConstants();
 //
-//    //Print sends to console
-//    system.printVariables();
-//
-//    //addConstant is for values in the string which can not be replaced
-//    system.addConstant("+");
-//    system.addConstant("-");
-//
-//    //Print sends to console
-//    system.printConstants();
-
-    //setStart is the starting axiom
+//    //setStart is the starting axiom
     system.setStart("A");
     system.printStart();
-
-    //addRule is for changing the variables in each level
-//    system.addRule(LRule("A", "B-F+CFC+F-D&F^D-F+&&CFC+F+B//"));
-//    system.addRule(LRule("B", "A&F^CFB^F^D^^-F-D^|F^B|FC^F^A//"));
-//    system.addRule(LRule("C", "|D^|F^B-F+C^F^A&&FA&F^C+F+B^F^D//"));
-//    system.addRule(LRule("D", "|CFB-F+B|FA&F^A&&FB-F+B|FC//"));
     
-    system.addRule(LRule("A", "[&FLA]/////[&FLA]///////'[&FLA]"));
-    system.addRule(LRule("F", "S/////F"));
-    system.addRule(LRule("S", "FL"));
-    system.addRule(LRule("L", "F"));
+    system.addRule(LRule("A", "FB"));
+    system.addRule(LRule("B", "FC"));
+    system.addRule(LRule("C", "FD"));
+    system.addRule(LRule("D", "FE"));
+    system.addRule(LRule("E", "[W][Y][X][Y]"));
+//    system.addRule(LRule("W", "+F"));
+//    system.addRule(LRule("X", "-FA"));
+    system.addRule(LRule("W", "+FA", 0.5, "-FA", 0.5));
+
+    system.addRule(LRule("Y", "&FA", 0.5, "^FA", 0.5));
+//    system.addRule(LRule("Y", "^FA"));
+
+    //Build out the sentances and store in into this vector.
+    //0 - the rules in vector string format.
+    //1 - the level of rewrite
+    //2 - starting axiom
+    // returns a vector of the strings at each level.
+//    resultStochastic = ofxLSystemGrammar::buildSentences(systemRules, maxAxiomLevel, "A");
 
 
     system.printRules();
     
     turtle = Turtle();
     
-    length = 10;
+    length = 0.5;
     theta = 22.5;
-    axiomLevel = 5;
+    axiomLevel = 1;
     
     turtle.setLength(length);
     turtle.setAngle(theta);
-    axiom = system.getLevel(axiomLevel);
-    
+//    axiom = system.getLevel(30);
+    //is actually getting 31 levels because it also retrieves 0
+    results = system.getLevels(maxAxiomLevel + 1);
     rotation = 0;
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-    rotation += 0.5;
+    rotation += 0.1;
+    
+    
+    if (grow) {
+        axiomLevel += 0.1;
+    }
+
+    if (axiomLevel > maxAxiomLevel) {
+        axiomLevel = maxAxiomLevel;
+    }
+    axiom = system.getLevel(axiomLevel);
 
 }
 
@@ -64,14 +83,17 @@ void ofApp::draw(){
     ofRotateYDeg(rotation);
     ofBackground(0, 0, 0);
     ofNoFill();
-    turtle.draw(axiom, 0, 0, 0); // input string, x, y, z
+    turtle.draw(results[axiomLevel], 0, 0, 0); // input string, x, y, z
+//    turtle.draw(resultStochastic[axiomLevel], 0, 0, 0); // input string, x, y, z
     ofPopMatrix();
     cam.end();
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-//        ofLog() << "axiom = " << axiom;
+
+
+    ofLog() << "axiom - " << axiomLevel << " result : " << results[axiomLevel];
 
 }
 

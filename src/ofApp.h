@@ -3,6 +3,7 @@
 #include "ofMain.h"
 #include "Turtle.hpp"
 #include "LSystem.h"
+//#include "ofxLSystemGrammar.h"
 
 class ofApp : public ofBaseApp{
 
@@ -30,12 +31,34 @@ class ofApp : public ofBaseApp{
     
     LSys system;
     
+//    //write all the rules in here
+//    vector<string> systemRules {
+////        "0.99 -> A -> FB",
+////        "0.99 -> B -> FC",
+////        "0.99 -> C -> FD",
+////        "0.99 -> D -> FE",
+////        "E -> [Z][Z][Z][Z]",
+//        "0.25 -> Z -> +FA",
+//        "0.25 -> Z -> -FA",
+//        "0.25 -> Z -> &FA",
+//        "0.25 -> Z -> ^FA"
+//    };
+//
+//    //the result of the rules are stored in here.
+    vector<string> results;
+    
     
     float length;
     float theta;
 
     float axiomLevel;
     
+    //always getting an exta level than what is written here. so for 31 levels you write 30
+    float maxAxiomLevel = 30;
+    
     ofEasyCam cam;
     float rotation;
+    
+    bool grow = true;
+    float growthRate = 0.1;
 };

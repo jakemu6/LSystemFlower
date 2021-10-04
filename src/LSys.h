@@ -35,6 +35,8 @@ public:
 	
 	string getNextLevel();
 	string getLevel(int level);
+    
+    vector<string> getLevels(int _level);
 	
 	vector<string> variables;
 	vector<string> constants;

@@ -14,6 +14,28 @@ LRule::LRule(string pre, string succ){
 	successor = succ;
 }
 
+LRule::LRule(string pre, string succ1, float probability1, string succ2, float probability2){
+    stochasticPredecessor = pre;
+    stochasticSuccessor1 = succ1;
+    stochasticSuccessor2 = succ2;
+
+    stochasticSuccessor1Probability = probability1;
+    stochasticSuccessor2Probability = probability2;
+}
+
+string LRule::stochasticProbability(){
+    if (stochasticSuccessor1Probability + stochasticSuccessor2Probability == 1.0) {
+        float r = ofRandom(1.0);
+        if (r < stochasticSuccessor1Probability) {
+            return stochasticSuccessor1;
+        } else if ( r > stochasticSuccessor1Probability) {
+            return stochasticSuccessor2;
+        }
+    } else {
+        ofLog() << "error: probabilities are not adding up to 1.0";
+    }
+}
+
 void LRule::print(){
 	cout << "\t\t\t\t" << predecessor << "->" << successor << endl;
 }

@@ -88,7 +88,11 @@ string LSys::getNextLevel(){
 			if(substr[i] == rules[j].predecessor){
 				substr[i] = rules[j].successor;
 				j = rules.size();		// if one rule is applied, skip rest of rules
-			}
+            } else if(substr[i] == rules[j].stochasticPredecessor){     //if not a predecessor check if it is stochastic
+//                ofLog() << rules[j].stochasticProbability();
+                substr[i] = rules[j].stochasticProbability();
+                j = rules.size();        // if one rule is applied, skip rest of rules
+            }
 		}
 	}
 	
@@ -109,4 +113,15 @@ string LSys::getLevel(int _level){
 		result = getNextLevel();
 	}
 	return result;
+}
+
+vector<string> LSys::getLevels(int _level){
+    curString = start;
+    vector<string> finalSentence;
+    string result;
+    for(int i = 0; i < _level; i++){
+        result = getNextLevel();
+        finalSentence.push_back(result);
+    }
+    return finalSentence;
 }
