@@ -64,8 +64,6 @@ void Turtle::draw(string input, float _x, float _y, float _z) {
     shared_ptr<ofNode> root(new ofNode);
     root->setPosition(x, y, z);
     nodesContainer.push_back(root);
-//    mesh.addVertex(root->getGlobalPosition());
-//    mesh.addColor(ofFloatColor(1.0, 1.0, 1.0));
     
 
     //get length of the input string
@@ -85,8 +83,6 @@ void Turtle::draw(string input, float _x, float _y, float _z) {
             shared_ptr<ofNode> newPoint(new ofNode);
             newPoint->setParent(*nodesContainer.back());
             newPoint->move(0, length, 0);
-//            mesh.addColor(ofFloatColor(1.0, 1.0, 1.0));
-//            mesh.addVertex(newPoint->getGlobalPosition());
             nodesContainer.push_back(newPoint);
             
             //save each segment seperately so that when it's drawn to a mesh the push pop doesn't cause problems
@@ -160,6 +156,16 @@ void Turtle::draw(string input, float _x, float _y, float _z) {
             rotatingPoint->setParent(*nodesContainer.back());
             rotatingPoint->rollDeg(180);
             nodesContainer.push_back(rotatingPoint);
+        }
+        else if(substr[i] == "L") {
+            //DRAW LEAF
+            shared_ptr<ofNode> flowerPoint(new ofNode);
+            flowerPoint->setParent(*nodesContainer.back());
+            ofEnableDepthTest();
+            ofSetColor(100);
+            ofFill();
+            ofDrawSphere(flowerPoint->getGlobalPosition(), 1);
+            ofDisableDepthTest();
         }
     }
     branchMesh.draw();

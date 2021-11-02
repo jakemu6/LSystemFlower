@@ -31,30 +31,20 @@ class ofApp : public ofBaseApp{
     
     LSys system;
     
-//    //write all the rules in here
-//    vector<string> systemRules {
-////        "0.99 -> A -> FB",
-////        "0.99 -> B -> FC",
-////        "0.99 -> C -> FD",
-////        "0.99 -> D -> FE",
-////        "E -> [Z][Z][Z][Z]",
-//        "0.25 -> Z -> +FA",
-//        "0.25 -> Z -> -FA",
-//        "0.25 -> Z -> &FA",
-//        "0.25 -> Z -> ^FA"
-//    };
-//
-//    //the result of the rules are stored in here.
+    //the result of the rules are stored in here.
     vector<string> results;
     
-    
+    //length of segments
     float length;
+    
+    //angle of segments
     float theta;
 
+    //axiom level that is actually being drawn.
     float axiomLevel;
     
     //always getting an exta level than what is written here. so for 31 levels you write 30
-    float maxAxiomLevel = 30;
+    float maxAxiomLevel = 75;
     
     ofEasyCam cam;
     float rotation;

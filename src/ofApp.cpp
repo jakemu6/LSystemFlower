@@ -2,38 +2,33 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    cam.setDistance(50);
+    cam.setDistance(100);
     
-////    //addVariable is for values that can be replaced
-////    system.addVariable("F");
-////
-////    //Print sends to console
-////    system.printVariables();
-////
-////    //addConstant is for values in the string which can not be replaced
-////    system.addConstant("+");
-////    system.addConstant("-");
-////
-////    //Print sends to console
-////    system.printConstants();
-//
+
 //    //setStart is the starting axiom
-    system.setStart("A");
+    system.setStart("Q");
     system.printStart();
     
-    system.addRule(LRule("A", "FB"));
-    system.addRule(LRule("B", "FC"));
-    system.addRule(LRule("C", "FD"));
-    system.addRule(LRule("D", "FE"));
-    system.addRule(LRule("E", "[W][Y][X][Y]"));
-//    system.addRule(LRule("W", "+F"));
-//    system.addRule(LRule("X", "-FA"));
-    system.addRule(LRule("W", "+FA", 0.5, "-FA", 0.5));
+    system.addRule(LRule("Q", "FW"));
+    system.addRule(LRule("W", "FE"));
+    system.addRule(LRule("E", "FR"));
+    system.addRule(LRule("R", "FT"));
+    system.addRule(LRule("T", "FY"));
+    system.addRule(LRule("Y", "FU"));
+    system.addRule(LRule("U", "FI"));
+    system.addRule(LRule("I", "FO"));
+    system.addRule(LRule("O", "FP"));
+    system.addRule(LRule("P", "[C][V]"));
 
-    system.addRule(LRule("Y", "&FA", 0.5, "^FA", 0.5));
+    system.addRule(LRule("C", "Z", 0.9, "L", 0.1));
+    system.addRule(LRule("V", "X", 0.9, "L", 0.1));
+
+    system.addRule(LRule("Z", "+FQ", 0.9, "-FL", 0.1));
+    system.addRule(LRule("X", "&FQ", 0.5, "^FQ", 0.5));
+    
+    
 //    system.addRule(LRule("Y", "^FA"));
 
-    //Build out the sentances and store in into this vector.
     //0 - the rules in vector string format.
     //1 - the level of rewrite
     //2 - starting axiom
@@ -45,32 +40,33 @@ void ofApp::setup(){
     
     turtle = Turtle();
     
-    length = 0.5;
+    length = 1;
     theta = 22.5;
-    axiomLevel = 1;
+    axiomLevel = 0.2;
     
     turtle.setLength(length);
     turtle.setAngle(theta);
-//    axiom = system.getLevel(30);
-    //is actually getting 31 levels because it also retrieves 0
+    
+    //Build out the sentances and store in into this vector.
     results = system.getLevels(maxAxiomLevel + 1);
     rotation = 0;
+    
+
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-    rotation += 0.1;
+    rotation += 1;
     
     
     if (grow) {
-        axiomLevel += 0.1;
+        axiomLevel += 1;
     }
 
     if (axiomLevel > maxAxiomLevel) {
         axiomLevel = maxAxiomLevel;
     }
     axiom = system.getLevel(axiomLevel);
-
 }
 
 //--------------------------------------------------------------
@@ -83,7 +79,7 @@ void ofApp::draw(){
     ofRotateYDeg(rotation);
     ofBackground(0, 0, 0);
     ofNoFill();
-    turtle.draw(results[axiomLevel], 0, 0, 0); // input string, x, y, z
+    turtle.draw(results[axiomLevel], 0, -50, 0); // input string, x, y, z
 //    turtle.draw(resultStochastic[axiomLevel], 0, 0, 0); // input string, x, y, z
     ofPopMatrix();
     cam.end();
