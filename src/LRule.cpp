@@ -23,6 +23,22 @@ LRule::LRule(string pre, string succ1, float probability1, string succ2, float p
     stochasticSuccessor2Probability = probability2;
 }
 
+LRule::LRule(string pre, string contextDir, string context, string succ){
+    CSPredecessor = pre;
+    CSSuccessor = succ;
+    CSContext = context;
+    CSDirection = contextDir;
+}
+
+bool LRule::checkContext(string context) {
+    if (CSContext == context) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+
 string LRule::stochasticProbability(){
     if (stochasticSuccessor1Probability + stochasticSuccessor2Probability == 1.0) {
         float r = ofRandom(1.0);
@@ -32,7 +48,7 @@ string LRule::stochasticProbability(){
             return stochasticSuccessor2;
         }
     } else {
-        ofLog() << "error: probabilities are not adding up to 1.0";
+        ofLog() << "error: stochastic probabilities are not adding up to 1.0";
     }
 }
 

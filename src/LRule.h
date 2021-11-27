@@ -19,12 +19,26 @@ public:
     //stochastic LRule
     LRule(string pre, string succ1, float probability1, string succ2, float probability2);
     
+    //Context Sensitive Rule
+    LRule(string pre, string contextDir, string context, string succ);
+
     
 	void print();
     string stochasticProbability();
+    
+    bool checkContext(string context);
+    string contextSensitive();
+
 	
 	friend bool operator== (LRule &rule1, LRule &rule2);
 
+    //CS-ContextSensitive
+    string CSPredecessor;
+    string CSSuccessor;
+    string CSContext;
+    string CSDirection;
+    
+    //Stochastic
     string stochasticPredecessor;
     string stochasticSuccessor1;
     float stochasticSuccessor1Probability;
@@ -32,7 +46,7 @@ public:
     float stochasticSuccessor2Probability;
 
     
-
+    //No-Contex
 	string predecessor;
 	string successor;	
 };

@@ -157,8 +157,8 @@ void Turtle::draw(string input, float _x, float _y, float _z) {
             rotatingPoint->rollDeg(180);
             nodesContainer.push_back(rotatingPoint);
         }
-        else if(substr[i] == "L") {
-            //DRAW LEAF
+        else if(substr[i] == "K") {
+            //DRAW Flower
             shared_ptr<ofNode> flowerPoint(new ofNode);
             flowerPoint->setParent(*nodesContainer.back());
             ofEnableDepthTest();

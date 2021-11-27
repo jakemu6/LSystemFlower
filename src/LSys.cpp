@@ -82,19 +82,68 @@ string LSys::getNextLevel(){
 	for(int i = 0; i < length; i++){
 		substr[i] = curString.substr(i,1);
 	}
+    
+//THIS IS BY RULE FIRST
+    //start with first rule
+    for (int i = 0; i < rules.size(); i++) {
+        //go through each letter with each rule
+        for (int j = 0; j < length; j++) {
+            if (rules[i].CSPredecessor == substr[j]) {
+                //check the directions
+                if(rules[i].CSDirection == "left") {
+                    if (rules[i].checkContext(substr[j-1])) {
+                        substr[j] = rules[i].CSSuccessor;
+                        //after this rule is applied skip over the letters changed
+                        j += rules[i].CSSuccessor.length();
+                    }
+                } else if (rules[i].CSDirection == "right") {
+                    if (rules[i].checkContext(substr[j+1])) {
+                        substr[j] = rules[i].CSSuccessor;
+                        //after this rule is applied skip over the letters changed
+                        j += rules[i].CSSuccessor.length();
+                    }
+                } else {
+                    ofLog() << "Type left or right for context direction";
+                }
+                
+                
 
-	for(int i = 0; i < length; i++){	// apply all rules
-		for(int j = 0; j < rules.size(); j++){
-			if(substr[i] == rules[j].predecessor){
-				substr[i] = rules[j].successor;
-				j = rules.size();		// if one rule is applied, skip rest of rules
-            } else if(substr[i] == rules[j].stochasticPredecessor){     //if not a predecessor check if it is stochastic
-//                ofLog() << rules[j].stochasticProbability();
-                substr[i] = rules[j].stochasticProbability();
-                j = rules.size();        // if one rule is applied, skip rest of rules
+            } else if (rules[i].predecessor == substr[j]) {
+                substr[j] = rules[i].successor;
+                j += rules[i].successor.length();
+
+            } else if (rules[i].stochasticPredecessor == substr[j]) {
+                string stochSuccessor = rules[i].stochasticProbability();
+                substr[j] = stochSuccessor;
+                j += stochSuccessor.length();
+
             }
-		}
-	}
+        }
+    }
+    
+    
+//THIS IS BY LETTER BY LETTER
+//    //for each i which is each letter in the string+
+//	for(int i = 0; i < length; i++){
+//        // apply all rules in the rules vector
+//		for(int j = 0; j < rules.size(); j++){
+//            //do context sensitive rules first
+//            //if the rule predecessor matches a letter in the string execute rule
+//            if(substr[i] == rules[j].CSPredecessor){
+//                //check if the left context matches the one in the rules
+//                if (rules[j].checkLeftContext(substr[i-1])) {
+//                    substr[i] = rules[j].CSSuccessor;
+//                    j = rules.size();        // if one rule is applied, skip rest of rules only applied if the left context matches.
+//                }
+//            } else if(substr[i] == rules[j].predecessor){
+//				substr[i] = rules[j].successor;
+//				j = rules.size();		// if one rule is applied, skip rest of rules
+//            } else if(substr[i] == rules[j].stochasticPredecessor){     //if not a predecessor check if it is stochastic
+//                substr[i] = rules[j].stochasticProbability();
+//                j = rules.size();        // if one rule is applied, skip rest of rules
+//            }
+//		}
+//	}
 	
 	string result;						// merge into resulting string
 	for(int i = 0; i < length; i++){
@@ -119,6 +168,10 @@ vector<string> LSys::getLevels(int _level){
     curString = start;
     vector<string> finalSentence;
     string result;
+    
+    //push the first starting sentence so that it is the 0 axiom
+    finalSentence.push_back(curString);
+    
     for(int i = 0; i < _level; i++){
         result = getNextLevel();
         finalSentence.push_back(result);
