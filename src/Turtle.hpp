@@ -39,9 +39,6 @@ public:
     
 protected:
 //    string forward;
-    string anotherForward;
-    string noDrawForward;
-
 
 //    string left;
 //    string right;

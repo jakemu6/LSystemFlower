@@ -87,7 +87,6 @@ void Turtle::draw(string input, float _x, float _y, float _z) {
             
             //save each segment seperately so that when it's drawn to a mesh the push pop doesn't cause problems
 //            checks each branch in the container to make sure that there are no overlaps but this ends up being slower.
-
             auto newBranch = Branch(*previousPoint, *newPoint);
             lineMesh.generate(newBranch, branchMesh);
 
@@ -98,8 +97,6 @@ void Turtle::draw(string input, float _x, float _y, float _z) {
 //                branchContainer.push_back(newBranch);
 //            }
 
-        }
-        else if(substr[i] == noDrawForward) {
         }
         else if(substr[i] == "+") {
             //TURN LEFT

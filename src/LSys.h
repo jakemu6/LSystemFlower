@@ -33,6 +33,8 @@ public:
 	void setStart(string start);
 	void printStart();
 	
+    bool parseBoolean(const std::string &str);
+    
 	string getNextLevel();
 	string getLevel(int level);
     

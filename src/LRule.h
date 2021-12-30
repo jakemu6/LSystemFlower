@@ -22,6 +22,14 @@ public:
     //Context Sensitive Rule
     LRule(string pre, string contextDir, string context, string succ);
 
+//    //Parametric Rules
+    LRule(string pre, string succ, string parametric);
+    string paraPredecessor;
+    string parameterKey;
+    string parameterBool;
+    string parameterSuccessor;
+
+    
     
 	void print();
     string stochasticProbability();

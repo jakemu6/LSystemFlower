@@ -4,11 +4,11 @@
 void ofApp::setup(){
     cam.setDistance(100);
   
-//    //CS TESTING
-    system.setStart("aaaabaaaaaaaaaaaa");
-    system.addRule(LRule("a", "b", "b"));
-//    system.addRule(LRule("b", "a"));
-    
+////    //CS TESTING
+//    system.setStart("aaaabaaaaaaaaaaaa");
+//    system.addRule(LRule("a", "b", "b"));
+////    system.addRule(LRule("b", "a"));
+//
     
 //    FLOWERING
 //    system.setStart("a");
@@ -42,10 +42,20 @@ void ofApp::setup(){
 ////
 //    system.printRules();
     
+    //SIMPLE RACEME
+    system.setStart("HHHHA(5,0)GGGG");
+//    system.addRule(LRule("a", "+F[L]a"));
+//    system.addRule(LRule("A(t):t<30000", "C", "Blank"));
+    system.addRule(LRule("A(x,y):y<=3", "A(x*2,x+y)", "Blank"));
+    system.addRule(LRule("A(x,y):y>3", "B(x)A(x/y,0)", "Blank"));
+    system.addRule(LRule("B(x):x>=1", "B(x-1)", "Blank"));
+    system.addRule(LRule("B(x):x<1", "C", "Blank"));
+
+    
     turtle = Turtle();
     
     length = 1;
-    theta = 22.5;
+    theta = 5;
     axiomLevel = 0;
     
     turtle.setLength(length);
@@ -97,7 +107,7 @@ void ofApp::keyPressed(int key){
 
 //    results = system.getLevels(maxAxiomLevel + 1);
 
-    ofLog() << "axiom - " << axiomLevel << " result : " << results[axiomLevel];
+//    ofLog() << "axiom - " << axiomLevel << " result : " << results[axiomLevel];
 
 }
 

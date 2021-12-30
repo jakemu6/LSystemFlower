@@ -3,6 +3,9 @@
 #include "ofMain.h"
 #include "Turtle.hpp"
 #include "LSystem.h"
+
+
+
 //#include "ofxLSystemGrammar.h"
 
 class ofApp : public ofBaseApp{
@@ -44,11 +47,13 @@ class ofApp : public ofBaseApp{
     float axiomLevel;
     
     //always getting an exta level than what is written here. so for 31 levels you write 30
-    float maxAxiomLevel = 40;
+    float maxAxiomLevel = 3;
     
     ofEasyCam cam;
     float rotation;
     
     bool grow = true;
     float growthRate = 0.1;
+    
+
 };
