@@ -14,6 +14,9 @@
 class LRule {
 	
 public:
+    
+    string ruleType;
+    
 	LRule(string pre, string succ);
     
     //stochastic LRule
@@ -23,7 +26,7 @@ public:
     LRule(string pre, string contextDir, string context, string succ);
 
 //    //Parametric Rules
-    LRule(string pre, string succ, string parametric);
+    LRule(string pre, string succ, string _ruleType);
     string paraPredecessor;
     string parameterKey;
     string parameterBool;

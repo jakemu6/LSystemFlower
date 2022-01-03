@@ -30,7 +30,10 @@ LRule::LRule(string pre, string contextDir, string context, string succ){
     CSDirection = contextDir;
 }
 
-LRule::LRule(string pre, string succ, string parametric){
+LRule::LRule(string pre, string succ, string _ruleType){
+    //record ruletype
+    ruleType = _ruleType;
+    
     //divide the different parts of the predacessor
     vector<string> splitString = ofSplitString(pre, ":");
     

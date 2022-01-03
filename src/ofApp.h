@@ -47,7 +47,7 @@ class ofApp : public ofBaseApp{
     float axiomLevel;
     
     //always getting an exta level than what is written here. so for 31 levels you write 30
-    float maxAxiomLevel = 3;
+    float maxAxiomLevel = 11;
     
     ofEasyCam cam;
     float rotation;

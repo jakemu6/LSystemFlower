@@ -43,13 +43,16 @@ void ofApp::setup(){
 //    system.printRules();
     
     //SIMPLE RACEME
-    system.setStart("HHHHA(5,0)GGGG");
+    system.setStart("A(5,7)");
 //    system.addRule(LRule("a", "+F[L]a"));
 //    system.addRule(LRule("A(t):t<30000", "C", "Blank"));
-    system.addRule(LRule("A(x,y):y<=3", "A(x*2,x+y)", "Blank"));
-    system.addRule(LRule("A(x,y):y>3", "B(x)A(x/y,0)", "Blank"));
-    system.addRule(LRule("B(x):x>=1", "B(x-1)", "Blank"));
-    system.addRule(LRule("B(x):x<1", "C", "Blank"));
+    
+    system.addRule(LRule("B(x):x>=1", "B(x-1)", "parametric"));
+    system.addRule(LRule("B(x):x<1", "C", "parametric"));
+    system.addRule(LRule("A(x,y):y>3", "B(x)A(x/y,0)", "parametric"));
+    system.addRule(LRule("A(x,y):y<=3", "A(x*2,x+y)", "parametric"));
+
+
 
     
     turtle = Turtle();
