@@ -34,32 +34,37 @@ LRule::LRule(string pre, string succ, string _ruleType){
     //record ruletype
     ruleType = _ruleType;
     
-    //divide the different parts of the predacessor
-    vector<string> splitString = ofSplitString(pre, ":");
-    
-    //make a substring of the length of first split to get the pre and parameter
-    int length = splitString[0].length();
-    string substr[length];
-    for(int i = 0; i < length; i++){
-        substr[i] = splitString[0].substr(i,1);
-    }
-
-    //getting the positions of the parentheses and then acquiring the contents between
-    unsigned open = splitString[0].find("(");
-    unsigned closed = splitString[0].find(")");
-    
-    //get the string between the parentheses - the parentheses
-    string parStr = splitString[0].substr(open + 1, closed - 2);
-    string parPre = splitString[0].substr(0 , open);
+    if (ruleType == "parametric") {
+        //divide the different parts of the predacessor
+        vector<string> splitString = ofSplitString(pre, ":");
         
-    //identified the pre and parameter by the position of parentheses and colon
-    //in future parKey may need to be separated further to check if there are two parameters
-    paraPredecessor = parPre;
-    parameterKey = parStr;
-    parameterBool = splitString[1];
-    parameterSuccessor = succ;
-    
-    
+        //make a substring of the length of first split to get the pre and parameter
+        int length = splitString[0].length();
+        string substr[length];
+        for(int i = 0; i < length; i++){
+            substr[i] = splitString[0].substr(i,1);
+        }
+
+        //getting the positions of the parentheses and then acquiring the contents between
+        unsigned open = splitString[0].find("(");
+        unsigned closed = splitString[0].find(")");
+        
+        //get the string between the parentheses - the parentheses
+        string parStr = splitString[0].substr(open + 1, closed - 2);
+        string parPre = splitString[0].substr(0 , open);
+            
+        //identified the pre and parameter by the position of parentheses and colon
+        //in future parKey may need to be separated further to check if there are two parameters
+        predecessor = parPre;
+        parameterKey = parStr;
+        parameterBool = splitString[1];
+        successor = succ;
+        
+    } else if (ruleType == "rewrite") {
+        //reminder that rewrite rules predecessors can only be one letter for now
+        predecessor = pre;
+        successor = succ;
+    }
 }
 
 bool LRule::checkContext(string context) {

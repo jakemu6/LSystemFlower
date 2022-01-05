@@ -4,61 +4,30 @@
 void ofApp::setup(){
     cam.setDistance(100);
   
-////    //CS TESTING
-//    system.setStart("aaaabaaaaaaaaaaaa");
-//    system.addRule(LRule("a", "b", "b"));
-////    system.addRule(LRule("b", "a"));
-//
     
-//    FLOWERING
-//    system.setStart("a");
-//    system.addRule(LRule("a", "I[L]a", 0.9, "I[L]A", 0.1));
-//    system.addRule(LRule("A", "K"));
-//
-//    system.addRule(LRule("I", "F"));
-//    system.addRule(LRule("L", "-F", 0.5, "+F", 0.5));
-    
-//ROOT SYSTEM
-//    //setStart is the starting axiom
-//    system.setStart("Q");
-//    system.printStart();
-//
-//    system.addRule(LRule("Q", "FW"));
-//    system.addRule(LRule("W", "FE"));
-//    system.addRule(LRule("E", "FR"));
-//    system.addRule(LRule("R", "FT"));
-//    system.addRule(LRule("T", "FY"));
-//    system.addRule(LRule("Y", "FU"));
-//    system.addRule(LRule("U", "FI"));
-//    system.addRule(LRule("I", "FO"));
-//    system.addRule(LRule("O", "FP"));
-//    system.addRule(LRule("P", "[C][V]"));
-//
-//    system.addRule(LRule("C", "Z", 0.9, "L", 0.1));
-//    system.addRule(LRule("V", "X", 0.9, "L", 0.1));
-//
-//    system.addRule(LRule("Z", "+FQ", 0.9, "-FL", 0.1));
-//    system.addRule(LRule("X", "&FQ", 0.5, "^FQ", 0.5));
-////
-//    system.printRules();
-    
-    //SIMPLE RACEME
-    system.setStart("A(5,7)");
-//    system.addRule(LRule("a", "+F[L]a"));
-//    system.addRule(LRule("A(t):t<30000", "C", "Blank"));
-    
-    system.addRule(LRule("B(x):x>=1", "B(x-1)", "parametric"));
-    system.addRule(LRule("B(x):x<1", "C", "parametric"));
-    system.addRule(LRule("A(x,y):y>3", "B(x)A(x/y,0)", "parametric"));
-    system.addRule(LRule("A(x,y):y<=3", "A(x*2,x+y)", "parametric"));
+    //Figure 3.5
+    system.setStart("I(9)a(13)");
+    system.addRule(LRule("a(t):t>0", "[&(70)L]/(137.5)I(10)a(t-1)", "parametric"));
+    system.addRule(LRule("a(t):t=0", "[&(70)L]/(137.5)I(10)A", "parametric"));
+    system.addRule(LRule("A", "[&(18)u(4)FFI(10)I(5)X(5)KKKK]/(137.5)I(8)A", "rewrite"));
 
+    system.addRule(LRule("I(t):t>0", "FI(t-1)", "parametric"));
+    system.addRule(LRule("I(t):t=0", "F", "parametric"));
+    system.addRule(LRule("u(t):t>0", "&(9)u(t-1)", "parametric"));
+    system.addRule(LRule("u(t):t=0", "&(9)", "parametric"));
+    
+    system.addRule(LRule("L", "[{.-FI(7)+FI(7)+FI(7)}][{.+FI(7)-FI(7)-FI(7)}]", "rewrite"));
+    system.addRule(LRule("K", "[&{.+FI(2)--FI(2)}][&{.-FI(2)++FI(2)}]/(90)", "rewrite"));
+    
+    system.addRule(LRule("X(t):t>0", "X(t-1)", "parametric"));
+    system.addRule(LRule("X(t):t=0", "^(50)[[-GGGG++[GGG[++G{.].].].++GGGG.--GGG.__G.}]%", "parametric"));
 
-
+    
     
     turtle = Turtle();
     
     length = 1;
-    theta = 5;
+    theta = 18;
     axiomLevel = 0;
     
     turtle.setLength(length);
@@ -73,17 +42,24 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-    rotation += 1;
-    ofLog() << "axiom - " << axiomLevel << " result : " << results[axiomLevel];
+    rotation += 2;
+//    ofLog() << "axiom - " << axiomLevel << " result : " << results[axiomLevel];
 
     
     if (grow) {
         axiomLevel += 1;
     }
 
-    if (axiomLevel > maxAxiomLevel) {
-        axiomLevel = maxAxiomLevel;
+    if (loop) {
+        if (axiomLevel > maxAxiomLevel) {
+            axiomLevel = 0;
+        }
+    } else {
+        if (axiomLevel > maxAxiomLevel) {
+            axiomLevel = maxAxiomLevel;
+        }
     }
+
     axiom = system.getLevel(axiomLevel);
 }
 

@@ -154,16 +154,16 @@ void Turtle::draw(string input, float _x, float _y, float _z) {
             rotatingPoint->rollDeg(180);
             nodesContainer.push_back(rotatingPoint);
         }
-        else if(substr[i] == "K") {
-            //DRAW Flower
-            shared_ptr<ofNode> flowerPoint(new ofNode);
-            flowerPoint->setParent(*nodesContainer.back());
-            ofEnableDepthTest();
-            ofSetColor(100);
-            ofFill();
-            ofDrawSphere(flowerPoint->getGlobalPosition(), 1);
-            ofDisableDepthTest();
-        }
+//        else if(substr[i] == "K") {
+//            //DRAW Flower
+//            shared_ptr<ofNode> flowerPoint(new ofNode);
+//            flowerPoint->setParent(*nodesContainer.back());
+//            ofEnableDepthTest();
+//            ofSetColor(100);
+//            ofFill();
+//            ofDrawSphere(flowerPoint->getGlobalPosition(), 1);
+//            ofDisableDepthTest();
+//        }
     }
     branchMesh.draw();
 
