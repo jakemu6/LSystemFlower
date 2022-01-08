@@ -90,6 +90,8 @@
 		CBD9E6C7277806B20075B308 /* muParserTokenReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = muParserTokenReader.h; sourceTree = "<group>"; };
 		CBD9E6C82781A4670075B308 /* stringEdit.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = stringEdit.cpp; sourceTree = "<group>"; };
 		CBD9E6C92781A4670075B308 /* stringEdit.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = stringEdit.hpp; sourceTree = "<group>"; };
+		CBD9E6CE27869B220075B308 /* muParserBase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = muParserBase.h; sourceTree = "<group>"; };
+		CBD9E6CF27869B410075B308 /* muParserBase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = muParserBase.h; path = "../../../../../../../../../Downloads/muparser-2.3.2 2/include/muParserBase.h"; sourceTree = "<group>"; };
 		E112B3AEBEA2C091BF2B40AE /* ofxPanel.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = ofxPanel.cpp; path = ../../../addons/ofxGui/src/ofxPanel.cpp; sourceTree = SOURCE_ROOT; };
 		E42962AC2163EDD300A6A9E2 /* ofCamera.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ofCamera.cpp; path = ../../../libs/openFrameworks/3d/ofCamera.cpp; sourceTree = SOURCE_ROOT; };
 		E42962AD2163EDD300A6A9E2 /* ofMesh.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ofMesh.h; path = ../../../libs/openFrameworks/3d/ofMesh.h; sourceTree = SOURCE_ROOT; };
@@ -339,6 +341,30 @@
 				480A780D8D0308AE4A368801 /* ofxGui */,
 			);
 			name = addons;
+			sourceTree = "<group>";
+		};
+		CBD9E6CD27869B220075B308 /* muParser Files */ = {
+			isa = PBXGroup;
+			children = (
+				CBD9E6C0277806B10075B308 /* muParser.h */,
+				CBD9E6CE27869B220075B308 /* muParserBase.h */,
+				CBD9E6CF27869B410075B308 /* muParserBase.h */,
+				CBD9E6BF277806B10075B308 /* muParserBytecode.h */,
+				CBD9E6BE277806B10075B308 /* muParserCallback.h */,
+				CBD9E6C1277806B10075B308 /* muParserDef.h */,
+				CBD9E6C4277806B20075B308 /* muParserError.h */,
+				CBD9E6C2277806B10075B308 /* muParserFixes.h */,
+				CBD9E6C5277806B20075B308 /* muParserTemplateMagic.h */,
+				CBD9E6C6277806B20075B308 /* muParserToken.h */,
+				CBD9E6C7277806B20075B308 /* muParserTokenReader.h */,
+				CBD9E6B5277806580075B308 /* muParser.cpp */,
+				CBD9E6B6277806590075B308 /* muParserBase.cpp */,
+				CBD9E6B4277806580075B308 /* muParserBytecode.cpp */,
+				CBD9E6B7277806590075B308 /* muParserCallback.cpp */,
+				CBD9E6B3277806580075B308 /* muParserError.cpp */,
+				CBD9E6B2277806580075B308 /* muParserTokenReader.cpp */,
+			);
+			path = "muParser Files";
 			sourceTree = "<group>";
 		};
 		E42962AA2163EDD300A6A9E2 /* openFrameworks */ = {
@@ -652,24 +678,10 @@
 				97E519F2F48AF2550AFCE3A9 /* Turtle.cpp */,
 				BCDB37DDD95C3B99CAF9D3D0 /* Geometry.hpp */,
 				EB21F635AC8B94BB840CA304 /* LSystem.h */,
-				CBD9E6C0277806B10075B308 /* muParser.h */,
 				CBD9E6C3277806B20075B308 /* muParserBase.h */,
-				CBD9E6BF277806B10075B308 /* muParserBytecode.h */,
-				CBD9E6BE277806B10075B308 /* muParserCallback.h */,
-				CBD9E6C1277806B10075B308 /* muParserDef.h */,
-				CBD9E6C4277806B20075B308 /* muParserError.h */,
-				CBD9E6C2277806B10075B308 /* muParserFixes.h */,
-				CBD9E6C5277806B20075B308 /* muParserTemplateMagic.h */,
-				CBD9E6C6277806B20075B308 /* muParserToken.h */,
-				CBD9E6C7277806B20075B308 /* muParserTokenReader.h */,
-				CBD9E6B5277806580075B308 /* muParser.cpp */,
-				CBD9E6B6277806590075B308 /* muParserBase.cpp */,
-				CBD9E6B4277806580075B308 /* muParserBytecode.cpp */,
-				CBD9E6B7277806590075B308 /* muParserCallback.cpp */,
-				CBD9E6B3277806580075B308 /* muParserError.cpp */,
-				CBD9E6B2277806580075B308 /* muParserTokenReader.cpp */,
 				CBD9E6C82781A4670075B308 /* stringEdit.cpp */,
 				CBD9E6C92781A4670075B308 /* stringEdit.hpp */,
+				CBD9E6CD27869B220075B308 /* muParser Files */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;

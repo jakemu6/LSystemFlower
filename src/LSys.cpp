@@ -298,44 +298,46 @@ string LSys::getNextLevel(){
 //        sub.push_back(curString.substr(i,1));
 	}
     
-//THIS IS BY RULE FIRST
-    //start with first rule
-    for (int i = 0; i < rules.size(); i++) {
-        
-
-        for (int j = 0; j < length; j++) {
-
-            
-            if (rules[i].CSPredecessor == substring[j]) {
-
-                //check the directions
-                if(rules[i].CSDirection == "left") {
-                    if (rules[i].checkContext(substring[j-1])) {
-                        substring[j] = rules[i].CSSuccessor;
-                        //after this rule is applied skip over the letters changed
-                        j += rules[i].CSSuccessor.length();
-                    }
-                } else if (rules[i].CSDirection == "right") {
-                    if (rules[i].checkContext(substring[j+1])) {
-                        substring[j] = rules[i].CSSuccessor;
-                        //after this rule is applied skip over the letters changed
-                        j += rules[i].CSSuccessor.length();
-                    }
-                } else {
-//                    ofLog() << "Type left or right for context direction";
-                }
-            } else if (rules[i].predecessor == substring[j]) {
-                substring[j] = rules[i].successor;
-                j += rules[i].successor.length();
-
-            } else if (rules[i].stochasticPredecessor == substring[j]) {
-                string stochSuccessor = rules[i].stochasticProbability();
-                substring[j] = stochSuccessor;
-                j += stochSuccessor.length();
-
-            }
-        }
-    }
+    //DEPRECATED CONTEXT SENSITIVE AND STOCHASTIC METHODS
+    
+////THIS IS BY RULE FIRST
+//    //start with first rule
+//    for (int i = 0; i < rules.size(); i++) {
+//
+//
+//        for (int j = 0; j < length; j++) {
+//
+//
+//            if (rules[i].CSPredecessor == substring[j]) {
+//
+//                //check the directions
+//                if(rules[i].CSDirection == "left") {
+//                    if (rules[i].checkContext(substring[j-1])) {
+//                        substring[j] = rules[i].CSSuccessor;
+//                        //after this rule is applied skip over the letters changed
+//                        j += rules[i].CSSuccessor.length();
+//                    }
+//                } else if (rules[i].CSDirection == "right") {
+//                    if (rules[i].checkContext(substring[j+1])) {
+//                        substring[j] = rules[i].CSSuccessor;
+//                        //after this rule is applied skip over the letters changed
+//                        j += rules[i].CSSuccessor.length();
+//                    }
+//                } else {
+////                    ofLog() << "Type left or right for context direction";
+//                }
+//            } else if (rules[i].predecessor == substring[j]) {
+//                substring[j] = rules[i].successor;
+//                j += rules[i].successor.length();
+//
+//            } else if (rules[i].stochasticPredecessor == substring[j]) {
+//                string stochSuccessor = rules[i].stochasticProbability();
+//                substring[j] = stochSuccessor;
+//                j += stochSuccessor.length();
+//
+//            }
+//        }
+//    }
 	
     std::string s = std::accumulate(curStringVec.begin(), curStringVec.end(), std::string{});
 
