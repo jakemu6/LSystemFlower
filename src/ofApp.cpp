@@ -9,8 +9,8 @@ void ofApp::setup(){
   
     turtle = Turtle();
     
-    length = 1;
-    theta = 22.5;
+//    length = 1;
+//    theta = 22.5;
     axiomLevel = 0;
     
     turtle.setLength(length);
@@ -35,8 +35,8 @@ void ofApp::update(){
 //        ofLog() << "axiom - " << axiomLevel << " result : " << results[axiomLevel];
 
     }
-    
-    rotation += 2;
+
+//    rotation += 2;
 
     
     if (grow) {
@@ -83,7 +83,7 @@ void ofApp::keyPressed(int key){
     
 //    results = system.getLevels(maxAxiomLevel + 1);
 
-//    ofLog() << "axiom - " << axiomLevel << " result : " << results[axiomLevel];
+    ofLog() << "axiom - " << axiomLevel << " result : " << results[axiomLevel];
 
 }
 

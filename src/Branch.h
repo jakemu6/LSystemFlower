@@ -14,7 +14,7 @@
 //later adds the cap sizes to create varying widths.
 class Branch {
 public:
-    Branch(const ofNode _begin, const ofNode _end) {
+    Branch(const ofNode &_begin, const ofNode &_end) {
         begin = _begin;
         end = _end;
     };

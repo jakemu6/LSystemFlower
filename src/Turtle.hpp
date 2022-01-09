@@ -12,6 +12,7 @@
 
 #include "ofMain.h"
 #include "Branch.h"
+#include "Leaf.h"
 #include "Geometry.hpp"
 
 class Turtle {
@@ -28,33 +29,37 @@ public:
 
 //    ofVboMesh mesh;
     ofVboMesh branchMesh;
+    ofVboMesh leafMesh;
 
     
     //the container of nodes can be stored here.
     //shared_ptr is a pointer object that removes itself when empty of refs or something I think.
     std::vector<shared_ptr<ofNode> > nodesContainer;
+    std::vector<shared_ptr<ofNode> > leafContainer;
+
     std::vector<shared_ptr<ofNode> > bookmarks;
     std::vector<Branch> branchContainer;
+    
+    shared_ptr<ofNode> startingPt;
+//    ofVec3f startPtPos;
+    
+//    of3dPrimitive leaf;
 
     
 protected:
-//    string forward;
 
-//    string left;
-//    string right;
-    
     float angle;
-    
-    //being replaced by rotationU
-    
-    
     float length;
     float x;
     float y;
     float z;
+    
+    bool fillPolygon;
 
-    bool branchAlreadySaved(Branch branch);
+    bool branchAlreadySaved(const Branch &newBranch);
     Geometry lineMesh;
+    Geometry meshGeo;
+
     
     void pushValues();
     void popValues();

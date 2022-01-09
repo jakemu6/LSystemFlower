@@ -92,6 +92,7 @@
 		CBD9E6C92781A4670075B308 /* stringEdit.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = stringEdit.hpp; sourceTree = "<group>"; };
 		CBD9E6CE27869B220075B308 /* muParserBase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = muParserBase.h; sourceTree = "<group>"; };
 		CBD9E6CF27869B410075B308 /* muParserBase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = muParserBase.h; path = "../../../../../../../../../Downloads/muparser-2.3.2 2/include/muParserBase.h"; sourceTree = "<group>"; };
+		CBD9E6D62789A18B0075B308 /* Leaf.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Leaf.h; sourceTree = "<group>"; };
 		E112B3AEBEA2C091BF2B40AE /* ofxPanel.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = ofxPanel.cpp; path = ../../../addons/ofxGui/src/ofxPanel.cpp; sourceTree = SOURCE_ROOT; };
 		E42962AC2163EDD300A6A9E2 /* ofCamera.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ofCamera.cpp; path = ../../../libs/openFrameworks/3d/ofCamera.cpp; sourceTree = SOURCE_ROOT; };
 		E42962AD2163EDD300A6A9E2 /* ofMesh.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ofMesh.h; path = ../../../libs/openFrameworks/3d/ofMesh.h; sourceTree = SOURCE_ROOT; };
@@ -652,6 +653,7 @@
 		E4B69B4A0A3A1720003C02F2 = {
 			isa = PBXGroup;
 			children = (
+				CBD9E6D62789A18B0075B308 /* Leaf.h */,
 				E4B6FCAD0C3E899E008CF71C /* openFrameworks-Info.plist */,
 				E4EB6923138AFD0F00A09F29 /* Project.xcconfig */,
 				E4B69E1C0A3A1BDC003C02F2 /* src */,
@@ -668,15 +670,15 @@
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
 				E4B69E1E0A3A1BDC003C02F2 /* ofApp.cpp */,
 				E4B69E1F0A3A1BDC003C02F2 /* ofApp.h */,
+				97E519F2F48AF2550AFCE3A9 /* Turtle.cpp */,
 				F526AEA39BE6B4800769CE47 /* Turtle.hpp */,
 				F9851BE3D12EEBB1D60E5003 /* Geometry.cpp */,
+				BCDB37DDD95C3B99CAF9D3D0 /* Geometry.hpp */,
 				463074D291522C4E426C4B5F /* Branch.h */,
 				808CAEBCED6FB2DAEB4BA671 /* LSys.h */,
 				2B792D5BB27121B611E24D03 /* LSys.cpp */,
 				20134F169604883791328790 /* LRule.h */,
 				BE4B061C84ED7C26B8C15D60 /* LRule.cpp */,
-				97E519F2F48AF2550AFCE3A9 /* Turtle.cpp */,
-				BCDB37DDD95C3B99CAF9D3D0 /* Geometry.hpp */,
 				EB21F635AC8B94BB840CA304 /* LSystem.h */,
 				CBD9E6C3277806B20075B308 /* muParserBase.h */,
 				CBD9E6C82781A4670075B308 /* stringEdit.cpp */,

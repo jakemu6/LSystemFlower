@@ -27,33 +27,59 @@ public:
         // /
         // |
   
-        //Figure 1.25
-        system.setStart("A");
-        system.addRule(LRule("A", "[&FL!A]/////'[&FL!A]///////'[&FL!A]", "rewrite"));
-        system.addRule(LRule("F", "S/////F", "rewrite"));
-        system.addRule(LRule("S", "FL", "rewrite"));
-        system.addRule(LRule("L", "['''^^{-f+f+f-|-f+f+f}]", "rewrite"));
+//        //Figure 1.25
+//        system.setStart("A");
+//        system.addRule(LRule("A", "[&FL!A]/////'[&FL!A]///////'[&FL!A]", "rewrite"));
+//        system.addRule(LRule("F", "S/////F", "rewrite"));
+//        system.addRule(LRule("S", "FL", "rewrite"));
+//        system.addRule(LRule("L", "['''^^{-f+f+f-|-f+f+f}]", "rewrite"));
+
+  
+        //Chap 5.2
+//        system.setStart("L");
+//        system.addRule(LRule("L", "F-.F", "rewrite"));
+//        system.addRule(LRule("X", "FX", "rewrite"));
+
+//        system.addRule(LRule("L", "FF{FFF+FFF+FFF+FFF}", "rewrite"));
 
         
+//        //Fig 5.11
+//        system.setStart("A(0)");
+//        system.addRule(LRule("A(d):d>0", "A(d-1)", "parametric"));
+//        system.addRule(LRule("A(d):d=0", "F(1)[+A(2)][-A(2)]F(1)A(0)", "parametric"));
+//        system.addRule(LRule("F(a):*", "F(a*1.36)", "parametric"));
+        //        system.addRule(LRule("L", "{[++++G.][++GG.][+GGG.][GGGGG.][-GGG.[--GG.][----G.]}", "rewrite"));
+
         
-        
-//        //Figure 3.5
+//        Figure 3.5
+        system.setStart("I(9)a(13)");
+        system.addRule(LRule("a(t):t>0", "[&(70)L]/(137.5)I(10)a(t-1)", "parametric"));
+        system.addRule(LRule("a(t):t=0", "[&(70)L]/(137.5)I(10)A", "parametric"));
+        system.addRule(LRule("A", "[&(18)u(4)FFI(10)I(5)X(5)KKKK]/(137.5)I(8)A", "rewrite"));
+//
+        system.addRule(LRule("I(t):t>0", "FI(t-1)", "parametric"));
+        system.addRule(LRule("I(t):t=0", "F", "parametric"));
+        system.addRule(LRule("u(t):t>0", "&(9)u(t-1)", "parametric"));
+        system.addRule(LRule("u(t):t=0", "&(9)", "parametric"));
+
+        system.addRule(LRule("L", "[{.-FI(7)+FI(7)+FI(7)}][{.+FI(7)-FI(7)-FI(7)}]", "rewrite"));
+        system.addRule(LRule("K", "[&{.+FI(2)--FI(2)}][&{.-FI(2)++FI(2)}]/(90)", "rewrite"));
+
+        system.addRule(LRule("X(t):t>0", "X(t-1)", "parametric"));
+        system.addRule(LRule("X(t):t=0", "^(50)[[-GGGG++[GGG[++G{.].].].++GGGG.--GGG.__G.}]%", "parametric"));
+
 //        system.setStart("I(9)a(13)");
 //        system.addRule(LRule("a(t):t>0", "[&(70)L]/(137.5)I(10)a(t-1)", "parametric"));
-//        system.addRule(LRule("a(t):t=0", "[&(70)L]/(137.5)I(10)A", "parametric"));
-//        system.addRule(LRule("A", "[&(18)u(4)FFI(10)I(5)X(5)KKKK]/(137.5)I(8)A", "rewrite"));
 //
 //        system.addRule(LRule("I(t):t>0", "FI(t-1)", "parametric"));
 //        system.addRule(LRule("I(t):t=0", "F", "parametric"));
-//        system.addRule(LRule("u(t):t>0", "&(9)u(t-1)", "parametric"));
-//        system.addRule(LRule("u(t):t=0", "&(9)", "parametric"));
 //
-//        system.addRule(LRule("L", "[{.-FI(7)+FI(7)+FI(7)}][{.+FI(7)-FI(7)-FI(7)}]", "rewrite"));
-//        system.addRule(LRule("K", "[&{.+FI(2)--FI(2)}][&{.-FI(2)++FI(2)}]/(90)", "rewrite"));
-//
-//        system.addRule(LRule("X(t):t>0", "X(t-1)", "parametric"));
-//        system.addRule(LRule("X(t):t=0", "^(50)[[-GGGG++[GGG[++G{.].].].++GGGG.--GGG.__G.}]%", "parametric"));
-//
+//        system.addRule(LRule("a(t):t>0", "Fa(t-1)", "parametric"));
+//        system.addRule(LRule("a(t):t=0", "FLa(4)", "parametric"));
+//        system.addRule(LRule("L", "[++FP]", "rewrite"));
+//        system.addRule(LRule("P", "{^G.&G.}", "rewrite"));
+
+        
         results = system.getLevels(maxLevel + 1);
     }
     
@@ -97,24 +123,26 @@ class ofApp : public ofBaseApp{
     vector<string> results;
     
     //length of segments
-    float length;
+    float length = 1;
     
     //angle of segments
-    float theta;
+    float theta = 90;
 
     //axiom level that is actually being drawn.
     float axiomLevel;
     
     //always getting an exta level than what is written here. so for 31 levels you write 30
-    float maxAxiomLevel = 7;
+    float maxAxiomLevel = 30;
     
     ofEasyCam cam;
+    //TODO SET THIS
+    bool rotate = false;
     float rotation;
     
     bool grow = true;
     float growthRate = 0.1;
     
-    bool loop = true;
+    bool loop = false;
     
 
 };

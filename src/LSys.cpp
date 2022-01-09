@@ -177,7 +177,7 @@ string LSys::getNextLevel(){
                     }
 
                     bool conditionCheck = parseBoolean(boolCheck);
-                    if (conditionCheck) {
+                    if (conditionCheck || boolCheck == "*") {
                         
                         //Get the successor and start replacing the key with the values
                         string succ = successor[i];
