@@ -35,14 +35,6 @@ Turtle::Turtle() {
     nodesContainer.clear();
     branchContainer.clear();
     leafContainer.clear();
-//    //LEAF PRIMITIVE SETUP
-//    leaf.getMesh().addVertex(ofVec3f(0,0));
-//    leaf.getMesh().addVertex(ofVec3f(40,20));
-//    leaf.getMesh().addVertex(ofVec3f(40,40));
-//    leaf.getMesh().addVertex(ofVec3f(20,40));
-//    leaf.getMesh().setMode(OF_PRIMITIVE_TRIANGLE_FAN);
-//
-//
 }
 
 
@@ -312,16 +304,23 @@ void Turtle::draw(string input, float _x, float _y, float _z) {
             nodesContainer.push_back(newPoint);
             
         }
-//        else if(substr[i] == ".") {
-//            shared_ptr<ofNode> newPoint(new ofNode);
-//            newPoint->setParent(*nodesContainer.back());
-//            leafContainer.push_back(newPoint);
+        else if(substr[i] == ".") {
+            shared_ptr<ofNode> newPoint(new ofNode);
+            newPoint->setParent(*nodesContainer.back());
+            
+            
+            //add a new point to the leafcontainer at the position of the .
+            if (fillPolygon) {
+                leafContainer.push_back(newPoint);
+            } else {
+                nodesContainer.push_back(newPoint);
+            }
 ////            ofLog() << startPtPos;
 //
 ////            shared_ptr<ofNode> startingPt(new ofNode);
 ////            startingPt->setPosition(startPtPos);
 //            nodesContainer.push_back(startingPt);
-//        }
+        }
         else if(substr[i] == "{") {
             //the curly brackets indicate that this needs to be a filled polygon
             //Init the first root of the leafcontainer
@@ -329,13 +328,8 @@ void Turtle::draw(string input, float _x, float _y, float _z) {
             //this is also the starting point
             shared_ptr<ofNode> root(new ofNode);
             root->setParent(*nodesContainer.back());
-//            startPtPos = root->getGlobalPosition();
-            startingPt = root;
             
-
-            
-//            startPtPos = root->getGlobalPosition();
-//            startingPt->setGlobalPosition(root->getGlobalPosition());
+            //create a starting root position for the leaf
             leafContainer.push_back(root);
             
             fillPolygon = true;

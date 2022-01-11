@@ -40,7 +40,7 @@ public:
     std::vector<shared_ptr<ofNode> > bookmarks;
     std::vector<Branch> branchContainer;
     
-    shared_ptr<ofNode> startingPt;
+//    shared_ptr<ofNode> startingPt;
 //    ofVec3f startPtPos;
     
 //    of3dPrimitive leaf;

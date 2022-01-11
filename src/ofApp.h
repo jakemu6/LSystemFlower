@@ -44,11 +44,11 @@ public:
 
         
 //        //Fig 5.11
-//        system.setStart("A(0)");
+//        system.setStart("L");
 //        system.addRule(LRule("A(d):d>0", "A(d-1)", "parametric"));
 //        system.addRule(LRule("A(d):d=0", "F(1)[+A(2)][-A(2)]F(1)A(0)", "parametric"));
 //        system.addRule(LRule("F(a):*", "F(a*1.36)", "parametric"));
-        //        system.addRule(LRule("L", "{[++++G.][++GG.][+GGG.][GGGGG.][-GGG.[--GG.][----G.]}", "rewrite"));
+//                system.addRule(LRule("L", "{[++++G.][++GG.][+GGG.][GGGGG.][-GGG.][--GG.][----G.]}", "rewrite"));
 
         
 //        Figure 3.5
@@ -67,6 +67,13 @@ public:
 
         system.addRule(LRule("X(t):t>0", "X(t-1)", "parametric"));
         system.addRule(LRule("X(t):t=0", "^(50)[[-GGGG++[GGG[++G{.].].].++GGGG.--GGG.__G.}]%", "parametric"));
+        
+        
+//        system.setStart("[A][B]");
+//        system.addRule(LRule("A", "[+A{.].C.}", "rewrite"));
+//        system.addRule(LRule("B", "[-B{.].C.}", "rewrite"));
+//        system.addRule(LRule("C", "GC", "rewrite"));
+
 
 //        system.setStart("I(9)a(13)");
 //        system.addRule(LRule("a(t):t>0", "[&(70)L]/(137.5)I(10)a(t-1)", "parametric"));
@@ -126,23 +133,23 @@ class ofApp : public ofBaseApp{
     float length = 1;
     
     //angle of segments
-    float theta = 90;
+    float theta = 18;
 
     //axiom level that is actually being drawn.
     float axiomLevel;
     
     //always getting an exta level than what is written here. so for 31 levels you write 30
-    float maxAxiomLevel = 30;
+    float maxAxiomLevel = 40;
     
     ofEasyCam cam;
     //TODO SET THIS
-    bool rotate = false;
+    bool rotate = true;
     float rotation;
     
     bool grow = true;
     float growthRate = 0.1;
     
-    bool loop = false;
+    bool loop = true;
     
 
 };

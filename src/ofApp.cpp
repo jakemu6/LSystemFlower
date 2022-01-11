@@ -5,7 +5,7 @@
 //--------------------------------------------------------------
 
 void ofApp::setup(){
-    cam.setDistance(100);
+    cam.setDistance(400);
   
     turtle = Turtle();
     
@@ -36,7 +36,9 @@ void ofApp::update(){
 
     }
 
-//    rotation += 2;
+    if (rotate) {
+        rotation += 2;
+    }
 
     
     if (grow) {
@@ -67,7 +69,7 @@ void ofApp::draw(){
     ofBackground(0, 0, 0);
     ofNoFill();
     if (results.size() != 0) {
-        turtle.draw(results[axiomLevel], 0, 0, 0); // input string, x, y, z
+        turtle.draw(results[axiomLevel], 0, -160, 0); // input string, x, y, z
     }
 
     ofPopMatrix();
