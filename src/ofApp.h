@@ -51,40 +51,32 @@ public:
 //                system.addRule(LRule("L", "{[++++G.][++GG.][+GGG.][GGGGG.][-GGG.][--GG.][----G.]}", "rewrite"));
 
         
-//        Figure 3.5
-        system.setStart("I(9)a(13)");
-        system.addRule(LRule("a(t):t>0", "[&(70)L]/(137.5)I(10)a(t-1)", "parametric"));
-        system.addRule(LRule("a(t):t=0", "[&(70)L]/(137.5)I(10)A", "parametric"));
-        system.addRule(LRule("A", "[&(18)u(4)FFI(10)I(5)X(5)KKKK]/(137.5)I(8)A", "rewrite"));
-//
-        system.addRule(LRule("I(t):t>0", "FI(t-1)", "parametric"));
-        system.addRule(LRule("I(t):t=0", "F", "parametric"));
-        system.addRule(LRule("u(t):t>0", "&(9)u(t-1)", "parametric"));
-        system.addRule(LRule("u(t):t=0", "&(9)", "parametric"));
-
-        system.addRule(LRule("L", "[{.-FI(7)+FI(7)+FI(7)}][{.+FI(7)-FI(7)-FI(7)}]", "rewrite"));
-        system.addRule(LRule("K", "[&{.+FI(2)--FI(2)}][&{.-FI(2)++FI(2)}]/(90)", "rewrite"));
-
-        system.addRule(LRule("X(t):t>0", "X(t-1)", "parametric"));
-        system.addRule(LRule("X(t):t=0", "^(50)[[-GGGG++[GGG[++G{.].].].++GGGG.--GGG.__G.}]%", "parametric"));
-        
-        
-//        system.setStart("[A][B]");
-//        system.addRule(LRule("A", "[+A{.].C.}", "rewrite"));
-//        system.addRule(LRule("B", "[-B{.].C.}", "rewrite"));
-//        system.addRule(LRule("C", "GC", "rewrite"));
-
-
+////        Figure 3.5
 //        system.setStart("I(9)a(13)");
 //        system.addRule(LRule("a(t):t>0", "[&(70)L]/(137.5)I(10)a(t-1)", "parametric"));
-//
+//        system.addRule(LRule("a(t):t=0", "[&(70)L]/(137.5)I(10)A", "parametric"));
+//        system.addRule(LRule("A", "[&(18)u(4)FFI(10)I(5)X(5)KKKK]/(137.5)I(8)A", "rewrite"));
+////
 //        system.addRule(LRule("I(t):t>0", "FI(t-1)", "parametric"));
 //        system.addRule(LRule("I(t):t=0", "F", "parametric"));
+//        system.addRule(LRule("u(t):t>0", "&(9)u(t-1)", "parametric"));
+//        system.addRule(LRule("u(t):t=0", "&(9)", "parametric"));
 //
-//        system.addRule(LRule("a(t):t>0", "Fa(t-1)", "parametric"));
-//        system.addRule(LRule("a(t):t=0", "FLa(4)", "parametric"));
-//        system.addRule(LRule("L", "[++FP]", "rewrite"));
-//        system.addRule(LRule("P", "{^G.&G.}", "rewrite"));
+//        system.addRule(LRule("L", "[{.-FI(7)+FI(7)+FI(7)}][{.+FI(7)-FI(7)-FI(7)}]", "rewrite"));
+//        system.addRule(LRule("K", "[&<.+FI(2)--FI(2)>][&<.-FI(2)++FI(2)>]/(90)", "rewrite"));
+//
+//        system.addRule(LRule("X(t):t>0", "X(t-1)", "parametric"));
+//        system.addRule(LRule("X(t):t=0", "^(50)[[-GGGG++[GGG[++G{.].].].++GGGG.--GGG.__G.}]%", "parametric"));
+        
+        //Fig 5.5
+        system.setStart("I[A][B]");
+        system.addRule(LRule("I", "F(1)+(0.5)I", "rewrite"));
+
+        system.addRule(LRule("A", "[+A{.].C.}", "rewrite"));
+        system.addRule(LRule("B", "[-B{.].C.}", "rewrite"));
+        system.addRule(LRule("C", "GC", "rewrite"));
+
+
 
         
         results = system.getLevels(maxLevel + 1);
@@ -130,24 +122,29 @@ class ofApp : public ofBaseApp{
     vector<string> results;
     
     //length of segments
-    float length = 1;
+    float length = 3;
     
     //angle of segments
-    float theta = 18;
+    float theta = 2.5;
 
     //axiom level that is actually being drawn.
     float axiomLevel;
     
-    //always getting an exta level than what is written here. so for 31 levels you write 30
-    float maxAxiomLevel = 40;
+    float maxAxiomLevel = 60;
     
     ofEasyCam cam;
     //TODO SET THIS
     bool rotate = true;
-    float rotation;
+    float rotationSpeed = 1;
+    float rotation = 0;
+
+    //static - no movement max axiom level
+    //loop - 0 - max;
+    //reverseLoop
+    string sequence = "loop";
     
     bool grow = true;
-    float growthRate = 0.1;
+    float growthRate = 0.5;
     
     bool loop = true;
     

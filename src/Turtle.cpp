@@ -108,6 +108,8 @@ void Turtle::draw(string input, float _x, float _y, float _z) {
                 
                 if (fillPolygon) {
                     leafContainer.push_back(newPoint);
+                } else if (flowerFill) {
+                    flowerContainer.push_back(newPoint);
                 } else {
                     //save each segment seperately so that when it's drawn to a mesh the push pop doesn't cause problems
                     //checks each branch in the container to make sure that there are no overlaps but this ends up being slower.
@@ -125,6 +127,8 @@ void Turtle::draw(string input, float _x, float _y, float _z) {
                 
                 if (fillPolygon) {
                     leafContainer.push_back(newPoint);
+                } else if (flowerFill) {
+                    flowerContainer.push_back(newPoint);
                 } else {
                     //save each segment seperately so that when it's drawn to a mesh the push pop doesn't cause problems
                     //checks each branch in the container to make sure that there are no overlaps but this ends up being slower.
@@ -312,7 +316,10 @@ void Turtle::draw(string input, float _x, float _y, float _z) {
             //add a new point to the leafcontainer at the position of the .
             if (fillPolygon) {
                 leafContainer.push_back(newPoint);
-            } else {
+            } else if (flowerFill) {
+                flowerContainer.push_back(newPoint);
+            }
+            else {
                 nodesContainer.push_back(newPoint);
             }
 ////            ofLog() << startPtPos;
@@ -341,26 +348,35 @@ void Turtle::draw(string input, float _x, float _y, float _z) {
 
             
             auto newLeaf = Leaf(leafContainer);
-            meshGeo.generateLeaf(newLeaf, leafMesh);
+            meshGeo.generateLeaf(newLeaf);
 
             leafContainer.clear();
         }
+        else if(substr[i] == "<") {
+            //the curly brackets indicate that this needs to be a filled polygon
+            //Init the first root of the leafcontainer
+            //set position and add it to the vector/sharedptr thingo
+            //this is also the starting point
+            shared_ptr<ofNode> root(new ofNode);
+            root->setParent(*nodesContainer.back());
+            
+            //create a starting root position for the leaf
+            flowerContainer.push_back(root);
+            
+            flowerFill = true;
+            
+        }
+        else if(substr[i] == ">") {
+            //when all the nodes are in the leafcontainer create a leaf object out of the nodes
+            flowerFill = false;
+
+            
+            auto newFlower = Flower(flowerContainer);
+            meshGeo.generateFlower(newFlower);
+
+            flowerContainer.clear();
+        }
         
-//        else if(substr[i] == "L") {
-//            //DRAW Flower
-//            shared_ptr<ofNode> flowerPoint(new ofNode);
-////            flowerPoint->setParent(*nodesContainer.back());
-//            ofEnableDepthTest();
-//            ofSetColor(0, 255, 0, 255);
-//            ofFill();
-//            leaf.setParent(*nodesContainer.back());
-//            leaf.draw();
-////            ofDrawSphere(flowerPoint->getGlobalPosition(), 1);
-//
-//            ofSetColor(255);
-//
-//            ofDisableDepthTest();
-//        }
     }
     branchMesh.draw();
 //    leafMesh.draw();

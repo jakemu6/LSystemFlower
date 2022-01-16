@@ -18,7 +18,7 @@ void ofApp::setup(){
     
     //Build out the sentances and store in into this vector.
 //    results = system.getLevels(maxAxiomLevel + 1);
-    rotation = 0;
+//    rotation = 0;
     
     retrieveLvl.setup(maxAxiomLevel);
     loading = true;
@@ -37,23 +37,43 @@ void ofApp::update(){
     }
 
     if (rotate) {
-        rotation += 2;
+        rotation += rotationSpeed;
     }
 
-    
-    if (grow) {
+    if (sequence == "static") {
+        axiomLevel = maxAxiomLevel;
+    } else if (sequence == "loop") {
         axiomLevel += 1;
-    }
-
-    if (loop) {
         if (axiomLevel > maxAxiomLevel) {
             axiomLevel = 0;
         }
-    } else {
-        if (axiomLevel > maxAxiomLevel) {
-            axiomLevel = maxAxiomLevel;
+    } else if (sequence == "reverseLoop") {
+//        growthRate = 1;
+//        cout << *p << endl;
+        if (axiomLevel >= maxAxiomLevel) {
+            growthRate = -growthRate;
+        } else if (axiomLevel < 0) {
+            growthRate = -growthRate;
         }
+//        float * p = &growthRate;
+
+        axiomLevel += growthRate;
+
     }
+    
+//    if (grow) {
+//        axiomLevel += 1;
+//    }
+//
+//    if (loop) {
+//        if (axiomLevel > maxAxiomLevel) {
+//            axiomLevel = 0;
+//        }
+//    } else {
+//        if (axiomLevel > maxAxiomLevel) {
+//            axiomLevel = maxAxiomLevel;
+//        }
+//    }
 
 //    axiom = system.getLevel(axiomLevel);
 }
@@ -66,10 +86,10 @@ void ofApp::draw(){
     
     ofPushMatrix();
     ofRotateYDeg(rotation);
-    ofBackground(0, 0, 0);
+    ofBackground(252, 250, 242);
     ofNoFill();
     if (results.size() != 0) {
-        turtle.draw(results[axiomLevel], 0, -160, 0); // input string, x, y, z
+        turtle.draw(results[axiomLevel], 0, -20, 0); // input string, x, y, z
     }
 
     ofPopMatrix();

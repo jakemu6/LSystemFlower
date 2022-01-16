@@ -13,6 +13,7 @@
 #include "ofMain.h"
 #include "Branch.h"
 #include "Leaf.h"
+#include "Flower.h"
 #include "Geometry.hpp"
 
 class Turtle {
@@ -36,6 +37,8 @@ public:
     //shared_ptr is a pointer object that removes itself when empty of refs or something I think.
     std::vector<shared_ptr<ofNode> > nodesContainer;
     std::vector<shared_ptr<ofNode> > leafContainer;
+    std::vector<shared_ptr<ofNode> > flowerContainer;
+
 
     std::vector<shared_ptr<ofNode> > bookmarks;
     std::vector<Branch> branchContainer;
@@ -55,6 +58,8 @@ protected:
     float z;
     
     bool fillPolygon;
+    bool flowerFill;
+
 
     bool branchAlreadySaved(const Branch &newBranch);
     Geometry lineMesh;
