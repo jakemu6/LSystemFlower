@@ -7,7 +7,7 @@
 
 class Geometry{
 public:
-    void generate(const Branch branch, ofVboMesh& mesh);
+    void generate(const Branch branch);
     void generateLeaf(const Leaf leaf);
     void generateFlower(const Flower flower);
 

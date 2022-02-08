@@ -29,8 +29,8 @@ public:
     void draw(string input, float x, float y, float z);
 
 //    ofVboMesh mesh;
-    ofVboMesh branchMesh;
-    ofVboMesh leafMesh;
+//    ofVboMesh branchMesh;
+//    ofVboMesh leafMesh;
 
     
     //the container of nodes can be stored here.

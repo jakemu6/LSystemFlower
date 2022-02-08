@@ -1,66 +1,84 @@
 #include "Geometry.hpp"
 
-void Geometry::generate(const Branch branch, ofVboMesh& mesh){
+void Geometry::generate(const Branch branch){
 
+    ofVboMesh bMesh;
+    bMesh.setMode(OF_PRIMITIVE_LINES);
+
+    ofColor Col;
+    Col.r=0;
+    Col.g=0;
+    Col.b=255;
+    
     ofVec3f start = branch.begin.getGlobalPosition();
     ofVec3f end = branch.end.getGlobalPosition();
+    
+    bMesh.addVertex(start);
+    bMesh.addColor(Col);
 
-    mesh.addVertex(start);
-    mesh.addVertex(end);
-
+    bMesh.addVertex(end);
+    bMesh.addColor(Col);
+    
+    bMesh.draw();
 }
 
 void Geometry::generateLeaf(const Leaf leaf){
     int size = leaf.container.size();
     
-    ofVboMesh leafMesh;
-    ofVboMesh leafOutlineMesh;
+    ofVboMesh p1Mesh;
+    ofVboMesh p1OutlineMesh;
 
-    leafMesh.setMode(OF_PRIMITIVE_TRIANGLE_FAN);
-    leafOutlineMesh.setMode(OF_PRIMITIVE_LINES);
+    p1Mesh.setMode(OF_PRIMITIVE_TRIANGLE_FAN);
+    p1OutlineMesh.setMode(OF_PRIMITIVE_LINE_LOOP);
 
     
-    ofColor leafCol;
-    leafCol.r=131;
-    leafCol.g=138;
-    leafCol.b=45;
+    ofColor p1Col;
+    p1Col.r=131;
+    p1Col.g=138;
+    p1Col.b=45;
     
-    ofColor lineCol;
-    lineCol.r=190;
-    lineCol.g=194;
-    lineCol.b=63;
-
+    ofColor p1lineCol;
+    p1lineCol.r=255;
+    p1lineCol.g=0;
+    p1lineCol.b=0;
+    
     for (int i = 0; i < size; i++) {
-        leafMesh.addVertex(leaf.container[i]->getGlobalPosition());
-        leafMesh.addColor(leafCol);
+        p1Mesh.addVertex(leaf.container[i]->getGlobalPosition());
+        p1Mesh.addColor(p1Col);
         
-        leafOutlineMesh.addVertex(leaf.container[i]->getGlobalPosition());
-        leafOutlineMesh.addColor(lineCol);
+        p1OutlineMesh.addVertex(leaf.container[i]->getGlobalPosition());
+        p1OutlineMesh.addColor(p1lineCol);
     }
-    
-//    ofSetColor(131, 138, 45, 255);
-//    ofNoFill();
-
-
-    leafMesh.draw();
-    leafOutlineMesh.draw();
-
-    ofSetColor(150, 114, 73, 255);
+    p1Mesh.draw();
+    p1OutlineMesh.draw();
 }
 
 void Geometry::generateFlower(const Flower flower){
     int size = flower.container.size();
     
-    ofVboMesh flowerMesh;
-    flowerMesh.setMode(OF_PRIMITIVE_TRIANGLE_FAN);
+    ofVboMesh p2Mesh;
+    ofVboMesh p2OutlineMesh;
+    p2Mesh.setMode(OF_PRIMITIVE_TRIANGLE_FAN);
+    p2OutlineMesh.setMode(OF_PRIMITIVE_LINE_LOOP);
+
+    ofColor p2Col;
+    p2Col.r=251;
+    p2Col.g=226;
+    p2Col.b=81;
+    
+    ofColor p2lineCol;
+    p2lineCol.r=0;
+    p2lineCol.g=0;
+    p2lineCol.b=0;
 
     for (int i = 0; i < size; i++) {
-        flowerMesh.addVertex(flower.container[i]->getGlobalPosition());
+        p2Mesh.addVertex(flower.container[i]->getGlobalPosition());
+        p2Mesh.addColor(p2Col);
+        
+        p2OutlineMesh.addVertex(flower.container[i]->getGlobalPosition());
+        p2OutlineMesh.addColor(p2lineCol);
     }
-    
-    ofSetColor(251, 226, 81, 255);
-    ofFill();
-    flowerMesh.draw();
-    ofSetColor(150, 114, 73, 255);
+    p2Mesh.draw();
+    p2OutlineMesh.draw();
 }
 

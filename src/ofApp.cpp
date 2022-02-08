@@ -43,7 +43,7 @@ void ofApp::update(){
     if (sequence == "static") {
         axiomLevel = maxAxiomLevel;
     } else if (sequence == "loop") {
-        axiomLevel += 1;
+        axiomLevel += growthRate;
         if (axiomLevel > maxAxiomLevel) {
             axiomLevel = 0;
         }

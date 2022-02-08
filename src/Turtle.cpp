@@ -9,23 +9,6 @@
 
 Turtle::Turtle() {
     
-    branchMesh.setMode(OF_PRIMITIVE_LINES);
-    leafMesh.setMode(OF_PRIMITIVE_LINES);
-
-//    leafMesh.setMode(OF_PRIMITIVE_TRIANGLE_FAN);
-
-//    mesh.enableColors();
-    
-    //    unitDirectionVector.set(1.0f, 1.0f, 1.0f);
-    //
-    //    unitDirectionVectorU.set(1.0f, 1.0f, 1.0f);
-    //    unitDirectionVectorL.set(1.0f, 1.0f, 1.0f);
-    //    unitDirectionVectorH.set(1.0f, 1.0f, 1.0f);
-    
-    //Basic Init of variables,
-    //Should all be changed further down with setAngle and setLength
-//    angle = 90;
-//    length = 10;
 
     x = 0;
     y = 0;
@@ -55,11 +38,6 @@ void Turtle::draw(string input, float _x, float _y, float _z) {
     branchContainer.clear();
     leafContainer.clear();
     
-    branchMesh.clear();
-    leafMesh.clear();
-
-//    mesh.clear();
-
     
     x = _x;
     y = _y;
@@ -114,7 +92,7 @@ void Turtle::draw(string input, float _x, float _y, float _z) {
                     //save each segment seperately so that when it's drawn to a mesh the push pop doesn't cause problems
                     //checks each branch in the container to make sure that there are no overlaps but this ends up being slower.
                     auto newBranch = Branch(*previousPoint, *newPoint);
-                    lineMesh.generate(newBranch, branchMesh);
+                    lineMesh.generate(newBranch);
                 }
                 
                 
@@ -133,7 +111,7 @@ void Turtle::draw(string input, float _x, float _y, float _z) {
                     //save each segment seperately so that when it's drawn to a mesh the push pop doesn't cause problems
                     //checks each branch in the container to make sure that there are no overlaps but this ends up being slower.
                     auto newBranch = Branch(*previousPoint, *newPoint);
-                    lineMesh.generate(newBranch, branchMesh);
+                    lineMesh.generate(newBranch);
                 }
             }
         }
@@ -289,10 +267,7 @@ void Turtle::draw(string input, float _x, float _y, float _z) {
                 rotatingPoint->setParent(*nodesContainer.back());
                 rotatingPoint->panDeg(-angle);
                 nodesContainer.push_back(rotatingPoint);
-        
             }
-            
-
         }
         else if(substr[i] == "|") {
             //TURN AROUND
@@ -302,17 +277,44 @@ void Turtle::draw(string input, float _x, float _y, float _z) {
             nodesContainer.push_back(rotatingPoint);
         }
         else if(substr[i] == "G") {
-            shared_ptr<ofNode> newPoint(new ofNode);
-            newPoint->setParent(*nodesContainer.back());
-            newPoint->move(0, length, 0);
-            nodesContainer.push_back(newPoint);
-            
+            if(substr[i + 1] == "(") {
+                //if parametric check the paraBools to see if it satisfies
+                //need to get the value in brackets and substitute values into the bool
+                string truncatedCurrentStr = input.substr(i, stringLength);
+                
+                //getting the positions of the parentheses and then acquiring the contents between as a string in the cut substring
+                int open = truncatedCurrentStr.find("(");
+                int closed = truncatedCurrentStr.find(")");
+//
+                string value = truncatedCurrentStr.substr(open + 1, closed - 2);
+                
+                //if in the axiom there is a comma, use the first value to determine the amount to move G by.
+                //This is used in leaf for adding growth rule
+                if (value.find(",") != std::string::npos) {
+                    vector<string> splitValue;
+                    splitValue = ofSplitString(value, ",");
+                    float floatVal = ofToFloat(splitValue[0]);
+                    shared_ptr<ofNode> newPoint(new ofNode);
+                    newPoint->setParent(*nodesContainer.back());
+                    newPoint->move(0, floatVal, 0);
+                    nodesContainer.push_back(newPoint);
+                } else {
+                    float floatVal = ofToFloat(value);
+                    shared_ptr<ofNode> newPoint(new ofNode);
+                    newPoint->setParent(*nodesContainer.back());
+                    newPoint->move(0, floatVal, 0);
+                    nodesContainer.push_back(newPoint);
+                }
+            } else {
+                shared_ptr<ofNode> newPoint(new ofNode);
+                newPoint->setParent(*nodesContainer.back());
+                newPoint->move(0, length, 0);
+                nodesContainer.push_back(newPoint);
+            }
         }
-        else if(substr[i] == ".") {
+        else if(substr[i] == "#") {
             shared_ptr<ofNode> newPoint(new ofNode);
             newPoint->setParent(*nodesContainer.back());
-            
-            
             //add a new point to the leafcontainer at the position of the .
             if (fillPolygon) {
                 leafContainer.push_back(newPoint);
@@ -322,11 +324,6 @@ void Turtle::draw(string input, float _x, float _y, float _z) {
             else {
                 nodesContainer.push_back(newPoint);
             }
-////            ofLog() << startPtPos;
-//
-////            shared_ptr<ofNode> startingPt(new ofNode);
-////            startingPt->setPosition(startPtPos);
-//            nodesContainer.push_back(startingPt);
         }
         else if(substr[i] == "{") {
             //the curly brackets indicate that this needs to be a filled polygon
@@ -369,8 +366,6 @@ void Turtle::draw(string input, float _x, float _y, float _z) {
         else if(substr[i] == ">") {
             //when all the nodes are in the leafcontainer create a leaf object out of the nodes
             flowerFill = false;
-
-            
             auto newFlower = Flower(flowerContainer);
             meshGeo.generateFlower(newFlower);
 
@@ -378,9 +373,6 @@ void Turtle::draw(string input, float _x, float _y, float _z) {
         }
         
     }
-    branchMesh.draw();
-//    leafMesh.draw();
-
 }
 
 //Check the branchContainer to see if there have already been branches in the same position.

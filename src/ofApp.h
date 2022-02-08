@@ -16,39 +16,24 @@ public:
 
     void threadedFunction(){
         
-        //F - Forward
-        // +
-        // -
-        // [
-        // ]
-        // &
-        // ^
-        // ?
-        // /
-        // |
-  
-//        //Figure 1.25
-//        system.setStart("A");
-//        system.addRule(LRule("A", "[&FL!A]/////'[&FL!A]///////'[&FL!A]", "rewrite"));
-//        system.addRule(LRule("F", "S/////F", "rewrite"));
-//        system.addRule(LRule("S", "FL", "rewrite"));
-//        system.addRule(LRule("L", "['''^^{-f+f+f-|-f+f+f}]", "rewrite"));
-
-  
-        //Chap 5.2
-//        system.setStart("L");
-//        system.addRule(LRule("L", "F-.F", "rewrite"));
-//        system.addRule(LRule("X", "FX", "rewrite"));
-
-//        system.addRule(LRule("L", "FF{FFF+FFF+FFF+FFF}", "rewrite"));
-
+        // F - Forward
+        // f - Move Forward No Draw
+        // + - Turn Right (Custom)
+        // - - Turn Left
+        // [ - Push Branch
+        // ] - Return Branch
+        // & - Pitch Down (Custom)
+        // ^ - Pitch Up
+        // ? - Roll Left
+        // / - Roll Right (Custom)
+        // | - Roll 180 Deg
         
-//        //Fig 5.11
-//        system.setStart("L");
-//        system.addRule(LRule("A(d):d>0", "A(d-1)", "parametric"));
-//        system.addRule(LRule("A(d):d=0", "F(1)[+A(2)][-A(2)]F(1)A(0)", "parametric"));
-//        system.addRule(LRule("F(a):*", "F(a*1.36)", "parametric"));
-//                system.addRule(LRule("L", "{[++++G.][++GG.][+GGG.][GGGGG.][-GGG.][--GG.][----G.]}", "rewrite"));
+        // G - Draw Line Not as edge
+        // . - Return to Origin Point (Last "[" Branch)
+        // { - Fill Polygon Style 1
+        // } - Close Polygon Style 1
+        // < - Fill Polygon Style 2
+        // > - Close Polygon Style 2
 
         
 ////        Figure 3.5
@@ -69,15 +54,47 @@ public:
 //        system.addRule(LRule("X(t):t=0", "^(50)[[-GGGG++[GGG[++G{.].].].++GGGG.--GGG.__G.}]%", "parametric"));
         
         //Fig 5.5
-        system.setStart("I[A][B]");
-        system.addRule(LRule("I", "F(1)+(0.5)I", "rewrite"));
+//        system.setStart("[A][B]");
+////        system.addRule(LRule("I", "F(1)+(0.5)I", "rewrite"));
+//        system.addRule(LRule("A", "[+A{.].C.}", "rewrite"));
+//        system.addRule(LRule("B", "[-B{.].C.}", "rewrite"));
+//        system.addRule(LRule("C", "GC", "rewrite"));
 
-        system.addRule(LRule("A", "[+A{.].C.}", "rewrite"));
-        system.addRule(LRule("B", "[-B{.].C.}", "rewrite"));
-        system.addRule(LRule("C", "GC", "rewrite"));
+//Fig 3.14
+//        system.setStart("A(7)");
+//        system.addRule(LRule("A(t):t=7", "FI(20)[&(60)~L(0)]/(90)[&(45)A(0)]/(90)[&(60)~L(0)]/(90)[&(45)A(4)]FI(10)~K(0)", "parametric"));
+//        system.addRule(LRule("A(t):t<7", "A(t+1)", "parametric"));
+//        system.addRule(LRule("I(t):t>0", "FFI(t-1)", "parametric"));
+//        system.addRule(LRule("L(t):*", "L(t+1)", "parametric"));
+//        system.addRule(LRule("K(t):*", "K(t+1)", "parametric"));
+
+//        system.setStart("F(1){.A(0)}");
+//        system.addRule(LRule("A(t):*", "[-B(t).][A(t+1)][+B(t).]F", "parametric"));
+//        system.addRule(LRule("B(t):t>0", "G(1,1)B(t-0.1)", "parametric"));
+////        system.addRule(LRule("G(s,r):s=0", "G (5,1)", "parametric"));
+//        system.addRule(LRule("G(s,r):*", "G(s*r,r)", "parametric"));
+
+        system.setStart("{#A(0)}");
+        //DECIMAL PLACES ARE IN THE SUBSTRING DETECT
+        system.addRule(LRule("A(t):*", "G(5,1.2)[-B(t)#][A(t+1)][+B(t)#]", "parametric"));
+        system.addRule(LRule("B(t):t>0", "G(4,1.1)B(t-0.25)", "parametric"));
+        system.addRule(LRule("G(s,r):*", "G(s*r,r)", "parametric"));
+        
+//        system.setStart("L");
+//        system.addRule(LRule("L", "F{A}", "rewrite"));
+//        system.addRule(LRule("A", "[+G.][-G.]", "rewrite"));
 
 
+//        system.setStart("[A][B]");
+////        system.addRule(LRule("I", "F(1)+(0.5)I", "rewrite"));
+//        system.addRule(LRule("A", "{.B[++G.]}", "rewrite"));
+//        system.addRule(LRule("B", "[G.][+GG.]", "rewrite"));
 
+//        system.addRule(LRule("B", "[-B{.].C.}", "rewrite"));
+//        system.addRule(LRule("C", "G(2,1.2)C", "rewrite"));
+//        system.addRule(LRule("G(s,r):*", "G(s*r,r)", "parametric"));
+
+        
         
         results = system.getLevels(maxLevel + 1);
     }
@@ -122,29 +139,29 @@ class ofApp : public ofBaseApp{
     vector<string> results;
     
     //length of segments
-    float length = 3;
+    float length = 1;
     
     //angle of segments
-    float theta = 2.5;
+    float theta = 60;
 
     //axiom level that is actually being drawn.
     float axiomLevel;
     
-    float maxAxiomLevel = 60;
+    float maxAxiomLevel = 20;
     
     ofEasyCam cam;
     //TODO SET THIS
-    bool rotate = true;
+    bool rotate = false;
     float rotationSpeed = 1;
     float rotation = 0;
 
     //static - no movement max axiom level
     //loop - 0 - max;
     //reverseLoop
-    string sequence = "loop";
+    string sequence = "static";
     
     bool grow = true;
-    float growthRate = 0.5;
+    float growthRate = 0.1;
     
     bool loop = true;
     
