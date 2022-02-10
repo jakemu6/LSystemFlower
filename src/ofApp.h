@@ -25,11 +25,11 @@ public:
         // & - Pitch Down (Custom)
         // ^ - Pitch Up
         // ? - Roll Left
-        // / - Roll Right (Custom)
+        // % - Roll Right (Custom)
         // | - Roll 180 Deg
         
         // G - Draw Line Not as edge
-        // . - Return to Origin Point (Last "[" Branch)
+        // # - Return to Origin Point (Last "[" Branch)
         // { - Fill Polygon Style 1
         // } - Close Polygon Style 1
         // < - Fill Polygon Style 2
@@ -74,11 +74,22 @@ public:
 ////        system.addRule(LRule("G(s,r):s=0", "G (5,1)", "parametric"));
 //        system.addRule(LRule("G(s,r):*", "G(s*r,r)", "parametric"));
 
-        system.setStart("{#A(0)}");
+        system.setStart("T(0)");
         //DECIMAL PLACES ARE IN THE SUBSTRING DETECT
-        system.addRule(LRule("A(t):*", "G(5,1.2)[-B(t)#][A(t+1)][+B(t)#]", "parametric"));
-        system.addRule(LRule("B(t):t>0", "G(4,1.1)B(t-0.25)", "parametric"));
-        system.addRule(LRule("G(s,r):*", "G(s*r,r)", "parametric"));
+        
+        //STEM
+        system.addRule(LRule("T(t):t>0", "T(t-1)", "parametric"));
+        system.addRule(LRule("T(t):t=0", "%(140)[&(10)P(1)L]T(5)", "parametric"));
+
+        system.addRule(LRule("P(t):*", "F(t/5)P(t+1)", "parametric"));
+//        system.addRule(LRule("P(t):t=0", "FL", "parametric"));
+
+        
+        //LEAF
+        system.addRule(LRule("L", "&(120){#A(0)}", "rewrite"));
+        system.addRule(LRule("A(t):*", "G(3,1.1)[-B(t)#][A(t+1)][+B(t)#]", "parametric"));
+        system.addRule(LRule("B(t):t>0", "G(1,0.9)B(t-0.1)", "parametric"));
+        system.addRule(LRule("G(s,r):s<2", "G(s*r,r)", "parametric"));
         
 //        system.setStart("L");
 //        system.addRule(LRule("L", "F{A}", "rewrite"));
@@ -139,7 +150,7 @@ class ofApp : public ofBaseApp{
     vector<string> results;
     
     //length of segments
-    float length = 1;
+    float length = 100;
     
     //angle of segments
     float theta = 60;
@@ -147,18 +158,18 @@ class ofApp : public ofBaseApp{
     //axiom level that is actually being drawn.
     float axiomLevel;
     
-    float maxAxiomLevel = 20;
+    float maxAxiomLevel = 40;
     
     ofEasyCam cam;
     //TODO SET THIS
-    bool rotate = false;
-    float rotationSpeed = 1;
+    bool rotate = true;
+    float rotationSpeed = 0.5;
     float rotation = 0;
 
     //static - no movement max axiom level
     //loop - 0 - max;
     //reverseLoop
-    string sequence = "static";
+    string sequence = "loop";
     
     bool grow = true;
     float growthRate = 0.1;

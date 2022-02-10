@@ -240,7 +240,7 @@ void Turtle::draw(string input, float _x, float _y, float _z) {
             rotatingPoint->panDeg(angle);
             nodesContainer.push_back(rotatingPoint);
         }
-        else if(substr[i] == "/") {
+        else if(substr[i] == "%") {
             //ROLL RIGHT
             
             if(substr[i + 1] == "(") {

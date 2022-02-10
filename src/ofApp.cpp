@@ -9,8 +9,6 @@ void ofApp::setup(){
   
     turtle = Turtle();
     
-//    length = 1;
-//    theta = 22.5;
     axiomLevel = 0;
     
     turtle.setLength(length);
@@ -60,22 +58,6 @@ void ofApp::update(){
         axiomLevel += growthRate;
 
     }
-    
-//    if (grow) {
-//        axiomLevel += 1;
-//    }
-//
-//    if (loop) {
-//        if (axiomLevel > maxAxiomLevel) {
-//            axiomLevel = 0;
-//        }
-//    } else {
-//        if (axiomLevel > maxAxiomLevel) {
-//            axiomLevel = maxAxiomLevel;
-//        }
-//    }
-
-//    axiom = system.getLevel(axiomLevel);
 }
 
 //--------------------------------------------------------------

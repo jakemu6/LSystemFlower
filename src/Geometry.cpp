@@ -6,9 +6,9 @@ void Geometry::generate(const Branch branch){
     bMesh.setMode(OF_PRIMITIVE_LINES);
 
     ofColor Col;
-    Col.r=0;
-    Col.g=0;
-    Col.b=255;
+    Col.r=131;
+    Col.g=138;
+    Col.b=45;
     
     ofVec3f start = branch.begin.getGlobalPosition();
     ofVec3f end = branch.end.getGlobalPosition();
@@ -50,7 +50,7 @@ void Geometry::generateLeaf(const Leaf leaf){
         p1OutlineMesh.addColor(p1lineCol);
     }
     p1Mesh.draw();
-    p1OutlineMesh.draw();
+//    p1OutlineMesh.draw();
 }
 
 void Geometry::generateFlower(const Flower flower){
