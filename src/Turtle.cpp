@@ -6,6 +6,7 @@
 //
 
 #include "Turtle.hpp"
+#include "ofxCorkCsg.h"
 
 Turtle::Turtle() {
     
@@ -37,7 +38,6 @@ void Turtle::draw(string input, float _x, float _y, float _z) {
     nodesContainer.clear();
     branchContainer.clear();
     leafContainer.clear();
-    
     
     x = _x;
     y = _y;
@@ -253,7 +253,6 @@ void Turtle::draw(string input, float _x, float _y, float _z) {
                 int closed = truncatedCurrentStr.find(")");
 //
                 string value = truncatedCurrentStr.substr(open + 1, closed - 2);
-                
                 float floatVal = ofToFloat(value);
 
                 shared_ptr<ofNode> rotatingPoint(new ofNode);
@@ -342,10 +341,11 @@ void Turtle::draw(string input, float _x, float _y, float _z) {
         else if(substr[i] == "}") {
             //when all the nodes are in the leafcontainer create a leaf object out of the nodes
             fillPolygon = false;
-
-            
             auto newLeaf = Leaf(leafContainer);
-            meshGeo.generateLeaf(newLeaf);
+
+            ofMesh p1Mesh;
+            p1Mesh = meshGeo.generateLeaf(newLeaf);
+            p1Mesh.draw();
 
             leafContainer.clear();
         }
@@ -367,11 +367,12 @@ void Turtle::draw(string input, float _x, float _y, float _z) {
             //when all the nodes are in the leafcontainer create a leaf object out of the nodes
             flowerFill = false;
             auto newFlower = Flower(flowerContainer);
-            meshGeo.generateFlower(newFlower);
-
+            
+            ofMesh p2Mesh;
+            p2Mesh = meshGeo.generateFlower(newFlower);
+            p2Mesh.draw();
             flowerContainer.clear();
         }
-        
     }
 }
 

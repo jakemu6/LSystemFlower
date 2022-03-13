@@ -11,12 +11,11 @@ class LevelRetriever: public ofThread{
 public:
     void setup(int maxAxiomLevel){
         this->maxLevel = maxAxiomLevel;
-
     }
 
     void threadedFunction(){
         
-        // F - Forward
+        // F - Forward (Custom)
         // f - Move Forward No Draw
         // + - Turn Right (Custom)
         // - - Turn Left
@@ -28,84 +27,40 @@ public:
         // % - Roll Right (Custom)
         // | - Roll 180 Deg
         
-        // G - Draw Line Not as edge
-        // # - Return to Origin Point (Last "[" Branch)
+        // G - Move Line Forward Not as edge
+        // # - Draw point at this position / Return to Origin Point (if Segment to be contained in "[]")
         // { - Fill Polygon Style 1
         // } - Close Polygon Style 1
         // < - Fill Polygon Style 2
         // > - Close Polygon Style 2
+        //(r,0_1) - Rand Int Value between 0 and 1 (Can only do positive integers)
 
+        //10 Segment branch
+        system.setStart("a(10)");
         
-////        Figure 3.5
-//        system.setStart("I(9)a(13)");
-//        system.addRule(LRule("a(t):t>0", "[&(70)L]/(137.5)I(10)a(t-1)", "parametric"));
-//        system.addRule(LRule("a(t):t=0", "[&(70)L]/(137.5)I(10)A", "parametric"));
-//        system.addRule(LRule("A", "[&(18)u(4)FFI(10)I(5)X(5)KKKK]/(137.5)I(8)A", "rewrite"));
-////
-//        system.addRule(LRule("I(t):t>0", "FI(t-1)", "parametric"));
-//        system.addRule(LRule("I(t):t=0", "F", "parametric"));
-//        system.addRule(LRule("u(t):t>0", "&(9)u(t-1)", "parametric"));
-//        system.addRule(LRule("u(t):t=0", "&(9)", "parametric"));
-//
-//        system.addRule(LRule("L", "[{.-FI(7)+FI(7)+FI(7)}][{.+FI(7)-FI(7)-FI(7)}]", "rewrite"));
-//        system.addRule(LRule("K", "[&<.+FI(2)--FI(2)>][&<.-FI(2)++FI(2)>]/(90)", "rewrite"));
-//
-//        system.addRule(LRule("X(t):t>0", "X(t-1)", "parametric"));
-//        system.addRule(LRule("X(t):t=0", "^(50)[[-GGGG++[GGG[++G{.].].].++GGGG.--GGG.__G.}]%", "parametric"));
+        //for each branch have it rotate with p
+        //I to make the branch grow
+        //L to create a branch off
+        //a to continue but shorten
+        system.addRule(LRule("a(t):t>0", "p(r,0_360)I(r,1_100)L(r,10_60)a(t-1)", "parametric"));
+        system.addRule(LRule("a(t):t=0", "vin", "parametric"));
+
+        system.addRule(LRule("I(t):*", "F(t)", "parametric"));
+        system.addRule(LRule("p(t):*", "&(10)%(t)", "parametric"));
+
+        //Create a branch and then create a 1/2 chance of making a flower
+        system.addRule(LRule("L(t):*", "[++(t)F(5)K(r,1_3)]", "parametric"));
+  
+        //Make the flower
+        system.addRule(LRule("K(t):t=2", "YFX", "parametric"));
+        system.addRule(LRule("Y", "[%(0)&(35)Q][%(72)&(35)Q][%(144)&(35)Q][%(216)&(35)Q][%(288)&(35)Q]", "rewrite"));
+        system.addRule(LRule("X", "[%(0)&(75)W][%(60)&(80)W][%(120)&(75)W][%(180)&(80)W][%(240)&(75)W][%(300)&(80)W]", "rewrite"));
         
-        //Fig 5.5
-//        system.setStart("[A][B]");
-////        system.addRule(LRule("I", "F(1)+(0.5)I", "rewrite"));
-//        system.addRule(LRule("A", "[+A{.].C.}", "rewrite"));
-//        system.addRule(LRule("B", "[-B{.].C.}", "rewrite"));
-//        system.addRule(LRule("C", "GC", "rewrite"));
-
-//Fig 3.14
-//        system.setStart("A(7)");
-//        system.addRule(LRule("A(t):t=7", "FI(20)[&(60)~L(0)]/(90)[&(45)A(0)]/(90)[&(60)~L(0)]/(90)[&(45)A(4)]FI(10)~K(0)", "parametric"));
-//        system.addRule(LRule("A(t):t<7", "A(t+1)", "parametric"));
-//        system.addRule(LRule("I(t):t>0", "FFI(t-1)", "parametric"));
-//        system.addRule(LRule("L(t):*", "L(t+1)", "parametric"));
-//        system.addRule(LRule("K(t):*", "K(t+1)", "parametric"));
-
-//        system.setStart("F(1){.A(0)}");
-//        system.addRule(LRule("A(t):*", "[-B(t).][A(t+1)][+B(t).]F", "parametric"));
-//        system.addRule(LRule("B(t):t>0", "G(1,1)B(t-0.1)", "parametric"));
-////        system.addRule(LRule("G(s,r):s=0", "G (5,1)", "parametric"));
-//        system.addRule(LRule("G(s,r):*", "G(s*r,r)", "parametric"));
-
-        system.setStart("T(0)");
-        //DECIMAL PLACES ARE IN THE SUBSTRING DETECT
+        system.addRule(LRule("Q", "{#[++GG#][GGG#][--GG#]}", "rewrite"));
+        system.addRule(LRule("W", "<#[++++++G#][+++GGG#][GGGG#][---GGG#][------G#]>", "rewrite"));
         
-        //STEM
-        system.addRule(LRule("T(t):t>0", "T(t-1)", "parametric"));
-        system.addRule(LRule("T(t):t=0", "%(140)[&(10)P(1)L]T(5)", "parametric"));
-
-        system.addRule(LRule("P(t):*", "F(t/5)P(t+1)", "parametric"));
-//        system.addRule(LRule("P(t):t=0", "FL", "parametric"));
-
-        
-        //LEAF
-        system.addRule(LRule("L", "&(120){#A(0)}", "rewrite"));
-        system.addRule(LRule("A(t):*", "G(3,1.1)[-B(t)#][A(t+1)][+B(t)#]", "parametric"));
-        system.addRule(LRule("B(t):t>0", "G(1,0.9)B(t-0.1)", "parametric"));
-        system.addRule(LRule("G(s,r):s<2", "G(s*r,r)", "parametric"));
-        
-//        system.setStart("L");
-//        system.addRule(LRule("L", "F{A}", "rewrite"));
-//        system.addRule(LRule("A", "[+G.][-G.]", "rewrite"));
-
-
-//        system.setStart("[A][B]");
-////        system.addRule(LRule("I", "F(1)+(0.5)I", "rewrite"));
-//        system.addRule(LRule("A", "{.B[++G.]}", "rewrite"));
-//        system.addRule(LRule("B", "[G.][+GG.]", "rewrite"));
-
-//        system.addRule(LRule("B", "[-B{.].C.}", "rewrite"));
-//        system.addRule(LRule("C", "G(2,1.2)C", "rewrite"));
-//        system.addRule(LRule("G(s,r):*", "G(s*r,r)", "parametric"));
-
-        
+        //Don't make the flower but make a stem
+        system.addRule(LRule("K(t):t=1", "FT(t)", "parametric"));
         
         results = system.getLevels(maxLevel + 1);
     }
@@ -114,8 +69,6 @@ public:
     vector<string> results;
     LSys system;
 };
-
-//#include "ofxLSystemGrammar.h"
 
 class ofApp : public ofBaseApp{
 
@@ -142,7 +95,8 @@ class ofApp : public ofBaseApp{
     Turtle turtle;
     
     LSys system;
-    
+    LSys system2;
+
     bool loading;
     LevelRetriever retrieveLvl;
     
@@ -150,18 +104,18 @@ class ofApp : public ofBaseApp{
     vector<string> results;
     
     //length of segments
-    float length = 100;
+    float length = 3;
     
     //angle of segments
-    float theta = 60;
+    float theta = 10;
 
     //axiom level that is actually being drawn.
     float axiomLevel;
     
-    float maxAxiomLevel = 40;
+    float maxAxiomLevel = 30;
     
     ofEasyCam cam;
-    //TODO SET THIS
+
     bool rotate = true;
     float rotationSpeed = 0.5;
     float rotation = 0;
@@ -176,5 +130,7 @@ class ofApp : public ofBaseApp{
     
     bool loop = true;
     
+    ofMesh sphere1;
+    ofMesh sphere2;
 
 };

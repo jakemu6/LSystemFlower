@@ -64,7 +64,7 @@ protected:
     bool branchAlreadySaved(const Branch &newBranch);
     Geometry lineMesh;
     Geometry meshGeo;
-
+    
     
     void pushValues();
     void popValues();

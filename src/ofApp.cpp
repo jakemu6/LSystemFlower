@@ -5,7 +5,10 @@
 //--------------------------------------------------------------
 
 void ofApp::setup(){
-    cam.setDistance(400);
+    cam.setDistance(800);
+    
+    ofEnableDepthTest();
+
   
     turtle = Turtle();
     
@@ -22,10 +25,12 @@ void ofApp::setup(){
     loading = true;
     retrieveLvl.startThread();
 
+
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
+    
     
     if(loading==true && !retrieveLvl.isThreadRunning()){
         results = retrieveLvl.results;
@@ -58,6 +63,8 @@ void ofApp::update(){
         axiomLevel += growthRate;
 
     }
+
+
 }
 
 //--------------------------------------------------------------
@@ -69,11 +76,17 @@ void ofApp::draw(){
     ofPushMatrix();
     ofRotateYDeg(rotation);
     ofBackground(252, 250, 242);
+//    ofFill();
+//    ofSetColor(0,0,255);
+//    ofDrawSphere(0, 0, 5);
+//    ofSetColor(255,0,0);
+//
+//    ofDrawSphere(2, 0, 5);
+
     ofNoFill();
     if (results.size() != 0) {
-        turtle.draw(results[axiomLevel], 0, -20, 0); // input string, x, y, z
+        turtle.draw(results[axiomLevel], 0, -200, 0); // input string, x, y, z
     }
-
     ofPopMatrix();
     cam.end();
 
@@ -93,7 +106,7 @@ void ofApp::keyPressed(int key){
 
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key){
-
+ 
 }
 
 //--------------------------------------------------------------

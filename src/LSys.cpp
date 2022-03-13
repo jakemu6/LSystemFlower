@@ -170,13 +170,23 @@ string LSys::getNextLevel(){
                         splitValue.push_back(paraValueString);
                     }
                     
+                    if (splitValue[0] == "r") {
+                        vector<string> randVals;
+                        randVals = ofSplitString(splitValue[1], "_");
+                        
+                        float randomNumber = ofRandom(ofToFloat(randVals[0]),ofToFloat(randVals[1]));
+                        string randNumSring = ofToString(randomNumber, 0);
+                        ofStringReplace(splitValue[0], "r", randNumSring);
+                    }
+                    
                     string boolCheck = paraBools[i];
                     
                     for (int k = 0; k < splitKey.size(); k++) {
                         ofStringReplace(boolCheck, splitKey[k], splitValue[k]);
                     }
-
+                    
                     bool conditionCheck = parseBoolean(boolCheck);
+
                     if (conditionCheck || boolCheck == "*") {
                         
                         //Get the successor and start replacing the key with the values
@@ -186,8 +196,14 @@ string LSys::getNextLevel(){
                             ofStringReplace(succ, splitKey[k], splitValue[k]);
                         }
                         
-                        
                         if (succ.find("(") != std::string::npos && succ.find(")") != std::string::npos) {
+                            
+                            
+                            //convert the succ to a substring to find the equations
+                            vector<string> succSubstring;
+                            for(int k = 0; k < succ.size(); k++){
+                                succSubstring.push_back(succ.substr(k,1));
+                            }
                             
                             //find locations of a character in a string for the brackets
                             //currently only uses positioning to tell.
@@ -205,12 +221,6 @@ string LSys::getNextLevel(){
                                 }
                             }
                             
-                            //convert the succ to a substring to find the equations
-                            vector<string> succSubstring;
-                            for(int k = 0; k < succ.size(); k++){
-                                succSubstring.push_back(succ.substr(k,1));
-                            }
-
                             //create a vector to contain all of the expressions that need to be done
                             //Currently accomodates only two expressions per bracket max
                             vector<string> expressions;
@@ -230,7 +240,7 @@ string LSys::getNextLevel(){
                                     expressions.push_back(exp);
                                 }
                             }
-                            
+                                                        
                             //for each of the expressions parse the math in it.
                             //then replace the string in the paraSucc
                             for (int k = 0; k < expressions.size(); k++) {
@@ -252,7 +262,8 @@ string LSys::getNextLevel(){
                         tempEdit.setup(j, succ, closed);
                         edits.push_back(tempEdit);
                     }
-                } else if (rules[i].ruleType == "rewrite") {
+                }
+                if (rules[i].ruleType == "rewrite") {
                     string succ = successor[i];
                     int preClosePos = predecessors[i].length();
                     
@@ -285,17 +296,12 @@ string LSys::getNextLevel(){
         advance(it2,edits[i].position);
         curStringVec.insert(it2,edits[i].successor);
     }
-    
-
-    //ATTEMPT 3 ENDS HERE
-    
+        
 	int length = curString.length();	// length of the current string
     vector <string> substring;
-//    list <string> sub;
 	
     for(int i = 0; i < length; i++){
         substring.push_back(curString.substr(i,1));
-//        sub.push_back(curString.substr(i,1));
 	}
     
     //DEPRECATED CONTEXT SENSITIVE AND STOCHASTIC METHODS
@@ -317,7 +323,7 @@ string LSys::getNextLevel(){
 //                        //after this rule is applied skip over the letters changed
 //                        j += rules[i].CSSuccessor.length();
 //                    }
-//                } else if (rules[i].CSDirection == "right") {
+//                } else if (rules[i].CSDirection == "right") {   nbcb      
 //                    if (rules[i].checkContext(substring[j+1])) {
 //                        substring[j] = rules[i].CSSuccessor;
 //                        //after this rule is applied skip over the letters changed
@@ -412,13 +418,8 @@ bool LSys::parseBoolean(const std::string &str) {
             return "true";
         }
     }
-    
-    
-    
     return str == "true" || str == "yes" || str == "on";
 }
-
-
 
 string LSys::getLevel(int _level){
 	curString = start;
