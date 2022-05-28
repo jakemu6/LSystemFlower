@@ -26,19 +26,19 @@ public:
 	void removeConstant(string cons);
 	void printConstants();
 	
-	void addRule(LRule rule);
+	void addRule(const LRule & rule);
 	void removeRule(LRule rule);
 	void printRules();
 	
-	void setStart(string start);
+	void setStart(const string & start);
 	void printStart();
 	
     bool parseBoolean(const std::string &str);
     
 	string getNextLevel();
-	string getLevel(int level);
+	string getLevel(const int & level);
     
-    vector<string> getLevels(int _level);
+    vector<string> getLevels(const int & _level);
 	
 	vector<string> variables;
 	vector<string> constants;

@@ -7,11 +7,26 @@
 
 class Geometry{
 public:
-    void generate(const Branch branch);
-    ofMesh generateLeaf(const Leaf leaf);
-    ofMesh generateFlower(const Flower flower);
+    
+    bool isShaderDirty;
+    shared_ptr<ofShader>    mShdInstanced;
+    ofTexture    mTexDepth;
 
+    
+    void setup();
+    void generate(const Branch & branch);
+    
+    void setBranchColor(ofColor & Col);
+    void setP1Color(ofColor & Col);
+    void setP2Color(ofColor & Col);
+    
+    void generateLeaf(const Leaf & leaf);
+    void generateFlower(const Flower & flower);
+    
+//    ofShader shader;
 
-//    bool grow = true;
-//    float growthRate = 0.1;
+protected:
+    ofColor branchColor;
+    ofColor p1Color;
+    ofColor p2Color;
 };

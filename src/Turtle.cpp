@@ -6,38 +6,29 @@
 //
 
 #include "Turtle.hpp"
-#include "ofxCorkCsg.h"
 
 Turtle::Turtle() {
-    
-
-    x = 0;
-    y = 0;
-    z = 0;
-    
-    bookmarks.clear();
-    nodesContainer.clear();
-    branchContainer.clear();
-    leafContainer.clear();
 }
 
-
-void Turtle::setAngle(float _angle) {
+void Turtle::setup(float & _angle, float & _length, ofColor & lineCol, ofColor & poly1Col, ofColor & poly2Col) {
     angle = _angle;
-    
-}
-
-void Turtle::setLength(float _length) {
     length = _length;
+    lineMesh.setup();
+    meshGeo.setup();
+
+    lineMesh.setBranchColor(lineCol);
+    meshGeo.setP1Color(poly1Col);
+    meshGeo.setP2Color(poly2Col);
 }
 
-
-void Turtle::draw(string input, float _x, float _y, float _z) {
+void Turtle::draw(string & input, const float & _x, const float & _y, const float & _z) {
     
     bookmarks.clear();
     nodesContainer.clear();
     branchContainer.clear();
     leafContainer.clear();
+    flowerContainer.clear();
+
     
     x = _x;
     y = _y;
@@ -53,7 +44,6 @@ void Turtle::draw(string input, float _x, float _y, float _z) {
     //get length of the input string
     int stringLength = input.length();
         
-    
     //split the string into 1 character
     string substr[stringLength];
     for(int i = 0; i < stringLength; i++) {
@@ -76,12 +66,10 @@ void Turtle::draw(string input, float _x, float _y, float _z) {
 //
                 string value = truncatedCurrentStr.substr(open + 1, closed - 2);
                 
-                float floatVal = ofToFloat(value);
-
                 auto previousPoint = nodesContainer.back();
                 shared_ptr<ofNode> newPoint(new ofNode);
                 newPoint->setParent(*nodesContainer.back());
-                newPoint->move(0, floatVal, 0);
+                newPoint->move(0, ofToFloat(value), 0);
                 nodesContainer.push_back(newPoint);
                 
                 if (fillPolygon) {
@@ -94,7 +82,8 @@ void Turtle::draw(string input, float _x, float _y, float _z) {
                     auto newBranch = Branch(*previousPoint, *newPoint);
                     lineMesh.generate(newBranch);
                 }
-                
+                i+=closed;
+
                 
             } else {
                 auto previousPoint = nodesContainer.back();
@@ -127,17 +116,17 @@ void Turtle::draw(string input, float _x, float _y, float _z) {
                 //getting the positions of the parentheses and then acquiring the contents between as a string in the cut substring
                 int open = truncatedCurrentStr.find("(");
                 int closed = truncatedCurrentStr.find(")");
-//
+
                 string value = truncatedCurrentStr.substr(open + 1, closed - 2);
                 
-                float floatVal = ofToFloat(value);
-
                 //FORWARD NO LINE
                 auto previousPoint = nodesContainer.back();
                 shared_ptr<ofNode> newPoint(new ofNode);
                 newPoint->setParent(*nodesContainer.back());
-                newPoint->move(0, floatVal, 0);
+                newPoint->move(0, ofToFloat(value), 0);
                 nodesContainer.push_back(newPoint);
+                i+=closed;
+
                 
             } else {
             
@@ -160,18 +149,17 @@ void Turtle::draw(string input, float _x, float _y, float _z) {
                 //getting the positions of the parentheses and then acquiring the contents between as a string in the cut substring
                 int open = truncatedCurrentStr.find("(");
                 int closed = truncatedCurrentStr.find(")");
-//
+
                 string value = truncatedCurrentStr.substr(open + 1, closed - 2);
-                
-                float floatVal = ofToFloat(value);
 
                 shared_ptr<ofNode> rotatingPoint(new ofNode);
                 rotatingPoint->setParent(*nodesContainer.back());
-                rotatingPoint->rollDeg(floatVal);
+                rotatingPoint->rollDeg(ofToFloat(value));
                 nodesContainer.push_back(rotatingPoint);
+                i+=closed;
                 
             } else {
-            
+
                 shared_ptr<ofNode> rotatingPoint(new ofNode);
                 rotatingPoint->setParent(*nodesContainer.back());
                 rotatingPoint->rollDeg(angle);
@@ -181,6 +169,7 @@ void Turtle::draw(string input, float _x, float _y, float _z) {
         }
         else if(substr[i] == "-") {
             //TURN RIGHT
+
             shared_ptr<ofNode> rotatingPoint(new ofNode);
             rotatingPoint->setParent(*nodesContainer.back());
             rotatingPoint->rollDeg(-angle);
@@ -207,13 +196,12 @@ void Turtle::draw(string input, float _x, float _y, float _z) {
 //
                 string value = truncatedCurrentStr.substr(open + 1, closed - 2);
                 
-                float floatVal = ofToFloat(value);
-
                 shared_ptr<ofNode> rotatingPoint(new ofNode);
                 rotatingPoint->setParent(*nodesContainer.back());
-                rotatingPoint->tiltDeg(floatVal);
+                rotatingPoint->tiltDeg(ofToFloat(value));
                 nodesContainer.push_back(rotatingPoint);
-                
+                i+=closed;
+
             } else {
             
                 //PITCH DOWN
@@ -253,13 +241,13 @@ void Turtle::draw(string input, float _x, float _y, float _z) {
                 int closed = truncatedCurrentStr.find(")");
 //
                 string value = truncatedCurrentStr.substr(open + 1, closed - 2);
-                float floatVal = ofToFloat(value);
 
                 shared_ptr<ofNode> rotatingPoint(new ofNode);
                 rotatingPoint->setParent(*nodesContainer.back());
-                rotatingPoint->panDeg(-floatVal);
+                rotatingPoint->panDeg(-ofToFloat(value));
                 nodesContainer.push_back(rotatingPoint);
-                
+                i+=closed;
+
             } else {
             
                 shared_ptr<ofNode> rotatingPoint(new ofNode);
@@ -292,18 +280,18 @@ void Turtle::draw(string input, float _x, float _y, float _z) {
                 if (value.find(",") != std::string::npos) {
                     vector<string> splitValue;
                     splitValue = ofSplitString(value, ",");
-                    float floatVal = ofToFloat(splitValue[0]);
                     shared_ptr<ofNode> newPoint(new ofNode);
                     newPoint->setParent(*nodesContainer.back());
-                    newPoint->move(0, floatVal, 0);
+                    newPoint->move(0, ofToFloat(splitValue[0]), 0);
                     nodesContainer.push_back(newPoint);
                 } else {
-                    float floatVal = ofToFloat(value);
                     shared_ptr<ofNode> newPoint(new ofNode);
                     newPoint->setParent(*nodesContainer.back());
-                    newPoint->move(0, floatVal, 0);
+                    newPoint->move(0, ofToFloat(value), 0);
                     nodesContainer.push_back(newPoint);
                 }
+                i+=closed;
+
             } else {
                 shared_ptr<ofNode> newPoint(new ofNode);
                 newPoint->setParent(*nodesContainer.back());
@@ -334,7 +322,6 @@ void Turtle::draw(string input, float _x, float _y, float _z) {
             
             //create a starting root position for the leaf
             leafContainer.push_back(root);
-            
             fillPolygon = true;
             
         }
@@ -343,10 +330,7 @@ void Turtle::draw(string input, float _x, float _y, float _z) {
             fillPolygon = false;
             auto newLeaf = Leaf(leafContainer);
 
-            ofMesh p1Mesh;
-            p1Mesh = meshGeo.generateLeaf(newLeaf);
-            p1Mesh.draw();
-
+            meshGeo.generateLeaf(newLeaf);
             leafContainer.clear();
         }
         else if(substr[i] == "<") {
@@ -359,7 +343,6 @@ void Turtle::draw(string input, float _x, float _y, float _z) {
             
             //create a starting root position for the leaf
             flowerContainer.push_back(root);
-            
             flowerFill = true;
             
         }
@@ -368,9 +351,7 @@ void Turtle::draw(string input, float _x, float _y, float _z) {
             flowerFill = false;
             auto newFlower = Flower(flowerContainer);
             
-            ofMesh p2Mesh;
-            p2Mesh = meshGeo.generateFlower(newFlower);
-            p2Mesh.draw();
+            meshGeo.generateFlower(newFlower);
             flowerContainer.clear();
         }
     }

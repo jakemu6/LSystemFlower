@@ -64,7 +64,7 @@ void LSys::printConstants(){
 	}
 }
 
-void LSys::addRule(LRule rule){
+void LSys::addRule(const LRule & rule){
 	rules.push_back(rule);
 }
 
@@ -81,7 +81,7 @@ void LSys::printRules(){
 	}
 }
 
-void LSys::setStart(string _start){
+void LSys::setStart(const string & _start){
 	start = _start;
 	curString = start;
 }
@@ -421,7 +421,7 @@ bool LSys::parseBoolean(const std::string &str) {
     return str == "true" || str == "yes" || str == "on";
 }
 
-string LSys::getLevel(int _level){
+string LSys::getLevel(const int & _level){
 	curString = start;
 	string result;
 	for(int i = 0; i < _level; i++){
@@ -430,11 +430,11 @@ string LSys::getLevel(int _level){
 	return result;
 }
 
-vector<string> LSys::getLevels(int _level){
+vector<string> LSys::getLevels(const int & _level){
     curString = start;
     vector<string> finalSentence;
     string result;
-    
+
     //push the first starting sentence so that it is the 0 axiom
     finalSentence.push_back(curString);
     

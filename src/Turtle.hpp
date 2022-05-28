@@ -18,19 +18,14 @@
 
 class Turtle {
 public:
+    
     Turtle();
-    Turtle(string forward, string left, string right);
+
+    void setup(float & _angle, float & _length, ofColor & lineCol, ofColor & poly1Col, ofColor & poly2Col);
+    void update();
     
-    
-    void setAngle(float angle);
-    void setLength(float length);
 
-
-    void draw(string input, float x, float y, float z);
-
-//    ofVboMesh mesh;
-//    ofVboMesh branchMesh;
-//    ofVboMesh leafMesh;
+    void draw(string & input, const float & x, const float & y, const float & z);
 
     
     //the container of nodes can be stored here.
@@ -38,18 +33,8 @@ public:
     std::vector<shared_ptr<ofNode> > nodesContainer;
     std::vector<shared_ptr<ofNode> > leafContainer;
     std::vector<shared_ptr<ofNode> > flowerContainer;
-
-
     std::vector<shared_ptr<ofNode> > bookmarks;
     std::vector<Branch> branchContainer;
-    
-//    shared_ptr<ofNode> startingPt;
-//    ofVec3f startPtPos;
-    
-//    of3dPrimitive leaf;
-
-    
-protected:
 
     float angle;
     float length;
@@ -60,14 +45,14 @@ protected:
     bool fillPolygon;
     bool flowerFill;
 
-
-    bool branchAlreadySaved(const Branch &newBranch);
+    //Lines from branches
     Geometry lineMesh;
+    //polygons from the flowers and leaves
     Geometry meshGeo;
+    bool branchAlreadySaved(const Branch &newBranch);
     
     
-    void pushValues();
-    void popValues();
+protected:
 };
 
 #endif /* Turtle_hpp */
