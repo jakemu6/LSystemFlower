@@ -19,7 +19,7 @@ void Geometry::setP2Color(ofColor & Col){
 void Geometry::generate(const Branch & branch){
 
 
-    ofVboMesh bMesh;
+    ofMesh bMesh;
     bMesh.setMode(OF_PRIMITIVE_LINES);
     
     ofVec3f start = branch.begin.getGlobalPosition();

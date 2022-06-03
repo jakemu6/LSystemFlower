@@ -5,6 +5,117 @@
 //--------------------------------------------------------------
 
 void ofApp::setup(){
+    
+    ofSetLogLevel(OF_LOG_VERBOSE);
+    ofEnableAlphaBlending();
+    render_buffer.allocate(width, height, GL_RGBA);
+    img_buffer.allocate(width, height, GL_RGBA);
+    img.load("rand.png");
+    fx.allocate(width, height);
+    fx.setPasses(10);
+    //https://www.shadertoy.com/view/ltyGRV
+    //ShaderToy translation key
+    //resolution - iResolution (Gets the resolution of the window)
+    //Res0 - size0 (Gets the resolution of the texture)
+    //tex0 - iChannel (Gets the texture sample)
+    
+    fx.setCode("#version 120\n \
+                        #extension GL_ARB_texture_rectangle : enable\n \
+                        uniform sampler2DRect tex0; \n \
+                        uniform sampler2DRect tex1; \n \
+                        uniform vec2 resolution;    \n \
+                        uniform vec2 size0; \n \
+                        uniform vec2 size1; \n \
+                        \
+                        vec4 getCol(vec2 pos)   \n \
+                        {   \n \
+                            vec2 uv=pos/size0;   \n \
+                            vec4 c1 = texture2DRect(tex0,uv);    \n \
+                            vec4 c2 = vec4(.4);     \n \
+                            float d = clamp(dot(c1.xyz,vec3(-0.5,1.0,-0.5)),0.0,1.0);   \n \
+                            return mix(c1,c2,1.8*d);    \n \
+                        }       \n \
+                        \
+                        vec2 getGrad(vec2 pos,float delta)  \n \
+                        {   \n \
+                            vec2 d=vec2(delta,0.0);   \n \
+                            return vec2(    \n \
+                                dot((getCol(pos+d.xy)-getCol(pos-d.xy)).xyz,vec3(.333)),    \n \
+                                dot((getCol(pos+d.yx)-getCol(pos-d.yx)).xyz,vec3(.333))     \n \
+                            );    \n \
+                        }   \n \
+                        \
+                        vec4 getRand(vec2 pos)  \n \
+                        {   \n \
+                            vec2 uv=pos/size1;   \n \
+                            return texture2DRect(tex1,uv);   \n \
+                        }   \n \
+                        \
+                        float htPattern(vec2 pos)   \n \
+                        {   \n \
+                            float p;    \n \
+                            float r=getRand(pos*.4/.7*1.).x;    \n \
+                            p=clamp((pow(r+.3,2.)-.45),0.,1.);    \n \
+                            return p;   \n \
+                        }   \n \
+                        \
+                        float getVal(vec2 pos, float level) \n \
+                        {   \n \
+                            return length(getCol(pos).xyz)+0.0001*length(pos-0.5*size0); \n \
+                            return dot(getCol(pos).xyz,vec3(.333)); \n \
+                        }   \n \
+                        \
+                        vec4 getBWDist(vec2 pos)    \n \
+                        {   \n \
+                            return vec4(smoothstep(.9,1.1,getVal(pos,0.)*.9+htPattern(pos*.7)));    \n \
+                        }   \n \
+                        \
+                        #define SampNum 40\n \
+                        \
+                        #define N(a) (a.yx*vec2(1,-1))\n \
+                        \
+                        void main(void) { \
+                            vec2 pos = ((gl_FragCoord.xy - resolution.xy * 0.5) / resolution.y * size0.y) + resolution.xy * 0.5;   \
+                            vec2 pos2=pos;  \
+                            vec2 pos3=pos;  \
+                            vec2 pos4=pos;  \
+                            vec2 pos0=pos;  \
+                            vec3 col=vec3(0);   \
+                            vec3 col2=vec3(0);  \
+                            float cnt=0.0;  \
+                            float cnt2=0.;  \
+                            for(int i=0;i<1*SampNum;i++)    \
+                            {   \
+                                vec2 gr =getGrad(pos, 2.0);     \
+                                vec2 gr2=getGrad(pos2,2.0);     \
+                                float grl=clamp(10.*length(gr),0.,1.);  \
+                                float gr2l=clamp(10.*length(gr2),0.,1.);    \
+                                pos +=.8 *normalize(N(gr)); \
+                                pos2-=.8 *normalize(N(gr2));    \
+                                float fact=1.-float(i)/float(SampNum);  \
+                                col+=fact*mix(vec3(1.2),getBWDist(pos).xyz*2.,grl); \
+                            }   \
+                            \
+                            \
+                            vec3 color1 = vec3(0.886, 0.576, 0.898);    \
+                            vec3 color2 = vec3(0.537, 0.741, 0.408);    \
+                            vec3 pixel; \
+                            pixel = ( gl_FragCoord.x > resolution.x / 2.0 ) ? color1 : color2;   \
+                            vec2  st = gl_TexCoord[0].st;   \
+                            vec4 y = texture2DRect(tex0, st);   \
+                            gl_FragColor = vec4(pixel, 1.0);   \
+                        }");
+               
+               
+//               void main(void) { \
+//                            vec2  st = gl_TexCoord[0].st;\
+//                            vec4 y = texture2DRect(tex0, st); \
+//                            gl_FragColor = y; \
+//                        }");
+    
+//    fx_file.setFade(1.0);
+//    fx_file.allocate(width, height);
+    
 //    #ifdef TARGET_OPENGLES
 //        shader.load("shadersES2/shader");
 //    ofLog() << "ES2";
@@ -163,9 +274,6 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-
-
-
     if (rotate) {
         rotation += rotationSpeed;
     }
@@ -191,39 +299,54 @@ void ofApp::update(){
             axiomLevel = maxAxiomLevel;
         }
     }
-    
-
-
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-//    fbo.begin();
-//
-//    if (doShader) {
-//        shader.begin();
-//        shader.setUniformTexture("fboTexture", fbo.getTexture(), 1);
-//        shader.setUniform2f("u_resolution", ofGetWidth(), ofGetHeight());
-////        shader.setUniform1f("blurAmnt", blur);
-//    }
-    cam.begin();
-    ofPushMatrix();
-    ofRotateYDeg(rotation);
-    ofBackground(252, 250, 242);
-    ofNoFill();
-    for(int i = 0; i < resultsList.size(); i++) {
-            turtle.draw(resultsList[i][axiomLevel], 0, -50, 0); // input string, x, y, z
+    render_buffer.begin();
+    {
+        cam.begin();
+//        ofPushStyle();
+        ofPushMatrix();
+        ofRotateYDeg(rotation);
+        ofBackground(252, 250, 242);
+        ofNoFill();
+        for(int i = 0; i < resultsList.size(); i++) {
+                turtle.draw(resultsList[i][axiomLevel], 0, -50, 0); // input string, x, y, z
+        }
+        for(int i = 0; i < resultsList2.size(); i++) {
+                turtle2.draw(resultsList2[i][axiomLevel], xPositions[i], -60, 0); // input string, x, y, z
+        }
+        ofPopMatrix();
+//        ofPopStyle();
+        cam.end();
     }
-    for(int i = 0; i < resultsList2.size(); i++) {
-            turtle2.draw(resultsList2[i][axiomLevel], xPositions[i], -60, 0); // input string, x, y, z
+    render_buffer.end();
+    img_buffer.begin();
+    {
+        img.draw(0, 0, ofGetWidth(), ofGetHeight());
     }
-    ofPopMatrix();
-    cam.end();
-//    if (doShader) {
-//        shader.end();
-//    }
-//    fbo.end();
-//    fbo.draw(0,0);
+    img_buffer.end();
+    
+    fx << render_buffer;
+    fx << img_buffer;
+    
+    ofBackgroundGradient(ofColor(0), ofColor(255), OF_GRADIENT_LINEAR);
+
+
+
+
+    // Left, directly from fbo. This should render clearly.
+    render_buffer.draw(0, 0, width, height);
+    fx.update();
+    fx.draw(width, 0, width, height);
+
+//    fx.begin();
+//    ofClear(255, 255);
+//    fx.draw();
+//    fx.end();
+//    fx.update();
+
 }
 
 //--------------------------------------------------------------

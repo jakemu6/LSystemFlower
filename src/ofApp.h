@@ -3,7 +3,7 @@
 #include "ofMain.h"
 #include "Turtle.hpp"
 #include "LSystem.h"
-#include "StoredTurtle.hpp"
+#include "ofxFXObject.h"
 
 
 
@@ -79,6 +79,16 @@ class ofApp : public ofBaseApp{
     bool loop = true;
     
     vector<float> xPositions;
+    
+    int width = 1000;
+    int height = 1000;
+    
+    ofFbo render_buffer;
+    ofFbo img_buffer;
+    ofImage img;
+    ofxFXObject fx;
+    
+    //    ofxFileBlur fx_file;
     
 //    ofFbo fbo;
 //    ofShader shader;
