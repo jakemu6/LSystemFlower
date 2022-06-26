@@ -8,11 +8,13 @@ void ofApp::setup(){
     
     ofSetLogLevel(OF_LOG_VERBOSE);
     ofEnableAlphaBlending();
+    ofDisableArbTex();
+
     render_buffer.allocate(width, height, GL_RGBA);
     img_buffer.allocate(width, height, GL_RGBA);
     img.load("rand.png");
     fx.allocate(width, height);
-    fx.setPasses(10);
+    fx.setPasses(1);
     //https://www.shadertoy.com/view/ltyGRV
     //ShaderToy translation key
     //resolution - iResolution (Gets the resolution of the window)
@@ -20,21 +22,27 @@ void ofApp::setup(){
     //tex0 - iChannel (Gets the texture sample)
     
     fx.setCode("#version 120\n \
-                        #extension GL_ARB_texture_rectangle : enable\n \
-                        uniform sampler2DRect tex0; \n \
-                        uniform sampler2DRect tex1; \n \
+                        uniform sampler2D tex0; \n \
                         uniform vec2 resolution;    \n \
                         uniform vec2 size0; \n \
-                        uniform vec2 size1; \n \
                         \
                         vec4 getCol(vec2 pos)   \n \
                         {   \n \
                             vec2 uv=pos/size0;   \n \
-                            vec4 c1 = texture2DRect(tex0,uv);    \n \
+                            vec4 c1 = texture2D(tex0,uv);    \n \
                             vec4 c2 = vec4(.4);     \n \
-                            float d = clamp(dot(c1.xyz,vec3(-0.5,1.0,-0.5)),0.0,1.0);   \n \
+                            float d = clamp(dot(c1.xyz,vec3(-0.5,0.0,-0.5)),0.0,1.0);   \n \
                             return mix(c1,c2,1.8*d);    \n \
                         }       \n \
+                        \
+                        vec4 getCol2(vec2 pos)   \n \
+                        {    \n \
+                           vec2 uv=pos/size0;     \n \
+                           vec4 c1 = texture2D(tex0,uv);  \n \
+                           vec4 c2 = vec4(1.5);  \n \
+                           float d = clamp(dot(c1.xyz,vec3(-0.5,0.0,-0.5)),0.0,1.0);     \n \
+                           return mix(c1,c2,1.8*d);  \n \
+                        }    \n \
                         \
                         vec2 getGrad(vec2 pos,float delta)  \n \
                         {   \n \
@@ -42,20 +50,21 @@ void ofApp::setup(){
                             return vec2(    \n \
                                 dot((getCol(pos+d.xy)-getCol(pos-d.xy)).xyz,vec3(.333)),    \n \
                                 dot((getCol(pos+d.yx)-getCol(pos-d.yx)).xyz,vec3(.333))     \n \
-                            );    \n \
+                            )/delta;    \n \
                         }   \n \
-                        \
-                        vec4 getRand(vec2 pos)  \n \
+                        vec2 getGrad2(vec2 pos,float delta) \n \
                         {   \n \
-                            vec2 uv=pos/size1;   \n \
-                            return texture2DRect(tex1,uv);   \n \
+                            vec2 d=vec2(delta,0);   \n \
+                            return vec2(    \n \
+                                dot((getCol2(pos+d.xy)-getCol2(pos-d.xy)).xyz,vec3(.333)),  \n \
+                                dot((getCol2(pos+d.yx)-getCol2(pos-d.yx)).xyz,vec3(.333))   \n \
+                            )/delta;    \n \
                         }   \n \
                         \
                         float htPattern(vec2 pos)   \n \
                         {   \n \
                             float p;    \n \
-                            float r=getRand(pos*.4/.7*1.).x;    \n \
-                            p=clamp((pow(r+.3,2.)-.45),0.,1.);    \n \
+                            p=clamp((pow(.8,2.)-.45),0.,1.);    \n \
                             return p;   \n \
                         }   \n \
                         \
@@ -70,40 +79,49 @@ void ofApp::setup(){
                             return vec4(smoothstep(.9,1.1,getVal(pos,0.)*.9+htPattern(pos*.7)));    \n \
                         }   \n \
                         \
-                        #define SampNum 40\n \
+                        #define SampNum 24\n \
                         \
-                        #define N(a) (a.yx*vec2(1,-1))\n \
                         \
-                        void main(void) { \
-                            vec2 pos = ((gl_FragCoord.xy - resolution.xy * 0.5) / resolution.y * size0.y) + resolution.xy * 0.5;   \
-                            vec2 pos2=pos;  \
-                            vec2 pos3=pos;  \
-                            vec2 pos4=pos;  \
-                            vec2 pos0=pos;  \
-                            vec3 col=vec3(0);   \
-                            vec3 col2=vec3(0);  \
-                            float cnt=0.0;  \
-                            float cnt2=0.;  \
-                            for(int i=0;i<1*SampNum;i++)    \
-                            {   \
-                                vec2 gr =getGrad(pos, 2.0);     \
-                                vec2 gr2=getGrad(pos2,2.0);     \
-                                float grl=clamp(10.*length(gr),0.,1.);  \
-                                float gr2l=clamp(10.*length(gr2),0.,1.);    \
-                                pos +=.8 *normalize(N(gr)); \
-                                pos2-=.8 *normalize(N(gr2));    \
-                                float fact=1.-float(i)/float(SampNum);  \
-                                col+=fact*mix(vec3(1.2),getBWDist(pos).xyz*2.,grl); \
-                            }   \
-                            \
-                            \
-                            vec3 color1 = vec3(0.886, 0.576, 0.898);    \
-                            vec3 color2 = vec3(0.537, 0.741, 0.408);    \
-                            vec3 pixel; \
-                            pixel = ( gl_FragCoord.x > resolution.x / 2.0 ) ? color1 : color2;   \
-                            vec2  st = gl_TexCoord[0].st;   \
-                            vec4 y = texture2DRect(tex0, st);   \
-                            gl_FragColor = vec4(pixel, 1.0);   \
+                        void main(void) { \n \
+                            vec2  st = gl_TexCoord[0].st;   \n \
+                            vec2 pos = ((st.xy - resolution.xy * 0.5) / resolution.y * size0.y) + size0.xy * 0.5;   \n \
+                            vec2 pos2=pos;  \n \
+                            vec2 pos3=pos;  \n \
+                            vec2 pos4=pos;  \n \
+                            vec2 pos0=pos;  \n \
+                            vec3 col=vec3(0);   \n \
+                            vec3 col2=vec3(0);  \n \
+                            float cnt=0.0;  \n \
+                            float cnt2=0.;  \n \
+                            for(int i=0;i<1*SampNum;i++)    \n \
+                            {   \n \
+                                vec2 gr =getGrad(pos, 2.0);     \n \
+                                vec2 gr2=getGrad(pos2,2.0);     \n \
+                                vec2 gr3=getGrad2(pos3,2.0);     \n \
+                                vec2 gr4=getGrad2(pos4,2.0);     \n \
+                                float grl=clamp(10.*length(gr),0.,1.);  \n \
+                                float gr2l=clamp(10.*length(gr2),0.,1.);    \n \
+                                pos +=.8 *normalize((gr.yx*vec2(1,-1)));     \n \
+                                pos2-=.8 *normalize((gr2.yx*vec2(1,-1)));    \n \
+                                float fact=1.-float(i)/float(SampNum);  \n \
+                                col+=fact*mix(vec3(1.2),getBWDist(pos).xyz*2.,grl);     \n \
+                                col+=fact*mix(vec3(1.2),getBWDist(pos2).xyz*2.,gr2l);   \n \
+                                pos3+=.25*normalize(gr3)+.5;    \n \
+                                pos4-=.5 *normalize(gr4)+.5;    \n \
+                                float f1=3.*fact;   \n \
+                                float f2=4.*(.7-fact);  \n \
+                                col2+=f1*(getCol2(pos3).xyz+.25+.4);   \n \
+                                col2+=f2*(getCol2(pos4).xyz+.25+.4);   \n \
+                                cnt2+=f1+f2;    \n \
+                                cnt+=fact;      \n \
+                            }   \n \
+                            col/=cnt*2.5;   \n \
+                            col2/=cnt2*1.65;    \n \
+                            \n \
+                            col = clamp(clamp(col*.9+.6,0.,1.)*col2,0.,1.); \n \
+                            \n \
+                            vec4 y = texture2D(tex0, st); \n \
+                            gl_FragColor = vec4(col, 1.0); \n \
                         }");
                
                
@@ -322,14 +340,15 @@ void ofApp::draw(){
         cam.end();
     }
     render_buffer.end();
-    img_buffer.begin();
-    {
-        img.draw(0, 0, ofGetWidth(), ofGetHeight());
-    }
-    img_buffer.end();
-    
+//    img_buffer.begin();
+//    {
+//        img.draw(0, 0, ofGetWidth(), ofGetHeight());
+//    }
+//    img_buffer.end();
+
+//
     fx << render_buffer;
-    fx << img_buffer;
+//    fx << img_buffer;
     
     ofBackgroundGradient(ofColor(0), ofColor(255), OF_GRADIENT_LINEAR);
 

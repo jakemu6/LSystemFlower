@@ -44,7 +44,7 @@ class ofApp : public ofBaseApp{
     vector<vector <string> > resultsList;
     vector<vector <string> > resultsList2;
     
-    int NumOfSys = 0;
+    int NumOfSys = 1;
     int NumOfSys2 = 1;
     
     Turtle turtle;
@@ -64,7 +64,7 @@ class ofApp : public ofBaseApp{
     
     ofEasyCam cam;
 
-    bool rotate = false;
+    bool rotate = true;
     float rotationSpeed = 0.1;
     float rotation = 0;
 
