@@ -79,7 +79,7 @@ void ofApp::setup(){
                             return vec4(smoothstep(.9,1.1,getVal(pos,0.)*.9+htPattern(pos*.7)));    \n \
                         }   \n \
                         \
-                        #define SampNum 24\n \
+                        #define SampNum 10\n \
                         \
                         \
                         void main(void) { \n \
@@ -101,13 +101,13 @@ void ofApp::setup(){
                                 vec2 gr4=getGrad2(pos4,2.0);     \n \
                                 float grl=clamp(10.*length(gr),0.,1.);  \n \
                                 float gr2l=clamp(10.*length(gr2),0.,1.);    \n \
-                                pos +=.8 *normalize((gr.yx*vec2(1,-1)));     \n \
-                                pos2-=.8 *normalize((gr2.yx*vec2(1,-1)));    \n \
+                                pos +=1.0 *normalize((gr.yx*vec2(1,-1)));     \n \
+                                pos2-=1.0 *normalize((gr2.yx*vec2(1,-1)));    \n \
                                 float fact=1.-float(i)/float(SampNum);  \n \
                                 col+=fact*mix(vec3(1.2),getBWDist(pos).xyz*2.,grl);     \n \
                                 col+=fact*mix(vec3(1.2),getBWDist(pos2).xyz*2.,gr2l);   \n \
-                                pos3+=.25*normalize(gr3)+.5;    \n \
-                                pos4-=.5 *normalize(gr4)+.5;    \n \
+                                pos3+=.25*normalize(gr3)+.1;    \n \
+                                pos4-=.5 *normalize(gr4);    \n \
                                 float f1=3.*fact;   \n \
                                 float f2=4.*(.7-fact);  \n \
                                 col2+=f1*(getCol2(pos3).xyz+.25+.4);   \n \
@@ -124,33 +124,6 @@ void ofApp::setup(){
                             gl_FragColor = vec4(col, 1.0); \n \
                         }");
                
-               
-//               void main(void) { \
-//                            vec2  st = gl_TexCoord[0].st;\
-//                            vec4 y = texture2DRect(tex0, st); \
-//                            gl_FragColor = y; \
-//                        }");
-    
-//    fx_file.setFade(1.0);
-//    fx_file.allocate(width, height);
-    
-//    #ifdef TARGET_OPENGLES
-//        shader.load("shadersES2/shader");
-//    ofLog() << "ES2";
-//
-//    #else
-//        if(ofIsGLProgrammableRenderer()){
-//            shader.load("shadersGL3/shader");
-//            ofLog() << "GL3";
-//        }else{
-//            shader.load("shadersGL2/shader");
-//            ofLog() << "GL2";
-//
-//        }
-//    #endif
-//
-//    doShader = true;
-    
     // F - Forward (Custom)
     // f - Move Forward No Draw
     // + - Turn Right (Custom)
@@ -191,13 +164,13 @@ void ofApp::setup(){
     system.addRule(LRule("L(t):*", "[++(t)F(5)K(r,1_5)]", "parametric"));
 
     //Make the flower
-    system.addRule(LRule("K(t):t>2", "YFX", "parametric"));
+    system.addRule(LRule("K(t):*", "YFX(r,70_80)", "parametric"));
 
     system.addRule(LRule("Y", "[%(0)&(35)Q][%(72)&(35)Q][%(144)&(35)Q][%(216)&(35)Q][%(288)&(35)Q]", "rewrite"));
-    system.addRule(LRule("X", "[%(0)&(75)W][%(60)&(80)W][%(120)&(75)W][%(180)&(80)W][%(240)&(75)W][%(300)&(80)W]", "rewrite"));
+    system.addRule(LRule("X(t):*", "[%(0)&(t)W][%(30)&(t)W][%(60)&(t)W][%(90)&(t)W][%(120)&(t)W][%(150)&(t)W][%(180)&(t)W][%(210)&(t)W][%(240)&(t)W][%(270)&(t)W][%(300)&(t)W][%(330)&(t)W]", "parametric"));
 
     system.addRule(LRule("Q", "{#[++GG#][GGG#][--GG#]}", "rewrite"));
-    system.addRule(LRule("W", "<#[++++++G#][+++GGG#][GGGG#][---GGG#][------G#]>", "rewrite"));
+    system.addRule(LRule("W", "<#[++G(5)#][G(6)#][--G(5)#]>", "rewrite"));
 
     for (int i = 0; i < NumOfSys; i++) {
         vector<string> results;
@@ -279,7 +252,7 @@ void ofApp::setup(){
     turtle2.setup(theta, length, branchCol2, poly1Col2, poly2Col2);
 
     axiomLevel = 0;
-    cam.setDistance(5000);
+    cam.setDistance(1000);
     ofEnableDepthTest();
     
 
@@ -353,12 +326,15 @@ void ofApp::draw(){
     ofBackgroundGradient(ofColor(0), ofColor(255), OF_GRADIENT_LINEAR);
 
 
+    
 
-
-    // Left, directly from fbo. This should render clearly.
+    // Left side with original, right side with shader applied
     render_buffer.draw(0, 0, width, height);
     fx.update();
     fx.draw(width, 0, width, height);
+    
+//    fx.draw(0, 0, width, height);
+
 
 //    fx.begin();
 //    ofClear(255, 255);

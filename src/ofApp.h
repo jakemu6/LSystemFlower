@@ -45,7 +45,7 @@ class ofApp : public ofBaseApp{
     vector<vector <string> > resultsList2;
     
     int NumOfSys = 1;
-    int NumOfSys2 = 1;
+    int NumOfSys2 = 0;
     
     Turtle turtle;
     Turtle turtle2;
@@ -53,10 +53,10 @@ class ofApp : public ofBaseApp{
     float maxAxiomLevel = 30;
     
     //length of segments
-    float length = 7;
+    float length = 10;
     
     //angle of segments
-    float theta = 10;
+    float theta = 5;
 
     //axiom level that is actually being drawn.
     float axiomLevel;
@@ -64,10 +64,9 @@ class ofApp : public ofBaseApp{
     
     ofEasyCam cam;
 
-    bool rotate = true;
+    bool rotate = false;
     float rotationSpeed = 0.1;
     float rotation = 0;
-
     //static - no movement max axiom level
     //loop - 0 - max;
     //reverseLoop
