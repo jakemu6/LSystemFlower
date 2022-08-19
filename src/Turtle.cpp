@@ -39,7 +39,6 @@ void Turtle::draw(string & input, const float & _x, const float & _y, const floa
     shared_ptr<ofNode> root(new ofNode);
     root->setPosition(x, y, z);
     nodesContainer.push_back(root);
-    
 
     //get length of the input string
     int stringLength = input.length();
@@ -71,7 +70,7 @@ void Turtle::draw(string & input, const float & _x, const float & _y, const floa
                 newPoint->setParent(*nodesContainer.back());
                 newPoint->move(0, ofToFloat(value), 0);
                 nodesContainer.push_back(newPoint);
-                
+
                 if (fillPolygon) {
                     leafContainer.push_back(newPoint);
                 } else if (flowerFill) {
@@ -83,7 +82,6 @@ void Turtle::draw(string & input, const float & _x, const float & _y, const floa
                     lineMesh.generate(newBranch);
                 }
                 i+=closed;
-
                 
             } else {
                 auto previousPoint = nodesContainer.back();
@@ -120,7 +118,7 @@ void Turtle::draw(string & input, const float & _x, const float & _y, const floa
                 string value = truncatedCurrentStr.substr(open + 1, closed - 2);
                 
                 //FORWARD NO LINE
-                auto previousPoint = nodesContainer.back();
+//                auto previousPoint = nodesContainer.back();
                 shared_ptr<ofNode> newPoint(new ofNode);
                 newPoint->setParent(*nodesContainer.back());
                 newPoint->move(0, ofToFloat(value), 0);
@@ -130,7 +128,7 @@ void Turtle::draw(string & input, const float & _x, const float & _y, const floa
                 
             } else {
             
-                auto previousPoint = nodesContainer.back();
+//                auto previousPoint = nodesContainer.back();
                 shared_ptr<ofNode> newPoint(new ofNode);
                 newPoint->setParent(*nodesContainer.back());
                 newPoint->move(0, length, 0);

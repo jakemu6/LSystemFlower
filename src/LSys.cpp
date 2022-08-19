@@ -91,25 +91,12 @@ void LSys::printStart(){
 	cout << "\t\t\t\t" << start << endl;
 }
 
-//TOO: have it read the parametric letters indicated by ( and )
-
 string LSys::getNextLevel(){
-    
-    
-    //record the current string
-    //place into a substring vector
-    int leng = curString.length();
-    vector <string> curStringVec;
-    for(int i = 0; i < leng; i++){
-        curStringVec.push_back(curString.substr(i,1));
-    }
-    
     //record all the rules and booleans
     vector<string> predecessors;
     vector<string> paraBools;
     vector<string> paraKey;
     vector<string> successor;
-
 
     for (int i = 0; i < rules.size(); i++) {
         
@@ -132,20 +119,100 @@ string LSys::getNextLevel(){
             successor.push_back("NO SUCCESSOR EXISTING");
         }
     }
+    
+    //Before anything occurs you need to check for (r,x_y) so that these can be converted to numbers first
+    //the "pre" is for stuff being done to the current string before any rules are read or applied
+    vector<stringEdit> preEdits;
+    int preLeng = curString.length();
+    vector <string> preCurStringVec;
+    for(int i = 0; i < preLeng; i++){
+        preCurStringVec.push_back(curString.substr(i,1));
+    }
+    
+    for (int i = 0; i < preCurStringVec.size(); i++) {
+
+        if (preCurStringVec[i] == "r") {
+            //if parametric check the paraBools to see if it satisfies
+            //need to get the value in brackets and substitute values into the bool
+            string truncatedCurrentStr = curString.substr(i-1, preCurStringVec.size());
             
+            //Bracket as a string to find in successor and predecessors
+            string openBracket = "(";
+            string closedBracket = ")";
+            
+            //getting the positions of the parentheses and then acquiring the contents between as a string in the cut substring
+            int open = truncatedCurrentStr.find("(");
+            int closed = truncatedCurrentStr.find(")");
+            
+            string paraValueString = truncatedCurrentStr.substr(open + 1, closed - 1);
+
+            //check if the contents within brackets has a comma for two values
+            vector<string> splitValue;
+
+            if (paraValueString.find(",") != std::string::npos) {
+                splitValue = ofSplitString(paraValueString, ",");
+            }else {
+                ofLog() << "ERROR: Missing a comma and value in a (r,x_y)";
+            }
+            
+
+
+            if (splitValue[0] == "r") {
+                vector<string> randVals;
+                randVals = ofSplitString(splitValue[1], "_");
+                float randomNumber = ofRandom(ofToFloat(randVals[0]),ofToFloat(randVals[1]));
+                string randNumString = ofToString(randomNumber, 0);
+                
+                stringEdit tempEdit;
+                tempEdit.setup(i, randNumString, closed-2);
+                preEdits.push_back(tempEdit);
+//                ofStringReplace(splitValue[0], "r", randNumString);
+            }
+        }
+    }
+    
+    ofSort(preEdits, &sortMe);
+    
+
+    //0. START THE EDITS AT THE BACK POSITION
+    for (int i = 0; i < preEdits.size(); i++) {
+        //1. REMOVE THE STRING AT POSITION
+        vector<string>::iterator it = preCurStringVec.begin();
+        vector<string>::iterator it1 = preCurStringVec.begin();
+        advance(it,preEdits[i].position);
+        advance(it1,preEdits[i].position + preEdits[i].closingPos + 1);
+        preCurStringVec.erase(it,it1);
+        
+        //2. ADD THE NEW STRING IN
+        vector<string>::iterator it2 = preCurStringVec.begin();
+        advance(it2,preEdits[i].position);
+        preCurStringVec.insert(it2,preEdits[i].successor);
+    }
+    //Convert preCurStringVec into a normal string for checks
+    std::string finalString = std::accumulate(preCurStringVec.begin(), preCurStringVec.end(), std::string{});
+    
+    //record the current string
+    //place into a substring vector
+    int leng = finalString.length();
+    vector <string> curStringVec;
+    for(int i = 0; i < leng; i++){
+        curStringVec.push_back(finalString.substr(i,1));
+    }
+    
     //record the position of where each of the edits are to take place along the string.
     vector<stringEdit> edits;
 
     for (int i = 0; i < predecessors.size(); i++) {
         for (int j = 0; j < curStringVec.size(); j++) {
-            
+
+
             //check if any of the predeccessors match the current string
             if (predecessors[i] == curStringVec[j]) {
                 
                 if (rules[i].ruleType == "parametric") {
                     //if parametric check the paraBools to see if it satisfies
                     //need to get the value in brackets and substitute values into the bool
-                    string truncatedCurrentStr = curString.substr(j, curStringVec.size());
+                    string truncatedCurrentStr = finalString.substr(j, curStringVec.size());
                     
                     //Bracket as a string to find in successor and predecessors
                     string openBracket = "(";
@@ -156,7 +223,7 @@ string LSys::getNextLevel(){
                     int closed = truncatedCurrentStr.find(")");
                     
                     string paraValueString = truncatedCurrentStr.substr(open + 1, closed - 2);
-
+                    
                     //check if the contents within brackets has a comma for two values
                     vector<string> splitKey;
                     vector<string> splitValue;
@@ -168,15 +235,6 @@ string LSys::getNextLevel(){
                     }else {
                         splitKey.push_back(paraKey[i]);
                         splitValue.push_back(paraValueString);
-                    }
-                    
-                    if (splitValue[0] == "r") {
-                        vector<string> randVals;
-                        randVals = ofSplitString(splitValue[1], "_");
-                        
-                        float randomNumber = ofRandom(ofToFloat(randVals[0]),ofToFloat(randVals[1]));
-                        string randNumSring = ofToString(randomNumber, 0);
-                        ofStringReplace(splitValue[0], "r", randNumSring);
                     }
                     
                     string boolCheck = paraBools[i];
@@ -303,56 +361,9 @@ string LSys::getNextLevel(){
     for(int i = 0; i < length; i++){
         substring.push_back(curString.substr(i,1));
 	}
-    
-    //DEPRECATED CONTEXT SENSITIVE AND STOCHASTIC METHODS
-    
-////THIS IS BY RULE FIRST
-//    //start with first rule
-//    for (int i = 0; i < rules.size(); i++) {
-//
-//
-//        for (int j = 0; j < length; j++) {
-//
-//
-//            if (rules[i].CSPredecessor == substring[j]) {
-//
-//                //check the directions
-//                if(rules[i].CSDirection == "left") {
-//                    if (rules[i].checkContext(substring[j-1])) {
-//                        substring[j] = rules[i].CSSuccessor;
-//                        //after this rule is applied skip over the letters changed
-//                        j += rules[i].CSSuccessor.length();
-//                    }
-//                } else if (rules[i].CSDirection == "right") {   nbcb      
-//                    if (rules[i].checkContext(substring[j+1])) {
-//                        substring[j] = rules[i].CSSuccessor;
-//                        //after this rule is applied skip over the letters changed
-//                        j += rules[i].CSSuccessor.length();
-//                    }
-//                } else {
-////                    ofLog() << "Type left or right for context direction";
-//                }
-//            } else if (rules[i].predecessor == substring[j]) {
-//                substring[j] = rules[i].successor;
-//                j += rules[i].successor.length();
-//
-//            } else if (rules[i].stochasticPredecessor == substring[j]) {
-//                string stochSuccessor = rules[i].stochasticProbability();
-//                substring[j] = stochSuccessor;
-//                j += stochSuccessor.length();
-//
-//            }
-//        }
-//    }
 	
     std::string s = std::accumulate(curStringVec.begin(), curStringVec.end(), std::string{});
-
-//    ofLog() << s;
     
-//	string result;						// merge into resulting string
-//	for(int i = 0; i < length; i++){
-//		result.append(substring[i]);
-//	}
 	curString = s;
 
 	level++;

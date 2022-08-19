@@ -4,11 +4,15 @@
 #include "Turtle.hpp"
 #include "LSystem.h"
 #include "ofxFXObject.h"
+#include "Systems.hpp"
 
 
+typedef enum {
+arrangement_1,
+arrangement_2,
+arrangement_3
+} State;
 
-//This thread is using the Lsystem to get the axiom for all of the results.
-//Set the rules in the thread the main thread will handle the turtle
 
 class ofApp : public ofBaseApp{
 
@@ -16,80 +20,45 @@ class ofApp : public ofBaseApp{
 		void setup();
 		void update();
 		void draw();
-
 		void keyPressed(int key);
 		void keyReleased(int key);
-		void mouseMoved(int x, int y );
-		void mouseDragged(int x, int y, int button);
-		void mousePressed(int x, int y, int button);
-		void mouseReleased(int x, int y, int button);
-		void mouseEntered(int x, int y);
-		void mouseExited(int x, int y);
 		void windowResized(int w, int h);
-		void dragEvent(ofDragInfo dragInfo);
-		void gotMessage(ofMessage msg);
 		
     string axiom;
     int count;
     
+    Systems palms;
+    Systems lavenders;
+    Systems branches;
 
-//    bool loading;
-//    LevelRetriever retrieveLvl;
-    
-    LSys system;
-    LSys system2;
+    State arrangementNo;
 
-    
-    //the result of the rules are stored in here.
-    vector<vector <string> > resultsList;
-    vector<vector <string> > resultsList2;
-    
-    int NumOfSys = 1;
-    int NumOfSys2 = 0;
-    
-    Turtle turtle;
-    Turtle turtle2;
-    
     float maxAxiomLevel = 30;
     
-    //length of segments
-    float length = 10;
-    
-    //angle of segments
-    float theta = 5;
-
     //axiom level that is actually being drawn.
     float axiomLevel;
     
-    
     ofEasyCam cam;
 
-    bool rotate = false;
+    bool rotate = true;
     float rotationSpeed = 0.1;
     float rotation = 0;
     //static - no movement max axiom level
-    //loop - 0 - max;
-    //reverseLoop
-    string sequence = "reverseLoop";
+    //loop - 0-max;
+    //reverseLoop - back and forth boomerang
+    //stepThrough - keyReleased to go up Axiom Level
+
+    string sequence = "loop";
     
     bool grow = true;
     float growthRate = 0.1;
-    
     bool loop = true;
     
-    vector<float> xPositions;
+    bool dev = false;
     
-    int width = 1000;
-    int height = 1000;
+    int width = ofGetWidth();
+    int height = ofGetHeight();
     
     ofFbo render_buffer;
-    ofFbo img_buffer;
-    ofImage img;
     ofxFXObject fx;
-    
-    //    ofxFileBlur fx_file;
-    
-//    ofFbo fbo;
-//    ofShader shader;
-//    bool doShader;
 };

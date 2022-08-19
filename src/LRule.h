@@ -16,14 +16,6 @@ class LRule {
 public:
     
     string ruleType;
-    
-	LRule(string pre, string succ);
-    
-    //stochastic LRule
-    LRule(string pre, string succ1, float probability1, string succ2, float probability2);
-    
-    //Context Sensitive Rule
-    LRule(string pre, string contextDir, string context, string succ);
 
 //    //Parametric Rules
     LRule(string pre, string succ, string _ruleType);
@@ -43,20 +35,6 @@ public:
 	
 	friend bool operator== (LRule &rule1, LRule &rule2);
 
-    //CS-ContextSensitive
-    string CSPredecessor;
-    string CSSuccessor;
-    string CSContext;
-    string CSDirection;
-    
-    //Stochastic
-    string stochasticPredecessor;
-    string stochasticSuccessor1;
-    float stochasticSuccessor1Probability;
-    string stochasticSuccessor2;
-    float stochasticSuccessor2Probability;
-
-    
     //No-Contex
 	string predecessor;
 	string successor;	
