@@ -15,8 +15,6 @@ class stringEdit {
 
     // methods, equivalent to specific functions of your class objects
     void setup(int _position, string _successor, int _closingPos);    // setup method, use this to setup your object's initial state
-//    void update();  // update method, used to refresh your objects properties
-//    void draw();    // draw method, this where you'll do the object's drawing
     
     // variables
     int position;

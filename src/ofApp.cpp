@@ -120,13 +120,25 @@ void ofApp::setup(){
                             gl_FragColor = vec4(col, 1.0); \n \
                         }");
                
-    palms.createSystem(types::palm, 2, maxAxiomLevel);
-    lavenders.createSystem(types::lavender, 4, maxAxiomLevel);
-    branches.createSystem(types::branch, 1, maxAxiomLevel);
+    palms.createSystem(types::palm, 10, maxAxiomLevel);
+    lavenders.createSystem(types::lavender, 10, maxAxiomLevel);
+    flowerBalls.createSystem(types::flowerBall, 10, maxAxiomLevel);
+    branches.createSystem(types::branch, 10, maxAxiomLevel);
+    phyllos.createSystem(types::phyllotaxis, 20, maxAxiomLevel);
 
     axiomLevel = 0;
     cam.setDistance(500);
     ofEnableDepthTest();
+    arrangementNo = arrangement_1;
+    //set positions for noise
+    randPos.set(ofRandom(0.001,2), ofRandom(0.001,0.9), ofRandom(0.001,2));
+    randAng.set(ofRandom(0.001,0.9), ofRandom(0.001,0.9), ofRandom(0.001,0.9));
+    for(int i = 0; i < numPlants; i++) {
+        ofVec3f position(-300 + (600 * ofNoise(i * randPos.x)), -200 + (400 * ofNoise(i * randPos.y)), -300 + (600 * ofNoise(i * randPos.z)));
+        ofVec3f angle(-80 + (160 * ofNoise(i * randAng.x)), 360 * ofNoise(i * randAng.y), -80 + (160 * ofNoise(i * randAng.z)));
+        positions.push_back(position);
+        angles.push_back(angle);
+    }
     
 }
 
@@ -135,7 +147,6 @@ void ofApp::update(){
     if (rotate) {
         rotation += rotationSpeed;
     }
-
     if (sequence == "static") {
         axiomLevel = maxAxiomLevel;
     } else if (sequence == "loop") {
@@ -148,6 +159,7 @@ void ofApp::update(){
             growthRate = -growthRate;
         } else if (axiomLevel < 0) {
             growthRate = -growthRate;
+            counter++;
         }
         axiomLevel += growthRate;
     } else if (sequence == "stepThrough") {
@@ -157,6 +169,8 @@ void ofApp::update(){
             axiomLevel = maxAxiomLevel;
         }
     }
+    
+    
 }
 
 //--------------------------------------------------------------
@@ -167,46 +181,90 @@ void ofApp::draw(){
         ofPushMatrix();
         ofRotateYDeg(rotation);
         ofBackground(252, 250, 242);
+//        ofBackground(0, 0, 0);
+
         ofNoFill();
 
         switch( arrangementNo )
         {
             case arrangement_1: {
-                ofVec3f p1(-5,-10, 5);
-                ofVec3f a1(45,-20, 30);
-                palms.renderArrangement(p1, a1, 1, axiomLevel);
+
+                palms.renderArrangement(positions[0], angles[0], 0, axiomLevel);
+                palms.renderArrangement(positions[1], angles[1], 1, axiomLevel);
+                palms.renderArrangement(positions[2], angles[2], 2, axiomLevel);
+                palms.renderArrangement(positions[3], angles[3], 3, axiomLevel);
+                palms.renderArrangement(positions[4], angles[4], 4, axiomLevel);
+                palms.renderArrangement(positions[5], angles[5], 5, axiomLevel);
+                palms.renderArrangement(positions[6], angles[6], 6, axiomLevel);
+                palms.renderArrangement(positions[7], angles[7], 7, axiomLevel);
+                palms.renderArrangement(positions[8], angles[8], 8, axiomLevel);
+                palms.renderArrangement(positions[9], angles[9], 9, axiomLevel);
                 
-                ofVec3f p2(0, 10, -10);
-                ofVec3f a2(-15, 180, 10);
-                palms.renderArrangement(p2, a2, 0, axiomLevel);
                 break;
             }
             case arrangement_2: {
-                ofVec3f p1( 20, -40, 0);
-                ofVec3f a1( 0, 0, 0);
-                lavenders.renderArrangement(p1, a1, 0, axiomLevel);
-                
-                ofVec3f p2( 0, -20, -20);
-                ofVec3f a2( 0, 90, 0);
-                lavenders.renderArrangement(p2, a2, 1, axiomLevel);
-                
-                ofVec3f p3( -20, 10, 0);
-                ofVec3f a3( 0, 180, 0);
-                lavenders.renderArrangement(p3, a3, 2, axiomLevel);
-                
-                ofVec3f p4( 0, 30, 20);
-                ofVec3f a4( 0, 270, 0);
-                lavenders.renderArrangement(p4, a4, 3, axiomLevel);
+                palms.renderArrangement(positions[0], angles[0], 0, axiomLevel);
+                phyllos.renderArrangement(positions[1], angles[1], 1, axiomLevel);
+                phyllos.renderArrangement(positions[2], angles[2], 2, axiomLevel);
+                phyllos.renderArrangement(positions[3], angles[3], 3, axiomLevel);
+                phyllos.renderArrangement(positions[4], angles[4], 4, axiomLevel);
+                lavenders.renderArrangement(positions[5], angles[5], 5, axiomLevel);
+                lavenders.renderArrangement(positions[6], angles[6], 6, axiomLevel);
+                lavenders.renderArrangement(positions[7], angles[7], 7, axiomLevel);
+                lavenders.renderArrangement(positions[8], angles[8], 8, axiomLevel);
+                palms.renderArrangement(positions[9], angles[9], 9, axiomLevel);
                 break;
             }
             case arrangement_3: {
-                ofVec3f p1( 0, 30, 20);
-                ofVec3f a1( 0, 270, 0);
-                branches.renderArrangement(p1, a1, 0, axiomLevel);
+                palms.renderArrangement(positions[0], angles[0], 0, axiomLevel);
+                branches.renderArrangement(positions[1], angles[1], 1, axiomLevel);
+                branches.renderArrangement(positions[2], angles[2], 2, axiomLevel);
+                branches.renderArrangement(positions[3], angles[3], 3, axiomLevel);
+                branches.renderArrangement(positions[4], angles[4], 4, axiomLevel);
+                palms.renderArrangement(positions[5], angles[5], 5, axiomLevel);
+                branches.renderArrangement(positions[6], angles[6], 6, axiomLevel);
+                branches.renderArrangement(positions[7], angles[7], 7, axiomLevel);
+                branches.renderArrangement(positions[8], angles[8], 8, axiomLevel);
+                palms.renderArrangement(positions[9], angles[9], 9, axiomLevel);
+                break;
+            }
+            case arrangement_4: {
+                flowerBalls.renderArrangement(positions[0], angles[0], 0, axiomLevel);
+                flowerBalls.renderArrangement(positions[1], angles[1], 1, axiomLevel);
+                flowerBalls.renderArrangement(positions[2], angles[2], 2, axiomLevel);
+                flowerBalls.renderArrangement(positions[3], angles[3], 3, axiomLevel);
+                flowerBalls.renderArrangement(positions[4], angles[4], 4, axiomLevel);
+                flowerBalls.renderArrangement(positions[5], angles[5], 5, axiomLevel);
+                flowerBalls.renderArrangement(positions[6], angles[6], 6, axiomLevel);
+                flowerBalls.renderArrangement(positions[7], angles[7], 7, axiomLevel);
+                flowerBalls.renderArrangement(positions[8], angles[8], 8, axiomLevel);
+                flowerBalls.renderArrangement(positions[9], angles[9], 9, axiomLevel);
+                break;
+            }
+            case arrangement_5: {
+                phyllos.renderArrangement(positions[0], angles[0], 0, axiomLevel);
+                phyllos.renderArrangement(positions[1], angles[1], 1, axiomLevel);
+                phyllos.renderArrangement(positions[2], angles[2], 2, axiomLevel);
+                phyllos.renderArrangement(positions[3], angles[3], 3, axiomLevel);
+                phyllos.renderArrangement(positions[4], angles[4], 4, axiomLevel);
+                phyllos.renderArrangement(positions[5], angles[5], 5, axiomLevel);
+                phyllos.renderArrangement(positions[6], angles[6], 6, axiomLevel);
+                phyllos.renderArrangement(positions[7], angles[7], 7, axiomLevel);
+                phyllos.renderArrangement(positions[8], angles[8], 8, axiomLevel);
+                phyllos.renderArrangement(positions[9], angles[9], 9, axiomLevel);
+                phyllos.renderArrangement(positions[10], angles[10], 10, axiomLevel);
+                phyllos.renderArrangement(positions[11], angles[11], 11, axiomLevel);
+                phyllos.renderArrangement(positions[12], angles[12], 12, axiomLevel);
+                phyllos.renderArrangement(positions[13], angles[13], 13, axiomLevel);
+                phyllos.renderArrangement(positions[14], angles[14], 14, axiomLevel);
+                phyllos.renderArrangement(positions[15], angles[15], 15, axiomLevel);
+                phyllos.renderArrangement(positions[16], angles[16], 16, axiomLevel);
+                phyllos.renderArrangement(positions[17], angles[17], 17, axiomLevel);
+                phyllos.renderArrangement(positions[18], angles[18], 18, axiomLevel);
+                phyllos.renderArrangement(positions[19], angles[19], 19, axiomLevel);
                 break;
             }
         }
-
         ofPopMatrix();
         cam.end();
     }
@@ -227,6 +285,16 @@ void ofApp::draw(){
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
+    positions.clear();
+    angles.clear();
+    randPos.set(ofRandom(0.001,2), ofRandom(0.001,0.9), ofRandom(0.001,2));
+    randAng.set(ofRandom(0.001,0.9), ofRandom(0.001,0.9), ofRandom(0.001,0.9));
+    for(int i = 0; i < numPlants; i++) {
+        ofVec3f position(-300 + (600 * ofNoise(i * randPos.x)), -200 + (400 * ofNoise(i * randPos.y)), -300 + (600 * ofNoise(i * randPos.z)));
+        ofVec3f angle(-80 + (160 * ofNoise(i * randAng.x)), 360 * ofNoise(i * randAng.y), -80 + (160 * ofNoise(i * randAng.z)));
+        positions.push_back(position);
+        angles.push_back(angle);
+    }
     switch ( key )
     {
         case 49: {
@@ -241,8 +309,16 @@ void ofApp::keyPressed(int key){
             arrangementNo = arrangement_3;
             break;
         }
+        case 52: {
+            arrangementNo = arrangement_4;
+            break;
+        }
+        case 53: {
+            arrangementNo = arrangement_5;
+            break;
+        }
     }
-//    ofLog() << "axiom - " << axiomLevel << " result : " << resultsList3[0][axiomLevel];
+//    ofLog() << "axiom - " << axiomLevel << " result : " << phyllos.res[0][axiomLevel];
 }
 
 //--------------------------------------------------------------

@@ -15,7 +15,7 @@
 //lavender,
 //palm
 //} Names;
-enum types {palm, branch, lavender};
+enum types {palm, branch, lavender, flowerBall, phyllotaxis};
 
 class Systems {
 public:

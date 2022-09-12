@@ -19,7 +19,7 @@ void Geometry::setP2Color(ofColor & Col){
 void Geometry::generate(const Branch & branch){
 
 
-    ofMesh bMesh;
+    ofVboMesh bMesh;
     bMesh.setMode(OF_PRIMITIVE_LINES);
     
     ofVec3f start = branch.begin.getGlobalPosition();
@@ -39,7 +39,7 @@ void Geometry::generateLeaf(const Leaf & leaf){
 
     int size = leaf.container.size();
     
-    ofMesh p1Mesh;
+    ofVboMesh p1Mesh;
     p1Mesh.setMode(OF_PRIMITIVE_TRIANGLE_FAN);
 
     for (int i = 0; i < size; i++) {
@@ -54,9 +54,8 @@ void Geometry::generateLeaf(const Leaf & leaf){
 void Geometry::generateFlower(const Flower & flower){
     int size = flower.container.size();
     
-    ofMesh p2Mesh;
+    ofVboMesh p2Mesh;
     p2Mesh.setMode(OF_PRIMITIVE_TRIANGLE_FAN);
-
 
     for (int i = 0; i < size; i++) {
         p2Mesh.addVertex(flower.container[i]->getGlobalPosition());

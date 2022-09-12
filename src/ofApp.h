@@ -10,7 +10,9 @@
 typedef enum {
 arrangement_1,
 arrangement_2,
-arrangement_3
+arrangement_3,
+arrangement_4,
+arrangement_5
 } State;
 
 
@@ -30,6 +32,8 @@ class ofApp : public ofBaseApp{
     Systems palms;
     Systems lavenders;
     Systems branches;
+    Systems flowerBalls;
+    Systems phyllos;
 
     State arrangementNo;
 
@@ -48,7 +52,10 @@ class ofApp : public ofBaseApp{
     //reverseLoop - back and forth boomerang
     //stepThrough - keyReleased to go up Axiom Level
 
-    string sequence = "loop";
+    string sequence = "reverseLoop";
+    
+    //counter is for reverseLoop only
+    int counter;
     
     bool grow = true;
     float growthRate = 0.1;
@@ -58,6 +65,12 @@ class ofApp : public ofBaseApp{
     
     int width = ofGetWidth();
     int height = ofGetHeight();
+    
+    int numPlants = 20;
+    ofVec3f randPos;
+    ofVec3f randAng;
+    vector<ofVec3f> positions;
+    vector<ofVec3f> angles;
     
     ofFbo render_buffer;
     ofxFXObject fx;

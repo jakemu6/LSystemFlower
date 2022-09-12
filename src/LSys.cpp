@@ -92,6 +92,7 @@ void LSys::printStart(){
 }
 
 string LSys::getNextLevel(){
+
     //record all the rules and booleans
     vector<string> predecessors;
     vector<string> paraBools;
@@ -111,26 +112,25 @@ string LSys::getNextLevel(){
             paraBools.push_back("NO BOOL EXISTING");
             paraKey.push_back("NO KEY EXISTING");
             successor.push_back(rules[i].successor);
-        }
-        else {
+        } else {
             predecessors.push_back("NO PREDECESSOR EXISTING");
             paraBools.push_back("NO BOOL EXISTING");
             paraKey.push_back("NO KEY EXISTING");
             successor.push_back("NO SUCCESSOR EXISTING");
         }
     }
-    
+
     //Before anything occurs you need to check for (r,x_y) so that these can be converted to numbers first
     //the "pre" is for stuff being done to the current string before any rules are read or applied
     vector<stringEdit> preEdits;
     int preLeng = curString.length();
     vector <string> preCurStringVec;
+    
     for(int i = 0; i < preLeng; i++){
         preCurStringVec.push_back(curString.substr(i,1));
     }
-    
-    for (int i = 0; i < preCurStringVec.size(); i++) {
 
+    for (int i = 0; i < preCurStringVec.size(); i++) {
         if (preCurStringVec[i] == "r") {
             //if parametric check the paraBools to see if it satisfies
             //need to get the value in brackets and substitute values into the bool
@@ -168,9 +168,10 @@ string LSys::getNextLevel(){
                 preEdits.push_back(tempEdit);
 //                ofStringReplace(splitValue[0], "r", randNumString);
             }
+
         }
     }
-    
+
     ofSort(preEdits, &sortMe);
     
 
@@ -210,6 +211,7 @@ string LSys::getNextLevel(){
             if (predecessors[i] == curStringVec[j]) {
                 
                 if (rules[i].ruleType == "parametric") {
+
                     //if parametric check the paraBools to see if it satisfies
                     //need to get the value in brackets and substitute values into the bool
                     string truncatedCurrentStr = finalString.substr(j, curStringVec.size());
@@ -236,12 +238,14 @@ string LSys::getNextLevel(){
                         splitKey.push_back(paraKey[i]);
                         splitValue.push_back(paraValueString);
                     }
-                    
+
                     string boolCheck = paraBools[i];
                     
                     for (int k = 0; k < splitKey.size(); k++) {
                         ofStringReplace(boolCheck, splitKey[k], splitValue[k]);
                     }
+                    
+
                     
                     bool conditionCheck = parseBoolean(boolCheck);
 
@@ -278,7 +282,7 @@ string LSys::getNextLevel(){
                                     closedLocations.push_back(k);
                                 }
                             }
-                            
+
                             //create a vector to contain all of the expressions that need to be done
                             //Currently accomodates only two expressions per bracket max
                             vector<string> expressions;
@@ -292,13 +296,16 @@ string LSys::getNextLevel(){
                                 //check if the expression has a comma in it
                                 if (exp.find(",") != std::string::npos) {
                                     vector<string> splitExp = ofSplitString(exp, ",");
-                                    expressions.push_back(splitExp[0]);
-                                    expressions.push_back(splitExp[1]);
+                                    if (splitExp[0] != "r") {
+                                        for (int l = 0; l < splitExp.size(); l++) {
+                                            expressions.push_back(splitExp[l]);
+                                        }
+                                    }
                                 } else {
                                     expressions.push_back(exp);
                                 }
                             }
-                                                        
+
                             //for each of the expressions parse the math in it.
                             //then replace the string in the paraSucc
                             for (int k = 0; k < expressions.size(); k++) {
@@ -333,7 +340,7 @@ string LSys::getNextLevel(){
             }
         }
     }
-    
+
     ofSort(edits, &sortMe);
     
     //0. START THE EDITS AT THE BACK POSITION
@@ -373,9 +380,6 @@ string LSys::getNextLevel(){
 
 //for the parametric rules to check if it satisfies conditions
 bool LSys::parseBoolean(const std::string &str) {
-    
-    
-    
     if (str.find("=") != std::string::npos) {
         
         //split the string at the equals

@@ -15,13 +15,3 @@ void stringEdit::setup(int _position, string _successor, int _closingPos){
     successor = _successor;
     closingPos = _closingPos;
 }
-
-//
-//
-//void stringEdit::update(){
-//
-//}
-//
-//void stringEdit::draw(){
-//
-//}
