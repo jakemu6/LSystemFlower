@@ -98,9 +98,7 @@ string LSys::getNextLevel(){
     vector<string> paraBools;
     vector<string> paraKey;
     vector<string> successor;
-
     for (int i = 0; i < rules.size(); i++) {
-        
         //for the parametric rules
         if (rules[i].ruleType == "parametric") {
             predecessors.push_back(rules[i].predecessor);
@@ -119,7 +117,6 @@ string LSys::getNextLevel(){
             successor.push_back("NO SUCCESSOR EXISTING");
         }
     }
-
     //Before anything occurs you need to check for (r,x_y) so that these can be converted to numbers first
     //the "pre" is for stuff being done to the current string before any rules are read or applied
     vector<stringEdit> preEdits;
@@ -168,13 +165,9 @@ string LSys::getNextLevel(){
                 preEdits.push_back(tempEdit);
 //                ofStringReplace(splitValue[0], "r", randNumString);
             }
-
         }
     }
-
     ofSort(preEdits, &sortMe);
-    
-
     //0. START THE EDITS AT THE BACK POSITION
     for (int i = 0; i < preEdits.size(); i++) {
         //1. REMOVE THE STRING AT POSITION
@@ -183,7 +176,6 @@ string LSys::getNextLevel(){
         advance(it,preEdits[i].position);
         advance(it1,preEdits[i].position + preEdits[i].closingPos + 1);
         preCurStringVec.erase(it,it1);
-        
         //2. ADD THE NEW STRING IN
         vector<string>::iterator it2 = preCurStringVec.begin();
         advance(it2,preEdits[i].position);
@@ -191,7 +183,6 @@ string LSys::getNextLevel(){
     }
     //Convert preCurStringVec into a normal string for checks
     std::string finalString = std::accumulate(preCurStringVec.begin(), preCurStringVec.end(), std::string{});
-    
     //record the current string
     //place into a substring vector
     int leng = finalString.length();
@@ -202,11 +193,8 @@ string LSys::getNextLevel(){
     
     //record the position of where each of the edits are to take place along the string.
     vector<stringEdit> edits;
-
     for (int i = 0; i < predecessors.size(); i++) {
         for (int j = 0; j < curStringVec.size(); j++) {
-
-
             //check if any of the predeccessors match the current string
             if (predecessors[i] == curStringVec[j]) {
                 

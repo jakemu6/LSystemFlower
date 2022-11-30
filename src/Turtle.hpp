@@ -23,10 +23,8 @@ public:
 
     void setup(float & _angle, float & _length, ofColor & lineCol, ofColor & poly1Col, ofColor & poly2Col);
     void update();
-    
-
     void draw(string & input, const float & x, const float & y, const float & z);
-
+    void overwriteCol(ofColor & lineCol, ofColor & poly1Col, ofColor & poly2Col);
     
     //the container of nodes can be stored here.
     //shared_ptr is a pointer object that removes itself when empty of refs or something I think.

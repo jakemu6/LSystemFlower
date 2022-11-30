@@ -22,9 +22,6 @@ public:
     
     void generateLeaf(const Leaf & leaf);
     void generateFlower(const Flower & flower);
-    
-//    ofShader shader;
-
 protected:
     ofColor branchColor;
     ofColor p1Color;

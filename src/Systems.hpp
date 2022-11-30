@@ -15,15 +15,26 @@
 //lavender,
 //palm
 //} Names;
-enum types {palm, branch, lavender, flowerBall, phyllotaxis};
+enum types {
+    palm,
+    branch,
+    lavender,
+    flowerBall,
+    phyllotaxis,
+    fan,
+    acro,
+    sigma,
+    alpha,
+    beta
+};
 
 class Systems {
 public:
     Systems();
     void createSystem(types select_types, int variations, int maxAxiomLevel);
-    
     void renderArrangement(ofVec3f startPos, ofVec3f angle, int varNum, float axiomLevel);
-    
+    void overwriteCol(ofColor & lineCol, ofColor & poly1Col, ofColor & poly2Col);
+
     //length of segments
     float length = 10;
     //angle of segments

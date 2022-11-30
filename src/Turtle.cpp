@@ -21,15 +21,19 @@ void Turtle::setup(float & _angle, float & _length, ofColor & lineCol, ofColor &
     meshGeo.setP2Color(poly2Col);
 }
 
+void Turtle::overwriteCol(ofColor & lineCol, ofColor & poly1Col, ofColor & poly2Col) {
+    lineMesh.setBranchColor(lineCol);
+    meshGeo.setP1Color(poly1Col);
+    meshGeo.setP2Color(poly2Col);
+}
+
 void Turtle::draw(string & input, const float & _x, const float & _y, const float & _z) {
-    
     bookmarks.clear();
     nodesContainer.clear();
     branchContainer.clear();
     leafContainer.clear();
     flowerContainer.clear();
 
-    
     x = _x;
     y = _y;
     z = _z;
@@ -62,7 +66,6 @@ void Turtle::draw(string & input, const float & _x, const float & _y, const floa
                 //getting the positions of the parentheses and then acquiring the contents between as a string in the cut substring
                 int open = truncatedCurrentStr.find("(");
                 int closed = truncatedCurrentStr.find(")");
-//
                 string value = truncatedCurrentStr.substr(open + 1, closed - 2);
                 
                 auto previousPoint = nodesContainer.back();
@@ -116,7 +119,6 @@ void Turtle::draw(string & input, const float & _x, const float & _y, const floa
                 int closed = truncatedCurrentStr.find(")");
 
                 string value = truncatedCurrentStr.substr(open + 1, closed - 2);
-                
                 //FORWARD NO LINE
 //                auto previousPoint = nodesContainer.back();
                 shared_ptr<ofNode> newPoint(new ofNode);
@@ -124,10 +126,7 @@ void Turtle::draw(string & input, const float & _x, const float & _y, const floa
                 newPoint->move(0, ofToFloat(value), 0);
                 nodesContainer.push_back(newPoint);
                 i+=closed;
-
-                
             } else {
-            
 //                auto previousPoint = nodesContainer.back();
                 shared_ptr<ofNode> newPoint(new ofNode);
                 newPoint->setParent(*nodesContainer.back());

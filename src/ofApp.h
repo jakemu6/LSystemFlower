@@ -8,11 +8,42 @@
 
 
 typedef enum {
-arrangement_1,
-arrangement_2,
-arrangement_3,
-arrangement_4,
-arrangement_5
+    arrangement_0,
+    arrangement_1,
+    arrangement_2,
+    arrangement_3,
+    arrangement_4,
+    arrangement_5,
+    arrangement_6,
+    arrangement_7,
+    arrangement_8,
+    arrangement_9,
+    
+
+    arrangement_10,
+    arrangement_11,
+    arrangement_12,
+    //ALL PLANTS IN SYSTEM
+    arrangement_R,
+    arrangement_T,
+    arrangement_Y,
+    arrangement_U,
+    arrangement_I,
+    arrangement_O,
+    arrangement_P,
+    
+    //SINGLE PLANT IN SYSTEM
+    arrangement_A,
+    arrangement_S,
+    arrangement_D,
+    arrangement_F,
+    arrangement_G,
+    arrangement_H,
+    arrangement_J,
+    arrangement_K,
+    arrangement_L,
+    arrangement_SEMICOLON
+    
 } State;
 
 
@@ -23,9 +54,10 @@ class ofApp : public ofBaseApp{
 		void update();
 		void draw();
 		void keyPressed(int key);
-		void keyReleased(int key);
-		void windowResized(int w, int h);
-		
+        void changeArrangement(int num);
+        void generateArrangement(int num);
+        void overwriteCol();
+    
     string axiom;
     int count;
     
@@ -34,10 +66,20 @@ class ofApp : public ofBaseApp{
     Systems branches;
     Systems flowerBalls;
     Systems phyllos;
+    Systems fans;
+    Systems acros;
+    Systems sigmas;
+    Systems alphas;
+    Systems betas;
+
 
     State arrangementNo;
 
     float maxAxiomLevel = 30;
+    int numPlants = 5;
+    
+    //for randomisation of the 
+    int numArrangements = 6;
     
     //axiom level that is actually being drawn.
     float axiomLevel;
@@ -54,9 +96,6 @@ class ofApp : public ofBaseApp{
 
     string sequence = "reverseLoop";
     
-    //counter is for reverseLoop only
-    int counter;
-    
     bool grow = true;
     float growthRate = 0.1;
     bool loop = true;
@@ -66,12 +105,11 @@ class ofApp : public ofBaseApp{
     int width = ofGetWidth();
     int height = ofGetHeight();
     
-    int numPlants = 20;
     ofVec3f randPos;
     ofVec3f randAng;
     vector<ofVec3f> positions;
     vector<ofVec3f> angles;
-    
+
     ofFbo render_buffer;
     ofxFXObject fx;
 };

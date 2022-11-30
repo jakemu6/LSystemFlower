@@ -17,7 +17,7 @@ int main( ){
 //        ofRunApp(mainWindow, mainApp);
 //        ofRunMainLoop();
 //    }else{
-        ofSetupOpenGL(1280, 720, OF_FULLSCREEN);
+        ofSetupOpenGL(1920, 1080, OF_FULLSCREEN);
         if(!ofGLCheckExtension("GL_ARB_geometry_shader4") && !ofGLCheckExtension("GL_EXT_geometry_shader4") && !ofIsGLProgrammableRenderer()){
             ofLogFatalError() << "geometry shaders not supported on this graphics card";
             return 1;
