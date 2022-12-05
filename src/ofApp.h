@@ -5,7 +5,7 @@
 #include "LSystem.h"
 #include "ofxFXObject.h"
 #include "Systems.hpp"
-
+#include "ofxGui.h"
 
 typedef enum {
     arrangement_0,
@@ -72,8 +72,31 @@ class ofApp : public ofBaseApp{
     Systems alphas;
     Systems betas;
 
-
     State arrangementNo;
+    
+    ofxPanel gui;
+    
+    ofxVec3Slider position1;
+    ofxVec3Slider position2;
+
+    ofxVec3Slider angle1;
+    ofxVec3Slider angle2;
+    
+//    ofxIntSlider intSlider;
+//    ofxFloatSlider floatSlider;
+//    
+//    ofxToggle toggle;
+//    ofxButton button;
+//    ofxLabel label;
+//    
+//    ofxIntField intField;
+//    ofxFloatField floatField;
+//    ofxTextField textField;
+//    
+//    ofxVec2Slider vec2Slider;
+//    ofxVec3Slider vec3Slider;
+//    ofxVec4Slider vec4Slider;
+    
 
     float maxAxiomLevel = 30;
     int numPlants = 5;

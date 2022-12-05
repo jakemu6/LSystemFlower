@@ -1,6 +1,9 @@
 #include "ofApp.h"
 //--------------------------------------------------------------
 void ofApp::setup(){
+    
+
+    
     ofSetLogLevel(OF_LOG_VERBOSE);
     ofEnableAlphaBlending();
     
@@ -13,6 +16,8 @@ void ofApp::setup(){
     //resolution - iResolution (Gets the resolution of the window)
     //Res0 - size0 (Gets the resolution of the texture)
     //tex0 - iChannel (Gets the texture sample)
+
+    
     fx.setCode("#version 120\n \
                         uniform sampler2D tex0; \n \
                         uniform vec2 resolution;    \n \
@@ -115,6 +120,9 @@ void ofApp::setup(){
                             vec4 y = texture2D(tex0, st); \n \
                             gl_FragColor = vec4(col, 1.0); \n \
                         }");
+    
+
+    
                
     palms.createSystem(types::palm, numPlants, maxAxiomLevel);
     lavenders.createSystem(types::lavender, numPlants, maxAxiomLevel);
@@ -129,15 +137,46 @@ void ofApp::setup(){
 
     axiomLevel = 0;
     cam.setDistance(280);
-    ofEnableDepthTest();
     //set init arrangement
     changeArrangement(2);
+    
+    //GUI FOR TESTING
+    gui.setup();
+    
+    gui.add(position1.setup("pos 1", ofVec3f(0, 0, 0), ofVec3f(-180, -180, -180), ofVec3f(180, 180, 180)));
+    gui.add(position2.setup("pos 2", ofVec3f(0, 0, 0), ofVec3f(-180, -180, -180), ofVec3f(180, 180, 180)));
+    
+    gui.add(angle1.setup("ang 1", ofVec3f(0, 0, 0), ofVec3f(-180, -180, -180), ofVec3f(180, 180, 180)));
+    gui.add(angle2.setup("ang 2", ofVec3f(0, 0, 0), ofVec3f(-180, -180, -180), ofVec3f(180, 180, 180)));
+
+    //    gui.add(vec3Slider.setup("vec3 slider", ofVec3f(100, 150, 90), ofVec3f(0, 0, 0), ofVec3f(255, 255, 255)));
+    
+//    gui.add(intSlider.setup("int slider", 64, 3, 64));
+//    gui.add(floatSlider.setup("float slider", 30.0, 0.0, 300.0));
+//    
+//    gui.add(toggle.setup("toggle", false));
+//    gui.add(button.setup("button"));
+//    gui.add(label.setup("label", "THIS IS A LABEL"));
+//    
+//    gui.add(intField.setup("int field", 100, 0, 100));
+//    gui.add(floatField.setup("float field", 100.0, 0.0, 100.0));
+//    gui.add(textField.setup("text field", "text"));
+//    
+//    gui.add(vec2Slider.setup("vec2 slider", ofVec2f(0, 0), ofVec2f(0, 0), ofVec2f(ofGetWidth(), ofGetHeight())));
+//    gui.add(vec3Slider.setup("vec3 slider", ofVec3f(100, 150, 90), ofVec3f(0, 0, 0), ofVec3f(255, 255, 255)));
+//    gui.add(vec4Slider.setup("vec4 slider", ofVec4f(0, 0, 0, 0), ofVec4f(0, 0, 0, 0), ofVec4f(255, 255, 255, 255)));
+
+
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
 //    cam.setDistance(ofGetMouseX());
-
+    
+//    if (!toggle) {
+//        rotate = false;
+//    }
+    
     if (rotate) {
         rotation += rotationSpeed;
     }
@@ -165,7 +204,7 @@ void ofApp::update(){
             axiomLevel = maxAxiomLevel;
         }
     }
-    
+
     
 }
 
@@ -175,24 +214,41 @@ void ofApp::draw(){
     {
         cam.begin();
         ofPushMatrix();
+        ofEnableDepthTest();
         ofRotateYDeg(rotation);
         ofBackground(252, 250, 242);
         ofNoFill();
         generateArrangement( arrangementNo );
+        ofDisableDepthTest();
         ofPopMatrix();
         cam.end();
     }
     render_buffer.end();
     fx << render_buffer;
     fx.update();
+    ofFill();
+    ofSetColor(255, 255, 255);
+    gui.draw();
 
     // DEV setting is left side with original, right side with shader applied
     if (dev) {
         render_buffer.draw(0, 0, width/2, height);
         fx.draw(width/2, 0, width/2, height);
+
     } else {
         fx.draw(0, 0, width, height);
     }
+    
+//    if (button) {
+//      ofSetColor(ofRandom(vec3Slider->x), ofRandom(vec3Slider->y), ofRandom(vec3Slider->z));
+//    }
+//    ofDrawCircle(ofGetWidth() / 2, ofGetHeight() / 2, 128);
+//    
+//    ofSetCircleResolution(intSlider);
+//    ofSetColor(vec4Slider->x, vec4Slider->y, vec4Slider->z, vec4Slider->w);
+//    ofDrawCircle(vec2Slider->x, vec2Slider->y, 128);
+    
+    gui.draw();
 }
 
 //--------------------------------------------------------------
@@ -471,8 +527,21 @@ void ofApp::generateArrangement(int num){
             betas.renderArrangement(positions[19], angles[19], 4, axiomLevel);
             break;
         }
-        case arrangement_R: {for (int i = 0; i < numPlants; i++) {flowerBalls.renderArrangement(positions[i], angles[i], i, axiomLevel);}break;}
-        case arrangement_T: {for (int i = 0; i < numPlants; i++) {phyllos.renderArrangement(positions[i], angles[i], i, axiomLevel);}break;}
+        case arrangement_R: {
+            acros.renderArrangement(ofVec3f(position1->x, position1->y, position1->z), ofVec3f(angle1->x, angle1->y, angle1->z), 0, axiomLevel);
+            phyllos.renderArrangement(ofVec3f(position2->x, position2->y, position2->z), ofVec3f(angle2->x, angle2->y, angle2->z), 1, axiomLevel);
+//            phyllos.renderArrangement(ofVec3f(20, -50, 0), ofVec3f(-20, 10, 0), 2, axiomLevel);
+//            phyllos.renderArrangement(ofVec3f(0, -80, 20), ofVec3f(20, 60, 0), 0, axiomLevel);
+            break;
+        }
+        case arrangement_T: {
+            palms.renderArrangement(ofVec3f(24, -100, 4), ofVec3f(-68, -25, -42), 2, axiomLevel);
+            palms.renderArrangement(ofVec3f(31, -44, 85), ofVec3f(35, 160, -10), 0, axiomLevel);
+            
+            phyllos.renderArrangement(ofVec3f(20, -50, 0), ofVec3f(-20, 10, 0), 2, axiomLevel);
+            phyllos.renderArrangement(ofVec3f(0, -80, 20), ofVec3f(20, 60, 0), 0, axiomLevel);
+            break;
+        }
         case arrangement_Y: {for (int i = 0; i < numPlants; i++) {fans.renderArrangement(positions[i], angles[i], i, axiomLevel);}break;}
         case arrangement_U: {for (int i = 0; i < numPlants; i++) {acros.renderArrangement(positions[i], angles[i], i, axiomLevel);}break;}
         case arrangement_I: {for (int i = 0; i < numPlants; i++) {sigmas.renderArrangement(positions[i], angles[i], i, axiomLevel);}break;}
@@ -488,7 +557,21 @@ void ofApp::generateArrangement(int num){
         case arrangement_J: {acros.renderArrangement(ofVec3f(0, 0, 0), ofVec3f(0, 0, 0), 0, axiomLevel);break;}
         case arrangement_K: {sigmas.renderArrangement(ofVec3f(0, 0, 0), ofVec3f(0, 0, 0), 0, axiomLevel);break;}
         case arrangement_L: {alphas.renderArrangement(ofVec3f(0, 0, 0), ofVec3f(0, 0, 0), 0, axiomLevel);break;}
-        case arrangement_SEMICOLON: {betas.renderArrangement(ofVec3f(0, 0, 0), ofVec3f(0, 0, 0), 0, axiomLevel);break;}
+            
+        case arrangement_SEMICOLON: {
+            palms.renderArrangement(positions[0], angles[0], 0, axiomLevel);
+            lavenders.renderArrangement(positions[1], angles[1], 1, axiomLevel);
+            branches.renderArrangement(positions[2], angles[2], 2, axiomLevel);
+            flowerBalls.renderArrangement(positions[3], angles[3], 3, axiomLevel);
+            phyllos.renderArrangement(positions[4], angles[4], 4, axiomLevel);
+            fans.renderArrangement(positions[5], angles[5], 0, axiomLevel);
+            acros.renderArrangement(positions[6], angles[6], 1, axiomLevel);
+            sigmas.renderArrangement(positions[7], angles[7], 2, axiomLevel);
+            alphas.renderArrangement(positions[8], angles[8], 3, axiomLevel);
+            betas.renderArrangement(positions[9], angles[9], 4, axiomLevel);
+            break;
+            
+        }
 
     }
 }
@@ -550,164 +633,231 @@ void ofApp::changeArrangement(int num){
 void ofApp::overwriteCol(){
     
     ofColor palmsBranchCol;
+    ofColor palmsPoly1Col;
+    ofColor palmsPoly2Col;
     int palmsBranchNum = ofRandom(0,3);
-    switch ( palmsBranchNum )
-    {
+    int palmsPoly1Num = ofRandom(0,3);
+    //NO 2ND COLOUR IN USE
+    int palmsPoly2Num = 0;
+    switch ( palmsBranchNum ) {
         case 0: { palmsBranchCol.set(108, 96, 36); break; }
         case 1: { palmsBranchCol.set(91, 98, 46); break; }
         case 2: { palmsBranchCol.set(100, 106, 88); break; }
     }
-    
-    ofColor palmsPoly1Col;
-    int palmsPoly1Num = ofRandom(0,3);
-    switch ( palmsPoly1Num )
-    {
+    switch ( palmsPoly1Num ) {
         case 0: { palmsPoly1Col.set(162, 140, 55); break; }
         case 1: { palmsPoly1Col.set(131, 138, 45); break; }
         case 2: { palmsPoly1Col.set(66, 96, 45); break; }
     }
-    
-    ofColor palmsPoly2Col;
-    int palmsPoly2Num = 0;
-    switch ( palmsPoly2Num )
-    {
-        case 0: { palmsPoly2Col.set(0, 0, 0); break; }
-    }
+    switch ( palmsPoly2Num ) { case 0: { palmsPoly2Col.set(0, 0, 0); break; }}
     palms.overwriteCol(palmsBranchCol, palmsPoly1Col, palmsPoly2Col);
     
     ofColor lavenderBranchCol;
+    ofColor lavenderPoly1Col;
+    ofColor lavenderPoly2Col;
     int lavenderBranchNum = ofRandom(0,3);
-    switch ( lavenderBranchNum )
-    {
+    int lavenderPoly1Num = ofRandom(0,3);
+    int lavenderPoly2Num = ofRandom(0,3);
+    switch ( lavenderBranchNum ) {
         case 0: { lavenderBranchCol.set(66, 96, 45); break; }
         case 1: { lavenderBranchCol.set(9, 97, 72); break; }
         case 2: { lavenderBranchCol.set(54, 86, 60); break; }
     }
-    
-    ofColor lavenderPoly1Col;
-    int lavenderPoly1Num = ofRandom(0,3);
-    switch ( lavenderPoly1Num )
-    {
+    switch ( lavenderPoly1Num ) {
         case 0: { lavenderPoly1Col.set(66, 96, 45); break; }
         case 1: { lavenderPoly1Col.set(9, 97, 72); break; }
         case 2: { lavenderPoly1Col.set(54, 86, 60); break; }
     }
-    
-    ofColor lavenderPoly2Col;
-    int lavenderPoly2Num = ofRandom(0,3);
-    switch ( lavenderPoly2Num )
-    {
+    switch ( lavenderPoly2Num ) {
         case 0: { lavenderPoly2Col.set(152, 109, 178); break; }
         case 1: { lavenderPoly2Col.set(171, 59, 58); break; }
         case 2: { lavenderPoly2Col.set(246, 197, 85); break; }
     }
     lavenders.overwriteCol(lavenderBranchCol, lavenderPoly1Col, lavenderPoly2Col);
     
+    
     ofColor branchBranchCol;
+    ofColor branchPoly1Col;
+    ofColor branchPoly2Col;
     int branchBranchNum = ofRandom(0,3);
-    switch ( branchBranchNum )
-    {
+    int branchPoly1Num = ofRandom(0,3);
+    int branchPoly2Num = ofRandom(0,3);
+    switch ( branchBranchNum ) {
         case 0: { branchBranchCol.set(66, 96, 45); break; }
         case 1: { branchBranchCol.set(9, 97, 72); break; }
         case 2: { branchBranchCol.set(54, 86, 60); break; }
     }
-    
-    ofColor branchPoly1Col;
-    int branchPoly1Num = ofRandom(0,3);
-    switch ( branchPoly1Num )
-    {
+    switch ( branchPoly1Num ) {
         case 0: { branchPoly1Col.set(66, 96, 45); break; }
         case 1: { branchPoly1Col.set(9, 97, 72); break; }
         case 2: { branchPoly1Col.set(54, 86, 60); break; }
     }
-    
-    ofColor branchPoly2Col;
-    int branchPoly2Num = ofRandom(0,3);
-    switch ( branchPoly2Num )
-    {
+    switch ( branchPoly2Num ) {
         case 0: { branchPoly2Col.set(143, 119, 181); break; }
         case 1: { branchPoly2Col.set(171, 59, 58); break; }
         case 2: { branchPoly2Col.set(247, 217, 76); break; }
     }
     branches.overwriteCol(branchBranchCol, branchPoly1Col, branchPoly2Col);
     
+    
     ofColor flowerBallBranchCol;
+    ofColor flowerBallPoly1Col;
+    ofColor flowerBallPoly2Col;
     int flowerBallBranchNum = ofRandom(0,3);
-    switch ( flowerBallBranchNum )
-    {
+    //NO 1ST COLOUR IN USE
+    int flowerBallPoly1Num = 0;
+    int flowerBallPoly2Num = ofRandom(0,3);
+    switch ( flowerBallBranchNum ) {
         case 0: { flowerBallBranchCol.set(66, 96, 45); break; }
         case 1: { flowerBallBranchCol.set(9, 97, 72); break; }
         case 2: { flowerBallBranchCol.set(54, 86, 60); break; }
     }
-    
-    ofColor flowerBallPoly1Col;
-    int flowerBallPoly1Num = 0;
-    switch ( flowerBallPoly1Num )
-    {
-        case 0: { flowerBallPoly1Col.set(0, 0, 0); break; }
-    }
-    
-    ofColor flowerBallPoly2Col;
-    int flowerBallPoly2Num = ofRandom(0,3);
-    switch ( flowerBallPoly2Num )
-    {
+    switch ( flowerBallPoly1Num ) { case 0: { flowerBallPoly1Col.set(0, 0, 0); break; }}
+    switch ( flowerBallPoly2Num ) {
         case 0: { flowerBallPoly2Col.set(181, 202, 160); break; }
         case 1: { flowerBallPoly2Col.set(189, 192, 186); break; }
         case 2: { flowerBallPoly2Col.set(215, 185, 142); break; }
     }
     flowerBalls.overwriteCol(flowerBallBranchCol, flowerBallPoly1Col, flowerBallPoly2Col);
     
+    
     ofColor phyllotaxisBranchCol;
+    ofColor phyllotaxisPoly1Col;
+    ofColor phyllotaxisPoly2Col;
     int phyllotaxisBranchNum = ofRandom(0,3);
-    switch ( phyllotaxisBranchNum )
-    {
+    int phyllotaxisPoly1Num = ofRandom(0,3);
+    int phyllotaxisPoly2Num = ofRandom(0,3);
+    switch ( phyllotaxisBranchNum ) {
         case 0: { phyllotaxisBranchCol.set(66, 96, 45); break; }
         case 1: { phyllotaxisBranchCol.set(9, 97, 72); break; }
         case 2: { phyllotaxisBranchCol.set(54, 86, 60); break; }
     }
-    
-    ofColor phyllotaxisPoly1Col;
-    int phyllotaxisPoly1Num = ofRandom(0,3);
-    switch ( phyllotaxisPoly1Num )
-    {
+    switch ( phyllotaxisPoly1Num ) {
         case 0: { phyllotaxisPoly1Col.set(66, 96, 45); break; }
         case 1: { phyllotaxisPoly1Col.set(9, 97, 72); break; }
         case 2: { phyllotaxisPoly1Col.set(54, 86, 60); break; }
     }
-    
-    ofColor phyllotaxisPoly2Col;
-    int phyllotaxisPoly2Num = ofRandom(0,3);
-    switch ( phyllotaxisPoly2Num )
-    {
+    switch ( phyllotaxisPoly2Num ) {
         case 0: { phyllotaxisPoly2Col.set(251, 153, 102); break; }
         case 1: { phyllotaxisPoly2Col.set(171, 59, 58); break; }
         case 2: { phyllotaxisPoly2Col.set(254, 223, 225); break; }
     }
     phyllos.overwriteCol(phyllotaxisBranchCol, phyllotaxisPoly1Col, phyllotaxisPoly2Col);
     
+    
     ofColor fansBranchCol;
+    ofColor fansPoly1Col;
+    ofColor fansPoly2Col;
     int fansBranchNum = ofRandom(0,3);
-    switch ( fansBranchNum )
-    {
+    int fansPoly1Num = ofRandom(0,3);
+    //NO 2ND COLOUR IN USE
+    int fansPoly2Num = 0;
+    switch ( fansBranchNum ) {
         case 0: { fansBranchCol.set(108, 96, 36); break; }
         case 1: { fansBranchCol.set(91, 98, 46); break; }
         case 2: { fansBranchCol.set(100, 106, 88); break; }
     }
-    
-    ofColor fansPoly1Col;
-    int fansPoly1Num = ofRandom(0,3);
-    switch ( fansPoly1Num )
-    {
+    switch ( fansPoly1Num ) {
         case 0: { fansPoly1Col.set(162, 140, 55); break; }
         case 1: { fansPoly1Col.set(131, 138, 45); break; }
         case 2: { fansPoly1Col.set(66, 96, 45); break; }
     }
+    switch ( fansPoly2Num ) {case 0: { fansPoly2Col.set(0, 0, 0); break; }}
+    fans.overwriteCol(fansBranchCol, fansPoly1Col, fansPoly2Col);
     
-    ofColor fansPoly2Col;
-    int fansPoly2Num = 0;
-    switch ( fansPoly2Num )
-    {
-        case 0: { fansPoly2Col.set(0, 0, 0); break; }
+    
+    ofColor acrosBranchCol;
+    ofColor acrosPoly1Col;
+    ofColor acrosPoly2Col;
+    int acrosBranchNum = ofRandom(0,3);
+    int acrosPoly1Num = ofRandom(0,3);
+    int acrosPoly2Num = ofRandom(0,3);
+    switch ( acrosBranchNum ) {
+        case 0: { acrosBranchCol.set(66, 96, 45); break; }
+        case 1: { acrosBranchCol.set(9, 97, 72); break; }
+        case 2: { acrosBranchCol.set(54, 86, 60); break; }
     }
-    palms.overwriteCol(fansBranchCol, fansPoly1Col, fansPoly2Col);
+    switch ( acrosPoly1Num ) {
+        case 0: { acrosPoly1Col.set(66, 96, 45); break; }
+        case 1: { acrosPoly1Col.set(9, 97, 72); break; }
+        case 2: { acrosPoly1Col.set(54, 86, 60); break; }
+    }
+    switch ( acrosPoly2Num ) {
+        case 0: { acrosPoly2Col.set(251, 153, 102); break; }
+        case 1: { acrosPoly2Col.set(171, 59, 58); break; }
+        case 2: { acrosPoly2Col.set(254, 223, 225); break; }
+    }
+    acros.overwriteCol(acrosBranchCol, acrosPoly1Col, acrosPoly2Col);
+    
+    
+    ofColor sigmasBranchCol;
+    ofColor sigmasPoly1Col;
+    ofColor sigmasPoly2Col;
+    int sigmasBranchNum = ofRandom(0,3);
+    int sigmasPoly1Num = ofRandom(0,3);
+    int sigmasPoly2Num = ofRandom(0,3);
+    switch ( sigmasBranchNum ) {
+        case 0: { sigmasBranchCol.set(66, 96, 45); break; }
+        case 1: { sigmasBranchCol.set(9, 97, 72); break; }
+        case 2: { sigmasBranchCol.set(54, 86, 60); break; }
+    }
+    switch ( sigmasPoly1Num ) {
+        case 0: { sigmasPoly1Col.set(66, 96, 45); break; }
+        case 1: { sigmasPoly1Col.set(9, 97, 72); break; }
+        case 2: { sigmasPoly1Col.set(54, 86, 60); break; }
+    }
+    switch ( sigmasPoly2Num ) {
+        case 0: { sigmasPoly2Col.set(251, 153, 102); break; }
+        case 1: { sigmasPoly2Col.set(171, 59, 58); break; }
+        case 2: { sigmasPoly2Col.set(254, 223, 225); break; }
+    }
+    sigmas.overwriteCol(sigmasBranchCol, sigmasPoly1Col, sigmasPoly2Col);
+    
+    
+    ofColor alphasBranchCol;
+    ofColor alphasPoly1Col;
+    ofColor alphasPoly2Col;
+    int alphasBranchNum = ofRandom(0,3);
+    int alphasPoly1Num = ofRandom(0,3);
+    int alphasPoly2Num = ofRandom(0,3);
+    switch ( alphasBranchNum ) {
+        case 0: { alphasBranchCol.set(66, 96, 45); break; }
+        case 1: { alphasBranchCol.set(9, 97, 72); break; }
+        case 2: { alphasBranchCol.set(54, 86, 60); break; }
+    }
+    switch ( alphasPoly1Num ) {
+        case 0: { alphasPoly1Col.set(66, 96, 45); break; }
+        case 1: { alphasPoly1Col.set(9, 97, 72); break; }
+        case 2: { alphasPoly1Col.set(54, 86, 60); break; }
+    }
+    switch ( alphasPoly2Num ) {
+        case 0: { alphasPoly2Col.set(251, 153, 102); break; }
+        case 1: { alphasPoly2Col.set(171, 59, 58); break; }
+        case 2: { alphasPoly2Col.set(254, 223, 225); break; }
+    }
+    alphas.overwriteCol(alphasBranchCol, alphasPoly1Col, alphasPoly2Col);
+    
+    
+    ofColor betasBranchCol;
+    ofColor betasPoly1Col;
+    ofColor betasPoly2Col;
+    int betasBranchNum = ofRandom(0,3);
+    int betasPoly1Num = ofRandom(0,3);
+    int betasPoly2Num = ofRandom(0,3);
+    switch ( betasBranchNum ) {
+        case 0: { betasBranchCol.set(66, 96, 45); break; }
+        case 1: { betasBranchCol.set(9, 97, 72); break; }
+        case 2: { betasBranchCol.set(54, 86, 60); break; }
+    }
+    switch ( betasPoly1Num ) {
+        case 0: { betasPoly1Col.set(66, 96, 45); break; }
+        case 1: { betasPoly1Col.set(9, 97, 72); break; }
+        case 2: { betasPoly1Col.set(54, 86, 60); break; }
+    }
+    switch ( betasPoly2Num ) {
+        case 0: { betasPoly2Col.set(251, 153, 102); break; }
+        case 1: { betasPoly2Col.set(171, 59, 58); break; }
+        case 2: { betasPoly2Col.set(254, 223, 225); break; }
+    }
+    betas.overwriteCol(betasBranchCol, betasPoly1Col, betasPoly2Col);
 }
