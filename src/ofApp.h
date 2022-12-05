@@ -82,6 +82,10 @@ class ofApp : public ofBaseApp{
     ofxVec3Slider angle1;
     ofxVec3Slider angle2;
     
+    ofxIntSlider colorInt;
+    ofxButton resetColor;
+
+    
 //    ofxIntSlider intSlider;
 //    ofxFloatSlider floatSlider;
 //    
@@ -117,13 +121,14 @@ class ofApp : public ofBaseApp{
     //reverseLoop - back and forth boomerang
     //stepThrough - keyReleased to go up Axiom Level
 
-    string sequence = "reverseLoop";
+    string sequence = "static";
     
     bool grow = true;
     float growthRate = 0.1;
     bool loop = true;
     
     bool dev = false;
+    
     
     int width = ofGetWidth();
     int height = ofGetHeight();

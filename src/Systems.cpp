@@ -60,10 +60,6 @@ void Systems::createSystem(types select_types, int variations, int maxAxiomLevel
             sys.addRule(LRule("E(t):t>0", "G(30)E(t-1)", "parametric"));
             sys.addRule(LRule("H(t,d):t>0", "+(d)H(t-1,14-t)", "parametric"));
             sys.addRule(LRule("I(t,d):t>0", "+(-d)I(t-1,14-t)", "parametric"));
-            
-            branchCol.set(162, 140, 55);
-            poly1Col.set(66, 96, 45);
-            poly2Col.set(251, 226, 81);
             break;
         }
         case types::branch: {
@@ -84,9 +80,6 @@ void Systems::createSystem(types select_types, int variations, int maxAxiomLevel
             sys.addRule(LRule("X(t):*", "[%(0)&(t)W][%(60)&(t)W][%(120)&(t)W][%(180)&(t)W][%(240)&(t)W][%(300)&(t)W]", "parametric"));
             sys.addRule(LRule("Q", "{#[+(30)G(1)#][G(2)#][+(-30)G(1)#]}", "rewrite"));
             sys.addRule(LRule("W", "<#[+(25)G(8)#][+(20)G(9)#][G(10)#][+(-20)G(9)#][+(-25)G(8)#]>", "rewrite"));
-            branchCol.set(114, 72, 50);
-            poly1Col.set(247, 194, 66);
-            poly2Col.set(251, 226, 81);
             break;
         }
         case types::lavender: {
@@ -101,9 +94,6 @@ void Systems::createSystem(types select_types, int variations, int maxAxiomLevel
             sys.addRule(LRule("C(t):t>1", "F(t)C(t-1)", "parametric"));
             sys.addRule(LRule("K(t):t>0", "%(45*t)F(5)[%(0)&(80-t*10)D(t/3)][%(90)&(80-t*10)D(t/3)][%(180)&(80-t*10)D(t/3)][%(270)&(80-t*10)D(t/3)][K(t-1)]", "parametric"));
             sys.addRule(LRule("D(t):*", "&(-90)C(t)<#[+(30)B(4)#][B(5)#][+(-30)B(4)#]>", "parametric"));
-            branchCol.set(9, 97, 72);
-            poly1Col.set(77, 81, 57);
-            poly2Col.set(171, 59, 58);
             break;
         }
         case types::flowerBall: {
@@ -117,10 +107,6 @@ void Systems::createSystem(types select_types, int variations, int maxAxiomLevel
             sys.addRule(LRule("K(t):*", "%(t)[B(0)][&(-20)B(20)][&(-10)B(57)][B(90)][&(10)B(123)][&(20)B(160)][B(180)]", "parametric"));
             sys.addRule(LRule("B(t):*", "+(t)f(5)L(5)", "parametric"));
             sys.addRule(LRule("L(t):*", "<[+(30)G(6)#][G(6)#][+(-30)G(6)#]>%(90)<[+(30)G(6)#][G(6)#][+(-30)G(6)#]>", "parametric"));
-            
-            branchCol.set(81, 110, 65);
-            poly1Col.set(0, 255, 0);
-            poly2Col.set(128, 143, 124);
             break;
         }
         case types::phyllotaxis: {
@@ -136,10 +122,6 @@ void Systems::createSystem(types select_types, int variations, int maxAxiomLevel
             sys.addRule(LRule("A(n):*", "+(137.5)&(n*10)[(n^0.5)D]A(n+1)", "parametric"));
             sys.addRule(LRule("D", "<[+(15)B(4)#][B(5)#][+(-15)B(4)#]>", "rewrite"));
             sys.addRule(LRule("B(t):t>0", "G(4)B(t-1)", "parametric"));
-            
-            branchCol.set(147, 150, 80);
-            poly1Col.set(220, 158, 180);
-            poly2Col.set(147, 150, 80);
             break;
         }
         case types::fan: {
@@ -149,10 +131,6 @@ void Systems::createSystem(types select_types, int variations, int maxAxiomLevel
             sys.addRule(LRule("A(n):*", "+(180)&(180-n*10)[(n^0.5)D]A(n+1)", "parametric"));
             sys.addRule(LRule("D", "%(80)<[+(5)B(4)#][B(5)#][+(-5)B(4)#]>", "rewrite"));
             sys.addRule(LRule("B(t):t>0", "G(16)B(t-1)", "parametric"));
-
-            branchCol.set(147, 150, 80);
-            poly1Col.set(220, 158, 180);
-            poly2Col.set(147, 150, 80);
             break;
         }
         case types::acro: {
@@ -167,13 +145,10 @@ void Systems::createSystem(types select_types, int variations, int maxAxiomLevel
             sys.addRule(LRule("Q(t):t=3", "[%(r,0_360)+(r,-70_70)C(r,4_5)A(0)][%(r,0_360)+(r,-70_70)C(r,4_5)A(0)][%(r,0_360)+(r,-70_70)C(r,4_5)A(0)]", "parametric"));
 
 //              Flowers
-            sys.addRule(LRule("A(n):*", "+(137.5)&(n*10)[(n^0.5)D]A(n+1)", "parametric"));
-            sys.addRule(LRule("D", "<[+(40)B(1)#][+(20)B(2)#][B(3)#][+(-20)B(2)#][+(-40)B(1)#]>", "rewrite"));
-            sys.addRule(LRule("B(t):t>0", "G(5)B(t-1)", "parametric"));
-
-            branchCol.set(147, 150, 80);
-            poly1Col.set(220, 158, 180);
-            poly2Col.set(147, 150, 80);
+            sys.addRule(LRule("A(n):n<8", "+(137.5)&(n*10)[(n^0.5)[D][E]]A(n+1)", "parametric"));
+            sys.addRule(LRule("D", "<[+(40)B(2)#][+(20)B(4)#][B(6)#][+(-20)B(4)#][+(-40)B(1)#]>", "rewrite"));
+            sys.addRule(LRule("E", "&(1){[+(38)B(1)#][+(20)B(2)#][B(3)#][+(-20)B(2)#][+(-38)B(1)#]}", "rewrite"));
+            sys.addRule(LRule("B(t):t>0", "G(2)B(t-1)", "parametric"));
             break;
         }
         case types::sigma: {
@@ -192,10 +167,6 @@ void Systems::createSystem(types select_types, int variations, int maxAxiomLevel
             sys.addRule(LRule("T(t):t>0", "&(2)%(2)F(r,0_16)[&(r,40_140)+(r,90_270)F(4)S]T(t-1)", "parametric"));
             sys.addRule(LRule("S", "[%(60)&(80)U(4)][%(110)&(80)U(4)][%(180)&(80)U(4)][%(-110)&(80)U(4)][%(-60)&(80)U(4)]", "rewrite"));
             sys.addRule(LRule("U(t):*", "{[+(40)G(t)#][+(20)G(t*2)#][G(t*5/2)#][+(-20)G(t*2)#][+(-40)G(t)#]}", "parametric"));
-
-            branchCol.set(147, 150, 80);
-            poly1Col.set(220, 158, 180);
-            poly2Col.set(147, 150, 80);
             break;
         }
         case types::alpha: {
@@ -210,11 +181,6 @@ void Systems::createSystem(types select_types, int variations, int maxAxiomLevel
             sys.addRule(LRule("P(t):t=3", "[+(r,0_80)%(r,0_360)C(3)][+(r,0_80)%(r,0_360)C(3)][+(r,0_80)%(r,0_360)C(3)]", "parametric"));
 
             sys.addRule(LRule("A(t):*", "{[+(45)G(t)#][G(t*3/2)#][+(-45)G(t)#]}%(90){[+(45)G(t)#][G(t*3/2)#][+(-45)G(t)#]}", "parametric"));
-
-            
-            branchCol.set(147, 150, 80);
-            poly1Col.set(220, 158, 180);
-            poly2Col.set(147, 150, 80);
             break;
         }
         case types::beta: {
@@ -230,10 +196,6 @@ void Systems::createSystem(types select_types, int variations, int maxAxiomLevel
 
             sys.addRule(LRule("P", "<[+(5)G(20)#][+(-5)G(20)#]>f(19.8)&(40)<[+(-90)G(1.8)#][G(4)#][+(90)G(1.8)#]>", "rewrite"));
             sys.addRule(LRule("A(t):*", "+(90)%(90){[+(40)G(t)#][+(30)G(t*2)#][G(t*5)#][+(-30)G(t*2)#][+(-40)G(t)#]}", "parametric"));
-
-            branchCol.set(147, 150, 80);
-            poly1Col.set(147, 150, 80);
-            poly2Col.set(220, 158, 80);
             break;
         }
     }
