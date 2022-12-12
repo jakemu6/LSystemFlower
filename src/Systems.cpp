@@ -98,20 +98,19 @@ void Systems::createSystem(types select_types, int variations, int maxAxiomLevel
         }
         case types::flowerBall: {
             sys.setStart("a(r,7_10)");
-            sys.addRule(LRule("a(t):*", "cb(t)A", "parametric"));
+            sys.addRule(LRule("a(t):*", "%(3)b(t)A(r,5_8)", "parametric"));
             sys.addRule(LRule("b(t):t>0", "&(2)F(5)b(t-1)", "parametric"));
             sys.addRule(LRule("b(t):t=0", "&(2)F(5)", "parametric"));
-            sys.addRule(LRule("c", "%(r,0_360)", "rewrite"));
             //Flowerball
-            sys.addRule(LRule("A", "[K(0)][K(60)][K(120)][K(180)][K(240)][K(300)]", "rewrite"));
-            sys.addRule(LRule("K(t):*", "%(t)[B(0)][&(-20)B(20)][&(-10)B(57)][B(90)][&(10)B(123)][&(20)B(160)][B(180)]", "parametric"));
-            sys.addRule(LRule("B(t):*", "+(t)f(5)L(5)", "parametric"));
-            sys.addRule(LRule("L(t):*", "<[+(30)G(6)#][G(6)#][+(-30)G(6)#]>%(90)<[+(30)G(6)#][G(6)#][+(-30)G(6)#]>", "parametric"));
+            sys.addRule(LRule("A(n):*", "[K(0,n)][K(60,n)][K(120,n)][K(180,n)][K(240,n)][K(300,n)]", "parametric"));
+            sys.addRule(LRule("K(t,n):*", "%(t)[B(0,n)][&(-20)B(20,n)][&(-10)B(57,n)][B(90,n)][&(10)B(123,n)][&(20)B(160,n)][B(180,n)]", "parametric"));
+            sys.addRule(LRule("B(t,n):*", "+(t)f(n)L(n)", "parametric"));
+            sys.addRule(LRule("L(t):*", "<[+(30)G(t)#][G(t)#][+(-30)G(t)#]>%(90)<[+(30)G(t)#][G(t)#][+(-30)G(t)#]>", "parametric"));
             break;
         }
         case types::phyllotaxis: {
-            sys.setStart("C(5)F(20)&(-90)A(0)");
-            sys.addRule(LRule("C(t):t>0", "&(2)F(r,4_20)[E]C(t-1)", "parametric"));
+            sys.setStart("C(5)F(20)&(-90)R(r,3_6)");
+            sys.addRule(LRule("C(t):t>0", "&(2)F(r,5_10)[E]C(t-1)", "parametric"));
             sys.addRule(LRule("E", "L(r,2_3)", "rewrite"));
             sys.addRule(LRule("L(t):t=3", "%(r,0_360)+(r,30_60)F&(r,45_135)P(5)", "parametric"));
             sys.addRule(LRule("P(t):t>0", "{[+(-110)M(5)#][+(-60)M(10)#][+(-50)M(12)#][M(20)#][+(50)M(12)#][+(60)M(10)#][+(110)M(5)#]}", "parametric"));
@@ -119,30 +118,32 @@ void Systems::createSystem(types select_types, int variations, int maxAxiomLevel
             sys.addRule(LRule("N(t,d):t>0", "G(d/10)N(t-1,t)", "parametric"));
 
             //Simple Cymes structure
-            sys.addRule(LRule("A(n):*", "+(137.5)&(n*10)[(n^0.5)D]A(n+1)", "parametric"));
-            sys.addRule(LRule("D", "<[+(15)B(4)#][B(5)#][+(-15)B(4)#]>", "rewrite"));
-            sys.addRule(LRule("B(t):t>0", "G(4)B(t-1)", "parametric"));
+            sys.addRule(LRule("R(p):*", "A(0,p)", "parametric"));
+
+            sys.addRule(LRule("A(n,p):n<16", "+(137.5)&(n*10)[(n^0.5)D(p)A(n+1,p)", "parametric"));
+            sys.addRule(LRule("D(p):*", "<[+(15)B(4,p)#][B(5,p)#][+(-15)B(4,p)#]>", "parametric"));
+            sys.addRule(LRule("B(t,p):t>0", "G(p)B(t-1,p)", "parametric"));
             break;
         }
         case types::fan: {
-            sys.setStart("C(10)&(0)%(180)A(0)");
-            sys.addRule(LRule("C(t):t>0", "&(2)F(r,4_20)C(t-1)", "parametric"));
+            sys.setStart("C(r,6_9)%(90)A(0)");
+            sys.addRule(LRule("C(t):t>0", "&(5)F(15)C(t-1)", "parametric"));
             //Simple Cymes structure
             sys.addRule(LRule("A(n):*", "+(180)&(180-n*10)[(n^0.5)D]A(n+1)", "parametric"));
             sys.addRule(LRule("D", "%(80)<[+(5)B(4)#][B(5)#][+(-5)B(4)#]>", "rewrite"));
-            sys.addRule(LRule("B(t):t>0", "G(16)B(t-1)", "parametric"));
+            sys.addRule(LRule("B(t):t>0", "G(14)B(t-1)", "parametric"));
             break;
         }
         case types::acro: {
 //              Stem
-            sys.setStart("&(180)C(r,4_5)A(0)");
+            sys.setStart("&(180)C(3)A(0)");
             sys.addRule(LRule("C(t):t>1", "&(2)F(10)C(t-1)", "parametric"));
             sys.addRule(LRule("C(t):t=1", "&(2)Q(r,1_3)F(10)C(t-1)", "parametric"));
             
 //              Fork
-            sys.addRule(LRule("Q(t):t=1", "[%(r,0_360)+(r,-70_70)C(r,4_5)A(0)][%(r,0_360)+(r,-70_70)C(r,4_5)A(0)]", "parametric"));
-            sys.addRule(LRule("Q(t):t=2", "[%(r,0_360)+(r,-70_70)C(r,4_5)A(0)]", "parametric"));
-            sys.addRule(LRule("Q(t):t=3", "[%(r,0_360)+(r,-70_70)C(r,4_5)A(0)][%(r,0_360)+(r,-70_70)C(r,4_5)A(0)][%(r,0_360)+(r,-70_70)C(r,4_5)A(0)]", "parametric"));
+            sys.addRule(LRule("Q(t):t=1", "[%(r,0_360)+(r,-60_60)C(r,4_5)A(0)][%(r,0_360)+(r,-60_60)C(r,4_5)A(0)]", "parametric"));
+            sys.addRule(LRule("Q(t):t=2", "[%(r,0_360)+(r,-60_60)C(r,4_5)A(0)]", "parametric"));
+            sys.addRule(LRule("Q(t):t=3", "[%(r,0_360)+(r,-60_60)C(r,4_5)A(0)][%(r,0_360)+(r,-60_60)C(r,4_5)A(0)][%(r,0_360)+(r,-60_60)C(r,4_5)A(0)]", "parametric"));
 
 //              Flowers
             sys.addRule(LRule("A(n):n<8", "+(137.5)&(n*10)[(n^0.5)[D][E]]A(n+1)", "parametric"));
@@ -191,8 +192,8 @@ void Systems::createSystem(types select_types, int variations, int maxAxiomLevel
             sys.addRule(LRule("O", "[+(10)%(r,0_360)C(r,3_5)]", "rewrite"));
 
             sys.addRule(LRule("C(t):t>0", "%(90)F(15)[[+(r,40_60)F(4)A(4)]][%(180)[+(r,40_60)F(4)A(4)]]C(t-1)", "parametric"));
-            sys.addRule(LRule("C(t):t=0", "&(2)%(2)F(6)[Q]", "parametric"));
-            sys.addRule(LRule("Q", "[%(r,0_360)&(r,10_40)[P]][%(r,0_360)&(r,10_40)[P]][%(r,0_360)&(r,10_40)[P]][%(r,0_360)&(r,10_40)[P]][%(r,0_360)&(r,10_40)[P]][%(r,0_360)&(r,10_40)[P]][%(r,0_360)&(r,10_40)[P]][%(r,0_360)&(r,10_40)[P]][%(r,0_360)&(r,10_40)[P]][%(r,0_360)&(r,10_40)[P]][%(r,0_360)&(r,10_40)[P]][%(r,0_360)&(r,10_40)[P]]", "rewrite"));
+            sys.addRule(LRule("C(t):t=0", "&(2)%(2)F(6)[Q(90)][Q(60)][Q(30)]", "parametric"));
+            sys.addRule(LRule("Q(t):*", "[%(0)&(t)[P]][%(30)&(t)[P]][%(60)&(t)[P]][%(90)&(t)[P]][%(120)&(t)[P]][%(150)&(t)[P]][%(180)&(t)[P]][%(210)&(t)[P]][%(240)&(t)[P]][%(270)&(t)[P]][%(300)&(t)[P]][%(330)&(t)[P]]", "parametric"));
 
             sys.addRule(LRule("P", "<[+(5)G(20)#][+(-5)G(20)#]>f(19.8)&(40)<[+(-90)G(1.8)#][G(4)#][+(90)G(1.8)#]>", "rewrite"));
             sys.addRule(LRule("A(t):*", "+(90)%(90){[+(40)G(t)#][+(30)G(t*2)#][G(t*5)#][+(-30)G(t*2)#][+(-40)G(t)#]}", "parametric"));

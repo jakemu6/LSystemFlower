@@ -8,6 +8,7 @@
 #include "ofxGui.h"
 
 typedef enum {
+    //MIXED ARRANGEMENTS
     arrangement_0,
     arrangement_1,
     arrangement_2,
@@ -18,19 +19,16 @@ typedef enum {
     arrangement_7,
     arrangement_8,
     arrangement_9,
-    
-
     arrangement_10,
     arrangement_11,
     arrangement_12,
-    //ALL PLANTS IN SYSTEM
-    arrangement_R,
-    arrangement_T,
-    arrangement_Y,
-    arrangement_U,
-    arrangement_I,
-    arrangement_O,
-    arrangement_P,
+    arrangement_13,
+    arrangement_14,
+    arrangement_15,
+    arrangement_16,
+    arrangement_17,
+    arrangement_18,
+    arrangement_19,
     
     //SINGLE PLANT IN SYSTEM
     arrangement_A,
@@ -46,9 +44,7 @@ typedef enum {
     
 } State;
 
-
 class ofApp : public ofBaseApp{
-
 	public:
 		void setup();
 		void update();
@@ -74,33 +70,19 @@ class ofApp : public ofBaseApp{
 
     State arrangementNo;
     
-    ofxPanel gui;
-    
-    ofxVec3Slider position1;
-    ofxVec3Slider position2;
-
-    ofxVec3Slider angle1;
-    ofxVec3Slider angle2;
-    
-    ofxIntSlider colorInt;
-    ofxButton resetColor;
-
-    
-//    ofxIntSlider intSlider;
-//    ofxFloatSlider floatSlider;
-//    
-//    ofxToggle toggle;
-//    ofxButton button;
-//    ofxLabel label;
-//    
-//    ofxIntField intField;
-//    ofxFloatField floatField;
-//    ofxTextField textField;
-//    
-//    ofxVec2Slider vec2Slider;
-//    ofxVec3Slider vec3Slider;
-//    ofxVec4Slider vec4Slider;
-    
+    //TESTING GUI
+//    ofxPanel gui;
+//    ofxVec3Slider position1;
+//    ofxVec3Slider position2;
+//    ofxVec3Slider position3;
+//    ofxVec3Slider position4;
+//    ofxVec3Slider position5;
+//
+//    ofxVec3Slider angle1;
+//    ofxVec3Slider angle2;
+//    ofxVec3Slider angle3;
+//    ofxVec3Slider angle4;
+//    ofxVec3Slider angle5;
 
     float maxAxiomLevel = 30;
     int numPlants = 5;
@@ -121,7 +103,7 @@ class ofApp : public ofBaseApp{
     //reverseLoop - back and forth boomerang
     //stepThrough - keyReleased to go up Axiom Level
 
-    string sequence = "static";
+    string sequence = "reverseLoop";
     
     bool grow = true;
     float growthRate = 0.1;

@@ -19,15 +19,15 @@ LRule::LRule(string pre, string succ, string _ruleType){
         vector<string> splitString = ofSplitString(pre, ":");
         
         //make a substring of the length of first split to get the pre and parameter
-        int length = splitString[0].length();
+        typename string::size_type length = splitString[0].length();
         string substr[length];
         for(int i = 0; i < length; i++){
             substr[i] = splitString[0].substr(i,1);
         }
 
         //getting the positions of the parentheses and then acquiring the contents between
-        unsigned open = splitString[0].find("(");
-        unsigned closed = splitString[0].find(")");
+        typename string::size_type open = splitString[0].find("(");
+        typename string::size_type closed = splitString[0].find(")");
         
         //get the string between the parentheses - the parentheses
         string parStr = splitString[0].substr(open + 1, closed - 2);
