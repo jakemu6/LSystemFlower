@@ -8,8 +8,13 @@ void ofApp::setup(){
     ofEnableAlphaBlending();
     
     ofDisableArbTex();
-    render_buffer.allocate(width, height, GL_RGBA);
-    fx.allocate(width, height);
+    render_buffer.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
+    final_buffer.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
+    pix.allocate(ofGetWidth(),ofGetHeight(),OF_IMAGE_COLOR_ALPHA);
+    fx.allocate(ofGetWidth(), ofGetHeight());
+    ofLog() << ofGetWidth();
+    ofLog() << ofGetHeight();
+
     fx.setPasses(1);
     //https://www.shadertoy.com/view/ltyGRV
     //ShaderToy translation key
@@ -17,7 +22,6 @@ void ofApp::setup(){
     //Res0 - size0 (Gets the resolution of the texture)
     //tex0 - iChannel (Gets the texture sample)
 
-    
     fx.setCode("#version 120\n \
                         uniform sampler2D tex0; \n \
                         uniform vec2 resolution;    \n \
@@ -119,7 +123,8 @@ void ofApp::setup(){
                             \n \
                             vec4 y = texture2D(tex0, st); \n \
                             gl_FragColor = vec4(col, 1.0); \n \
-                        }");
+                        }"
+    );
     
 
     if (!dev) {
@@ -135,12 +140,13 @@ void ofApp::setup(){
         betas.createSystem(types::beta, numPlants, maxAxiomLevel);
     }
                
-
-
+    camDistance = 400;
     axiomLevel = 0;
-    cam.setDistance(280);
     //set init arrangement
-    changeArrangement(1);
+    currentArrangement = 0;
+    changeArrangement(currentArrangement);
+    shift_x = 0;
+    shift_y = 0;
     
     //GUI FOR TESTING
 //    gui.setup();
@@ -158,6 +164,7 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
+    cam.setDistance(camDistance);
     if (rotate) {
         rotation += rotationSpeed;
     }
@@ -173,7 +180,7 @@ void ofApp::update(){
             growthRate = -growthRate;
         } else if (axiomLevel < 0) {
             growthRate = -growthRate;
-            int num = (int)ofRandom(0,30);
+            int num = (int)ofRandom(0,20);
             changeArrangement(num);
         }
         axiomLevel += growthRate;
@@ -184,19 +191,18 @@ void ofApp::update(){
             axiomLevel = maxAxiomLevel;
         }
     }
-
-    
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    
-    
     render_buffer.begin();
     {
         cam.begin();
         ofPushMatrix();
         ofEnableDepthTest();
+        ofTranslate(shift_x, shift_y, 0);
+//        ofRotateZDeg(90);
+        ofRotateXDeg(pitch);
         ofRotateYDeg(rotation);
         ofBackground(252, 250, 242);
         ofNoFill();
@@ -211,14 +217,18 @@ void ofApp::draw(){
     ofFill();
     ofSetColor(255, 255, 255);
 //    gui.draw();
-
+    
     // DEV setting is left side with original, right side with shader applied
     if (dev) {
-        render_buffer.draw(0, 0, width/2, height);
-        fx.draw(width/2, 0, width/2, height);
+        render_buffer.draw(0, 0, ofGetWidth()/2, ofGetHeight());
+        fx.draw(ofGetWidth()/2, 0, ofGetWidth()/2, ofGetHeight());
     } else {
-        fx.draw(0, 0, width, height);
+        final_buffer.begin();
+        fx.draw(0, 0, ofGetWidth(), ofGetHeight());
+        final_buffer.end();
     }
+    //REDRAW OVER THE FINAL BUFFER
+    fx.draw(0, 0, ofGetWidth(), ofGetHeight());
 }
 
 //--------------------------------------------------------------
@@ -238,7 +248,6 @@ void ofApp::keyPressed(int key){
         case 55: {changeArrangement(7);break;}
         case 56: {changeArrangement(8);break;}
         case 57: {changeArrangement(9);break;}
-        
         //KEY Q W E R T Y U I O P
         case 113: {changeArrangement(10);break;}
         case 119: {changeArrangement(11);break;}
@@ -250,7 +259,6 @@ void ofApp::keyPressed(int key){
         case 105: {changeArrangement(17);break;}
         case 111: {changeArrangement(18);break;}
         case 112: {changeArrangement(19);break;}
-
         //KEY A S D F G H J K L ;
         case 97: {changeArrangement(20);break;}
         case 115: {changeArrangement(21);break;}
@@ -262,6 +270,40 @@ void ofApp::keyPressed(int key){
         case 107: {changeArrangement(27);break;}
         case 108: {changeArrangement(28);break;}
         case 59: {changeArrangement(29);break;}
+           
+//        //SCREENSHOT CONTROLS
+//        case 122: {
+//            currentArrangement--;
+//            if (currentArrangement < 0) {currentArrangement = 29;}
+//            changeArrangement(currentArrangement);
+//            break;
+//        }
+//        case 120: {
+//            currentArrangement++;
+//            if (currentArrangement > 29) {currentArrangement = 0;}
+//            changeArrangement(currentArrangement);
+//            break;
+//        }
+//            //SCREENSHOT FX TO IMG USE 'C'
+//        case 99: {
+//            final_buffer.readToPixels(pix);
+//            string time = ofGetTimestampString();
+//            ofSaveImage(pix, "A3_" + time + ".png", OF_IMAGE_QUALITY_BEST);
+//            break;
+//        }
+//        //use arrows to rotate scene
+//        case 57356: {rotation += 10;break;}
+//        case 57358: {rotation -= 10;break;}
+//        case 57357: {pitch += 10;break;}
+//        case 57359: {pitch -= 10;break;}
+//        // + - to zoom in and out
+//        case 49: {shift_y += 10;break;}
+//        case 51: {shift_y -= 10;break;}
+//        // num pad 1 2 3 5 to move scene
+//        case 50: {shift_x -= 10;break;}
+//        case 53: {shift_x += 10;break;}
+//        case 45: {camDistance += 30;break;}
+//        case 43: {camDistance -= 30;break;}
     }
     
 
@@ -297,6 +339,12 @@ void ofApp::generateArrangement(int num){
             flowerBalls.renderArrangement(positions[17], angles[17], 2, axiomLevel);
             flowerBalls.renderArrangement(positions[18], angles[18], 3, axiomLevel);
             flowerBalls.renderArrangement(positions[19], angles[19], 4, axiomLevel);
+            //FOR TESTING WITH GUI
+            //            flowerBalls.renderArrangement(ofVec3f(position1->x, position1->y, position1->z), ofVec3f(angle1->x, angle1->y, angle1->z), 0, axiomLevel);
+            //            flowerBalls.renderArrangement(ofVec3f(position2->x, position2->y, position2->z), ofVec3f(angle2->x, angle2->y, angle2->z), 1, axiomLevel);
+            //            betas.renderArrangement(ofVec3f(position3->x, position3->y, position3->z), ofVec3f(angle3->x, angle3->y, angle3->z), 2, axiomLevel);
+            //            betas.renderArrangement(ofVec3f(position4->x, position4->y, position4->z), ofVec3f(angle4->x, angle4->y, angle4->z), 3, axiomLevel);
+            //            betas.renderArrangement(ofVec3f(position5->x, position5->y, position5->z), ofVec3f(angle5->x, angle5->y, angle5->z), 4, axiomLevel);
             break;
         }
         case arrangement_1: {
@@ -497,21 +545,14 @@ void ofApp::generateArrangement(int num){
         }
         case arrangement_18: {
             sigmas.renderArrangement(ofVec3f(0, -53, 0), ofVec3f(0, 29, 0), 0, axiomLevel);
-            acros.renderArrangement(ofVec3f(-15, -29, 0), ofVec3f(180, 180, 0), 1, axiomLevel);
-            lavenders.renderArrangement(ofVec3f(7, -37, 15), ofVec3f(15, 0, -26), 2, axiomLevel);
-            lavenders.renderArrangement(ofVec3f(0, -20, 0), ofVec3f(33, 0, 24), 3, axiomLevel);
-            lavenders.renderArrangement(ofVec3f(0, 0, 0), ofVec3f(-26, 0, -26), 4, axiomLevel);
+            fans.renderArrangement(ofVec3f(-15, -29, 0), ofVec3f(0, 180, 0), 1, axiomLevel);
+
             break;
         }
         case arrangement_19: {
             sigmas.renderArrangement(ofVec3f(0, -67, 0), ofVec3f(0, -37, 0), 0, axiomLevel);
             acros.renderArrangement(ofVec3f(0, -60, 0), ofVec3f(29, 90, 180), 1, axiomLevel);
-            lavenders.renderArrangement(ofVec3f(-22, -79, 0), ofVec3f(-11, 0, 0), 2, axiomLevel);
-            //            flowerBalls.renderArrangement(ofVec3f(position1->x, position1->y, position1->z), ofVec3f(angle1->x, angle1->y, angle1->z), 0, axiomLevel);
-            //            flowerBalls.renderArrangement(ofVec3f(position2->x, position2->y, position2->z), ofVec3f(angle2->x, angle2->y, angle2->z), 1, axiomLevel);
-            //            betas.renderArrangement(ofVec3f(position3->x, position3->y, position3->z), ofVec3f(angle3->x, angle3->y, angle3->z), 2, axiomLevel);
-            //            betas.renderArrangement(ofVec3f(position4->x, position4->y, position4->z), ofVec3f(angle4->x, angle4->y, angle4->z), 3, axiomLevel);
-            //            betas.renderArrangement(ofVec3f(position5->x, position5->y, position5->z), ofVec3f(angle5->x, angle5->y, angle5->z), 4, axiomLevel);
+            alphas.renderArrangement(ofVec3f(-22, -79, 0), ofVec3f(-11, 0, 0), 2, axiomLevel);
             break;
         }
         case arrangement_A: {palms.renderArrangement(ofVec3f(0, -70, 0), ofVec3f(0, 0, 0), 0, axiomLevel);break;}
@@ -537,7 +578,7 @@ void ofApp::changeArrangement(int num){
     randPos.set(ofRandom(0.001,2), ofRandom(0.001,0.9), ofRandom(0.001,2));
     randAng.set(ofRandom(0.001,0.9), ofRandom(0.001,0.9), ofRandom(0.001,0.9));
     for(int i = 1; i < 20 + 1; i++) {
-        ofVec3f position(-300 + (600 * ofNoise(i * randPos.x)), -300 + (400 * ofNoise(i * randPos.y)), -300 + (600 * ofNoise(i * randPos.z)));
+        ofVec3f position(-300 + (600 * ofNoise(i * randPos.x)), -300 + (500 * ofNoise(i * randPos.y)), -300 + (600 * ofNoise(i * randPos.z)));
         ofVec3f angle(-80 + (160 * ofNoise(i * randAng.x)), 360 * ofNoise(i * randAng.y), -80 + (160 * ofNoise(i * randAng.z)));
         positions.push_back(position);
         angles.push_back(angle);
@@ -579,6 +620,8 @@ void ofApp::changeArrangement(int num){
         case 28: {arrangementNo = arrangement_L;break;}
         case 29: {arrangementNo = arrangement_SEMICOLON;break;}
     }
+    
+
 }
 
 void ofApp::overwriteCol(){

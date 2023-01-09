@@ -70,6 +70,8 @@ class ofApp : public ofBaseApp{
 
     State arrangementNo;
     
+    int currentArrangement;
+    
     //TESTING GUI
 //    ofxPanel gui;
 //    ofxVec3Slider position1;
@@ -98,15 +100,20 @@ class ofApp : public ofBaseApp{
     bool rotate = true;
     float rotationSpeed = 0.1;
     float rotation = 0;
+    
+    float camDistance;
+    float pitch;
+    float shift_x, shift_y;
     //static - no movement max axiom level
     //loop - 0-max;
     //reverseLoop - back and forth boomerang
     //stepThrough - keyReleased to go up Axiom Level
+    //capture - save image of the flowers and exit program, files are in bin/data
 
     string sequence = "reverseLoop";
     
     bool grow = true;
-    float growthRate = 0.1;
+    float growthRate = 0.2;
     bool loop = true;
     
     bool dev = false;
@@ -122,4 +129,9 @@ class ofApp : public ofBaseApp{
 
     ofFbo render_buffer;
     ofxFXObject fx;
+    ofFbo final_buffer;
+
+    ofImage img;
+    ofPixels pix;
+
 };

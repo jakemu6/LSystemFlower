@@ -17,12 +17,14 @@ int main( ){
 //        ofRunApp(mainWindow, mainApp);
 //        ofRunMainLoop();
 //    }else{
-        ofSetupOpenGL(1920, 1080, OF_FULLSCREEN);
-        if(!ofGLCheckExtension("GL_ARB_geometry_shader4") && !ofGLCheckExtension("GL_EXT_geometry_shader4") && !ofIsGLProgrammableRenderer()){
-            ofLogFatalError() << "geometry shaders not supported on this graphics card";
-            return 1;
-        }
-        
-        ofRunApp(new ofApp);
+//    ofSetupOpenGL(4961, 3508, OF_WINDOW);
+    ofSetupOpenGL(1920, 1080, OF_FULLSCREEN);
+
+    if(!ofGLCheckExtension("GL_ARB_geometry_shader4") && !ofGLCheckExtension("GL_EXT_geometry_shader4") && !ofIsGLProgrammableRenderer()){
+        ofLogFatalError() << "geometry shaders not supported on this graphics card";
+        return 1;
+    }
+    
+    ofRunApp(new ofApp);
 //    }
 }
