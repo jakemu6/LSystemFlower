@@ -6,7 +6,9 @@ void ofApp::setup(){
     
     ofSetLogLevel(OF_LOG_VERBOSE);
     ofEnableAlphaBlending();
-    
+    ofSetVerticalSync(true);
+    ofHideCursor();
+
     ofDisableArbTex();
     render_buffer.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
     final_buffer.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
@@ -96,10 +98,10 @@ void ofApp::setup(){
                             float cnt2=0.;  \n \
                             for(int i=0;i<1*SampNum;i++)    \n \
                             {   \n \
-                                vec2 gr =getGrad(pos, 2.0);     \n \
-                                vec2 gr2=getGrad(pos2,2.0);     \n \
-                                vec2 gr3=getGrad2(pos3,2.0);     \n \
-                                vec2 gr4=getGrad2(pos4,2.0);     \n \
+                                vec2 gr =getGrad(pos, 2.0)-.00005;     \n \
+                                vec2 gr2=getGrad(pos2,2.0)-.00005;     \n \
+                                vec2 gr3=getGrad2(pos3,2.0)-.00005;     \n \
+                                vec2 gr4=getGrad2(pos4,2.0)-.00005;     \n \
                                 float grl=clamp(10.*length(gr),0.,1.);  \n \
                                 float gr2l=clamp(10.*length(gr2),0.,1.);    \n \
                                 pos +=1.0 *normalize((gr.yx*vec2(1,-1)));     \n \
