@@ -28,7 +28,6 @@ public:
 	
 	void addRule(const LRule & rule);
 	void removeRule(LRule rule);
-	void printRules();
 	
 	void setStart(const string & start);
 	void printStart();

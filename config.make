@@ -8,7 +8,7 @@
 #   The location of your root openFrameworks installation
 #       (default) OF_ROOT = ../../.. 
 ################################################################################
-OF_ROOT = /Users/jakemu/Documents/Developer/OF/of_v0.11.2_osx_release
+OF_ROOT = ./of_v0.11.2_osx_release
 
 ################################################################################
 # PROJECT ROOT
@@ -88,7 +88,7 @@ OF_ROOT = /Users/jakemu/Documents/Developer/OF/of_v0.11.2_osx_release
 #
 #   Note: Leave a leading space when adding list items with the += operator
 ################################################################################
-# PROJECT_DEFINES = 
+PROJECT_DEFINES = TARGET_OS_IPHONE_SIMULATOR=0
 
 ################################################################################
 # PROJECT CFLAGS
@@ -105,7 +105,7 @@ OF_ROOT = /Users/jakemu/Documents/Developer/OF/of_v0.11.2_osx_release
 #
 #   Note: Leave a leading space when adding list items with the += operator
 ################################################################################
-# PROJECT_CFLAGS = 
+PROJECT_CFLAGS = -Isrc/muParser
 
 ################################################################################
 # PROJECT OPTIMIZATION CFLAGS

@@ -74,13 +74,6 @@ void LSys::removeRule(LRule rule){
 	}
 }
 
-void LSys::printRules(){
-	cout << "LSys rules:" << endl;
-	for(int i = 0; i < rules.size(); i++){
-		rules[i].print();
-	}
-}
-
 void LSys::setStart(const string & _start){
 	start = _start;
 	curString = start;

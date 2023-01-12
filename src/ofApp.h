@@ -98,7 +98,7 @@ class ofApp : public ofBaseApp{
     ofEasyCam cam;
 
     bool rotate = true;
-    float rotationSpeed = 0.1;
+    float rotationSpeed = 0.05;
     float rotation = 0;
     
     float camDistance;
@@ -113,7 +113,7 @@ class ofApp : public ofBaseApp{
     string sequence = "reverseLoop";
     
     bool grow = true;
-    float growthRate = 0.2;
+    float growthRate = 0.05;
     bool loop = true;
     
     bool dev = false;
